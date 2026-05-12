@@ -8,7 +8,7 @@
 
 | Need | Service | Key Detail |
 |------|---------|------------|
-| Chat, text gen, code | **Azure OpenAI** | GPT-4o, GPT-4, GPT-3.5-Turbo |
+| Chat, text gen, code | **Azure OpenAI** | GPT-4o, GPT-4o-mini, GPT-4 |
 | Image generation | **Azure OpenAI** | DALL-E 3 / gpt-image-1 |
 | Audio transcription | **Azure OpenAI** (Whisper) OR **Azure AI Speech** (STT) | Whisper = batch; Speech = real-time |
 | Image analysis | **Azure AI Vision** | Image Analysis 4.0 API |
@@ -110,6 +110,12 @@
 - **Latency** — Response time
 - **Blocked Calls** — Rate limiting (HTTP 429)
 
+### Pricing Tiers
+| Tier | Label | Note |
+|------|-------|------|
+| **Free** | F0 | Rate-limited; single-service only |
+| **Standard** | S0 | Production use |
+
 ---
 
 ## Responsible AI — Content Safety Details
@@ -198,3 +204,17 @@ https://api.cognitive.microsofttranslator.com/
 | `Ocp-Apim-Subscription-Key` | Your subscription key |
 | `Content-Type` | `application/json` (most APIs) |
 | `Ocp-Apim-Subscription-Region` | Required for **Translator** only |
+
+---
+
+## Numbers to Remember
+
+| Fact | Value |
+|------|-------|
+| Free tier label | F0 |
+| Standard tier label | S0 |
+| Content filter categories | 4 (Hate, Sexual, Violence, Self-harm) |
+| Content filter severity levels | 4 (safe, low, medium, high) |
+| Max stop sequences (OpenAI) | 4 |
+| Passing score | 700/1000 |
+| Exam time | 100 minutes |

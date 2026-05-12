@@ -30,7 +30,7 @@ POST https://<endpoint>/computervision/imageanalysis:analyze?api-version=2024-02
 | Option | Values | Purpose |
 |--------|--------|---------|
 | `language` | `en`, `ja`, `zh`, etc. | Language of returned text |
-| `gender-neutral-caption` | `true` / `false` | Replace "man/woman" with "person" |
+| `gender-neutral-caption` | `true` / `false` | Replace "man/woman" with "person", "boy/girl" with "child" |
 | `smartcrops-aspect-ratios` | `0.75` – `1.8` | Desired crop ratios |
 | `model-version` | `latest`, `2024-02-01` | API model version |
 
@@ -119,6 +119,18 @@ Workflow: Create group → Add persons → Add faces → **Train** → Identify
 - Apply via the [Face Recognition intake form](https://aka.ms/facerecognition)
 - Detection (finding faces) is generally available
 - Identification/verification requires approval
+
+---
+
+## Service Selection — Image Analysis vs Face API vs Custom Vision
+
+| Need | Use | NOT |
+|------|-----|-----|
+| "Detect people in an image" (bounding boxes only) | **Image Analysis 4.0** (`people`) | Not Face API (that's for identity) |
+| "Identify WHO a person is" | **Face API** (Identify) | Not Image Analysis (no identity) |
+| "Is this a cat or dog?" | **Custom Vision** (classification) | Not Image Analysis tags (not your custom categories) |
+| "WHERE are the cats?" (bounding boxes) | **Custom Vision** (object detection) | Not Image Analysis objects (generic, not your data) |
+| "Extract text from a document" | **Read API** or **Document Intelligence** | Not Custom Vision |
 
 ---
 

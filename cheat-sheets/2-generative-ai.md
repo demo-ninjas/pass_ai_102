@@ -4,18 +4,18 @@
 
 ## Azure OpenAI Models — Know Which To Pick
 
-| Model | Best For | Context Window |
-|-------|----------|----------------|
-| **GPT-4o** | Multimodal (text + images + audio), fastest GPT-4 class | 128K input / 16K output |
-| **GPT-4o-mini** | Fast, cheap replacement for GPT-3.5 | 128K input / 16K output |
-| **GPT-4** | Complex reasoning, highest accuracy | 128K input / 4K output |
-| **GPT-4 Turbo** | Faster/cheaper than GPT-4, with vision | 128K input / 4K output |
-| **GPT-3.5-Turbo** | Legacy; fast, cheap, simple tasks | 16K input / 4K output |
-| **gpt-image-1** | Image generation from text (replaces DALL-E) | N/A |
-| **Whisper** | Audio transcription and translation | 25 MB audio file |
-| **text-embedding-ada-002** | Text embeddings (legacy) | 8K tokens |
-| **text-embedding-3-small** | Text embeddings (newer, cheaper) | 8K tokens |
-| **text-embedding-3-large** | Text embeddings (newer, best quality) | 8K tokens |
+| Model | Best For | Context Window | Dimensions |
+|-------|----------|----------------|------------|
+| **GPT-4o** | Multimodal (text + images + audio), fastest GPT-4 class | 128K input / 16K output | — |
+| **GPT-4o-mini** | Fast, cheap replacement for GPT-3.5 | 128K input / 16K output | — |
+| **GPT-4** | Complex reasoning, highest accuracy | 128K input / 4K output | — |
+| **GPT-4 Turbo** | Faster/cheaper than GPT-4, with vision | 128K input / 4K output | — |
+| **GPT-3.5-Turbo** | Legacy; fast, cheap, simple tasks | 16K input / 4K output | — |
+| **gpt-image-1** | Image generation from text (replaces DALL-E) | N/A | — |
+| **Whisper** | Audio transcription and translation | 25 MB audio file | — |
+| **text-embedding-ada-002** | Text embeddings (legacy) | 8K tokens | 1,536 dimensions |
+| **text-embedding-3-small** | Text embeddings (newer, cheaper) | 8K tokens | 1,536 dimensions |
+| **text-embedding-3-large** | Text embeddings (newer, best quality) | 8K tokens | 3,072 dimensions |
 
 ---
 
@@ -214,3 +214,23 @@ POST https://<resource>.openai.azure.com/openai/deployments/<model>/images/gener
 - Deploy Azure OpenAI models in containers for edge/disconnected scenarios
 - Requires special approval for disconnected containers
 - Still needs periodic billing connection unless fully disconnected
+
+---
+
+## Numbers to Remember
+
+| Fact | Value |
+|------|-------|
+| GPT-4o context | 128K input / 16K output |
+| GPT-4 Turbo context | 128K input / 4K output |
+| text-embedding-3-large dimensions | 3,072 |
+| text-embedding-3-small dimensions | 1,536 |
+| text-embedding-ada-002 dimensions | 1,536 |
+| Max embeddings per batch call | 2,048 items |
+| Fine-tuning min examples | 10 (50-100+ recommended) |
+| Fine-tuning data format | JSONL |
+| DALL-E/gpt-image-1 sizes | 1024², 1792×1024, 1024×1792 |
+| Max stop sequences | 4 |
+| temperature range | 0.0–2.0 |
+| top_p range | 0.0–1.0 |
+| frequency/presence_penalty range | -2.0–2.0 |

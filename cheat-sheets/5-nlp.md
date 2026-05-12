@@ -364,3 +364,19 @@ POST https://<endpoint>/language/:query-knowledgebases?api-version=2021-10-01
 - Minimum: **10,000 parallel sentences** for quality
 - Publish model → use `category` parameter in Translator API
 - Managed in Custom Translator portal (https://portal.customtranslator.azure.ai)
+
+---
+
+## Numbers to Remember
+
+| Fact | Value |
+|------|-------|
+| Text Analytics max doc size | 5,120 characters |
+| Text Analytics max docs/request | 1,000 |
+| Text Analytics max request size | 1 MB |
+| Custom Translator min sentences | 10,000+ parallel sentences |
+| Sentiment values | positive, negative, neutral, mixed |
+| CLU entity types | Learned, List, Prebuilt, Regex |
+| Chit-chat personalities | Professional, Friendly, Witty, Caring, Enthusiastic |
+| Face landmarks count | 27 points |
+| SSML namespace for mstts | xmlns:mstts="http://www.w3.org/2001/mstts" |
