@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-102 Exam Prep</title>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+  --accent: #3b82f6; --accent2: #8b5cf6; --green: #22c55e; --red: #ef4444; --orange: #f59e0b;
+  --text: #f1f5f9; --text2: #94a3b8; --text3: #64748b;
+  --radius: 12px; --shadow: 0 4px 24px rgba(0,0,0,.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+button { cursor:pointer; font-family:inherit; border:none; }
+a { color:var(--accent); }
+
+/* Header */
+.header { background:linear-gradient(135deg,#1e3a5f,#2d1b69); padding:20px 24px; text-align:center; border-bottom:1px solid var(--surface2); }
+.header h1 { font-size:1.6rem; font-weight:700; margin-bottom:4px; }
+.header .countdown { color:var(--orange); font-size:.95rem; font-weight:600; }
+.header .subtitle { color:var(--text2); font-size:.85rem; margin-top:4px; }
+
+/* Nav */
+.nav { display:flex; background:var(--surface); border-bottom:1px solid var(--surface2); overflow-x:auto; }
+.nav button { flex:1; min-width:0; padding:14px 8px; background:transparent; color:var(--text2); font-size:.85rem; font-weight:600; border-bottom:3px solid transparent; transition:all .2s; white-space:nowrap; }
+.nav button.active { color:var(--accent); border-bottom-color:var(--accent); background:rgba(59,130,246,.08); }
+.nav button:hover:not(.active) { color:var(--text); background:rgba(255,255,255,.03); }
+.nav .badge { display:inline-block; background:var(--accent); color:#fff; font-size:.7rem; padding:1px 6px; border-radius:99px; margin-left:4px; vertical-align:middle; }
+
+/* Panels */
+.panel { display:none; padding:20px; max-width:800px; margin:0 auto; }
+.panel.active { display:block; }
+
+/* Cards */
+.card { background:var(--surface); border-radius:var(--radius); padding:24px; margin-bottom:16px; box-shadow:var(--shadow); }
+
+/* Flashcard */
+.fc-container { perspective:1000px; margin:20px auto; max-width:600px; }
+.fc-card { position:relative; width:100%; min-height:260px; transition:transform .5s; transform-style:preserve-3d; cursor:pointer; }
+.fc-card.flipped { transform:rotateY(180deg); }
+.fc-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:var(--radius); padding:32px 24px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+.fc-front { background:linear-gradient(135deg,#1e3a5f,#1e293b); border:1px solid var(--surface2); }
+.fc-back { background:linear-gradient(135deg,#1a4731,#1e293b); border:1px solid #22c55e33; transform:rotateY(180deg); }
+.fc-domain { font-size:.75rem; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+.fc-question { font-size:1.15rem; line-height:1.5; }
+.fc-answer { font-size:1.15rem; line-height:1.5; color:var(--green); font-weight:600; }
+.fc-hint { font-size:.8rem; color:var(--text3); margin-top:16px; }
+.fc-actions { display:flex; gap:12px; justify-content:center; margin-top:20px; }
+.fc-actions button { padding:12px 28px; border-radius:99px; font-weight:600; font-size:.9rem; transition:all .2s; }
+.btn-wrong { background:rgba(239,68,68,.15); color:var(--red); border:1px solid rgba(239,68,68,.3); }
+.btn-wrong:hover { background:rgba(239,68,68,.25); }
+.btn-right { background:rgba(34,197,94,.15); color:var(--green); border:1px solid rgba(34,197,94,.3); }
+.btn-right:hover { background:rgba(34,197,94,.25); }
+.fc-progress { display:flex; align-items:center; gap:12px; margin-bottom:16px; color:var(--text2); font-size:.85rem; }
+.fc-progress .bar { flex:1; height:6px; background:var(--surface2); border-radius:99px; overflow:hidden; }
+.fc-progress .bar-fill { height:100%; background:var(--accent); border-radius:99px; transition:width .3s; }
+.fc-filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; justify-content:center; }
+.fc-filters button { padding:6px 14px; border-radius:99px; font-size:.78rem; font-weight:600; background:var(--surface2); color:var(--text2); transition:all .2s; }
+.fc-filters button.active { background:var(--accent); color:#fff; }
+
+/* Quiz */
+.quiz-q { font-size:1.1rem; line-height:1.5; margin-bottom:20px; }
+.quiz-opts label { display:block; padding:14px 18px; margin-bottom:8px; background:var(--surface2); border-radius:var(--radius); cursor:pointer; transition:all .2s; border:2px solid transparent; font-size:.95rem; }
+.quiz-opts label:hover { background:#3b4d63; }
+.quiz-opts label.selected { border-color:var(--accent); background:rgba(59,130,246,.1); }
+.quiz-opts label.correct { border-color:var(--green); background:rgba(34,197,94,.1); }
+.quiz-opts label.wrong { border-color:var(--red); background:rgba(239,68,68,.1); }
+.quiz-opts input { display:none; }
+.quiz-explanation { margin-top:16px; padding:16px; background:rgba(34,197,94,.08); border-radius:var(--radius); border-left:3px solid var(--green); font-size:.9rem; line-height:1.5; }
+.quiz-score { text-align:center; padding:32px; }
+.quiz-score .big { font-size:3rem; font-weight:800; }
+.quiz-score .pct { font-size:1.2rem; color:var(--text2); margin-top:8px; }
+
+/* Progress */
+.progress-domain { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.progress-domain .label { width:140px; font-size:.85rem; font-weight:600; flex-shrink:0; }
+.progress-domain .bar { flex:1; height:24px; background:var(--surface2); border-radius:var(--radius); overflow:hidden; position:relative; }
+.progress-domain .bar-fill { height:100%; border-radius:var(--radius); transition:width .5s; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-size:.75rem; font-weight:700; min-width:fit-content; }
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:24px; }
+.stat-card { background:var(--surface); border-radius:var(--radius); padding:20px; text-align:center; }
+.stat-card .num { font-size:2rem; font-weight:800; }
+.stat-card .lbl { font-size:.8rem; color:var(--text2); margin-top:4px; }
+
+/* Cheat Sheet */
+.cs-section { border:1px solid var(--surface2); border-radius:var(--radius); margin-bottom:8px; overflow:hidden; }
+.cs-header { padding:14px 18px; background:var(--surface); cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.95rem; transition:background .2s; }
+.cs-header:hover { background:var(--surface2); }
+.cs-header .arrow { transition:transform .2s; color:var(--text3); }
+.cs-section.open .arrow { transform:rotate(90deg); }
+.cs-body { padding:0 18px; max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s; }
+.cs-section.open .cs-body { max-height:5000px; padding:16px 18px; }
+.cs-table { width:100%; border-collapse:collapse; font-size:.85rem; }
+.cs-table th { text-align:left; padding:8px; border-bottom:2px solid var(--surface2); color:var(--accent); font-weight:600; }
+.cs-table td { padding:8px; border-bottom:1px solid rgba(255,255,255,.05); }
+.cs-table code { background:var(--surface2); padding:2px 6px; border-radius:4px; font-size:.82rem; }
+
+/* Buttons */
+.btn { padding:12px 24px; border-radius:var(--radius); font-weight:600; font-size:.9rem; transition:all .2s; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#2563eb; }
+.btn-secondary { background:var(--surface2); color:var(--text); }
+.btn-secondary:hover { background:#475569; }
+.btn-sm { padding:8px 16px; font-size:.82rem; }
+
+/* Utils */
+.text-center { text-align:center; }
+.mt-12 { margin-top:12px; }
+.mt-20 { margin-top:20px; }
+.mb-16 { margin-bottom:16px; }
+.flex-center { display:flex; justify-content:center; gap:12px; }
+.tag { display:inline-block; padding:3px 10px; border-radius:99px; font-size:.75rem; font-weight:600; }
+.tag-blue { background:rgba(59,130,246,.15); color:var(--accent); }
+.tag-green { background:rgba(34,197,94,.15); color:var(--green); }
+.tag-red { background:rgba(239,68,68,.15); color:var(--red); }
+.tag-orange { background:rgba(245,158,11,.15); color:var(--orange); }
+
+@media(max-width:600px){
+  .fc-face { padding:24px 16px; }
+  .progress-domain { flex-direction:column; align-items:stretch; }
+  .progress-domain .label { width:auto; }
+  .stats-grid { grid-template-columns:repeat(2,1fr); }
+  .nav button { font-size:.78rem; padding:12px 4px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎯 AI-102 Exam Prep</h1>
+  <div class="countdown" id="countdown"></div>
+  <div class="subtitle">Designing and Implementing a Microsoft Azure AI Solution</div>
+</div>
+
+<div class="nav" id="nav">
+  <button data-tab="flashcards" class="active">🃏 Flashcards</button>
+  <button data-tab="quiz">📝 Quiz</button>
+  <button data-tab="progress">📊 Progress</button>
+  <button data-tab="cheatsheets">📋 Cheat Sheets</button>
+</div>
+
+<!-- FLASHCARDS -->
+<div class="panel active" id="tab-flashcards">
+  <div class="fc-filters" id="fc-filters"></div>
+  <div class="fc-progress">
+    <span id="fc-count">0/0</span>
+    <div class="bar"><div class="bar-fill" id="fc-bar" style="width:0%"></div></div>
+    <span id="fc-pct">0%</span>
+  </div>
+  <div class="fc-container">
+    <div class="fc-card" id="fc-card" onclick="flipCard()">
+      <div class="fc-face fc-front">
+        <div class="fc-domain" id="fc-domain"></div>
+        <div class="fc-question" id="fc-question"></div>
+        <div class="fc-hint">Click to reveal answer</div>
+      </div>
+      <div class="fc-face fc-back">
+        <div class="fc-domain">Answer</div>
+        <div class="fc-answer" id="fc-answer"></div>
+      </div>
+    </div>
+  </div>
+  <div class="fc-actions" id="fc-actions" style="display:none">
+    <button class="btn-wrong" onclick="markCard(false)">✗ Again</button>
+    <button class="btn-right" onclick="markCard(true)">✓ Got it</button>
+  </div>
+  <div class="text-center mt-20" id="fc-done" style="display:none">
+    <div style="font-size:2.5rem; margin-bottom:12px;">🎉</div>
+    <h2>Deck Complete!</h2>
+    <p class="mt-12" style="color:var(--text2)" id="fc-summary"></p>
+    <div class="flex-center mt-20">
+      <button class="btn btn-primary" onclick="resetDeck()">Start Over</button>
+      <button class="btn btn-secondary" onclick="reviewStarred()">Review ★ Starred</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="panel" id="tab-quiz">
+  <div id="quiz-setup">
+    <div class="card">
+      <h2 style="margin-bottom:16px;">Practice Quiz</h2>
+      <p style="color:var(--text2); margin-bottom:20px;">Test yourself with scenario-based multiple choice questions. Select a domain or take a mixed quiz.</p>
+      <div class="fc-filters" id="quiz-domain-filters"></div>
+      <div class="flex-center mt-20">
+        <button class="btn btn-primary" onclick="startQuiz(10)">10 Questions</button>
+        <button class="btn btn-secondary" onclick="startQuiz(25)">25 Questions</button>
+      </div>
+    </div>
+  </div>
+  <div id="quiz-active" style="display:none">
+    <div class="fc-progress">
+      <span id="quiz-count">0/0</span>
+      <div class="bar"><div class="bar-fill" id="quiz-bar" style="width:0%"></div></div>
+      <span id="quiz-score-live">0 correct</span>
+    </div>
+    <div class="card">
+      <div class="fc-domain" id="quiz-domain"></div>
+      <div class="quiz-q" id="quiz-question"></div>
+      <div class="quiz-opts" id="quiz-opts"></div>
+      <div class="quiz-explanation" id="quiz-explanation" style="display:none"></div>
+      <div class="flex-center mt-20">
+        <button class="btn btn-primary" id="quiz-next" style="display:none" onclick="nextQuizQ()">Next →</button>
+      </div>
+    </div>
+  </div>
+  <div id="quiz-results" style="display:none">
+    <div class="card quiz-score">
+      <div class="big" id="quiz-final-score"></div>
+      <div class="pct" id="quiz-final-pct"></div>
+      <div class="mt-20" id="quiz-pass-msg"></div>
+      <div class="flex-center mt-20">
+        <button class="btn btn-primary" onclick="resetQuiz()">Try Again</button>
+      </div>
+    </div>
+    <div id="quiz-review"></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="panel" id="tab-progress">
+  <div class="stats-grid" id="stats-grid"></div>
+  <div class="card">
+    <h3 style="margin-bottom:16px;">Flashcard Mastery by Domain</h3>
+    <div id="progress-bars"></div>
+  </div>
+  <div class="card mt-20">
+    <h3 style="margin-bottom:16px;">Study Streak</h3>
+    <div id="streak-info"></div>
+  </div>
+  <div class="flex-center mt-20">
+    <button class="btn btn-secondary btn-sm" onclick="if(confirm('Reset all progress?')){localStorage.clear();location.reload();}">Reset All Progress</button>
+  </div>
+</div>
+
+<!-- CHEAT SHEETS -->
+<div class="panel" id="tab-cheatsheets">
+  <div class="fc-filters mb-16" id="cs-filters"></div>
+  <div id="cs-content"></div>
+</div>
+
+<script>
+// ==================== DATA ====================
+const DOMAINS = [
+  { id:'d1', name:'Plan & Manage', weight:'20-25%', color:'#3b82f6' },
+  { id:'d2', name:'Generative AI', weight:'15-20%', color:'#8b5cf6' },
+  { id:'d3', name:'Agentic', weight:'5-10%', color:'#06b6d4' },
+  { id:'d4', name:'Computer Vision', weight:'10-15%', color:'#f59e0b' },
+  { id:'d5', name:'NLP & Speech', weight:'15-20%', color:'#22c55e' },
+  { id:'d6', name:'Knowledge Mining', weight:'15-20%', color:'#ef4444' }
+];
+
+const FLASHCARDS = [
+  // Domain 1
+  {id:1,d:'d1',q:'You need Azure AI Language AND Vision with one key. What resource type?',a:'Multi-service resource'},
+  {id:2,d:'d1',q:'You need separate billing per AI service. What resource type?',a:'Single-service resource'},
+  {id:3,d:'d1',q:'Which resource type offers a free tier (F0)?',a:'Single-service only'},
+  {id:4,d:'d1',q:'What header passes a subscription key to Azure AI APIs?',a:'Ocp-Apim-Subscription-Key'},
+  {id:5,d:'d1',q:'What header passes an Entra ID token?',a:'Authorization: Bearer <token>'},
+  {id:6,d:'d1',q:'What SDK class auto-handles Entra ID, managed identity, CLI creds?',a:'DefaultAzureCredential'},
+  {id:7,d:'d1',q:'Key rotation order for zero downtime?',a:'App uses Key1 → regen Key2 → switch to Key2 → regen Key1'},
+  {id:8,d:'d1',q:'Where should you store Azure AI keys in production?',a:'Azure Key Vault'},
+  {id:9,d:'d1',q:'RBAC role to call APIs but NOT manage resources?',a:'Cognitive Services User'},
+  {id:10,d:'d1',q:'RBAC role to manage AND call Azure OpenAI?',a:'Cognitive Services OpenAI Contributor'},
+  {id:11,d:'d1',q:'Private Endpoint vs Service Endpoint?',a:'Private Endpoint = private IP in VNet. Service Endpoint = optimized route, still public IP.'},
+  {id:12,d:'d1',q:'Do Azure AI containers need internet?',a:'Yes for billing (phone-home), unless disconnected container (special approval)'},
+  {id:13,d:'d1',q:'Deployment type guaranteeing min tokens/minute?',a:'Provisioned Throughput (PTU)'},
+  {id:14,d:'d1',q:'Name Microsoft\'s 6 Responsible AI principles.',a:'Fairness, Reliability & Safety, Privacy & Security, Inclusiveness, Transparency, Accountability'},
+  {id:15,d:'d1',q:'What blocks SPECIFIC TERMS you define in Azure OpenAI?',a:'Blocklist (not content filter — that\'s category-based)'},
+  {id:16,d:'d1',q:'What detects prompt injection / jailbreak?',a:'Prompt shields'},
+  {id:17,d:'d1',q:'What checks if response is supported by context?',a:'Groundedness detection'},
+  {id:18,d:'d1',q:'Content filters apply to input only, output only, or both?',a:'BOTH input (prompt) AND output (completion)'},
+  {id:19,d:'d1',q:'Name the 4 content filter categories.',a:'Hate, Sexual, Violence, Self-harm'},
+  {id:20,d:'d1',q:'Azure Translator uses what unique endpoint?',a:'api.cognitive.microsofttranslator.com (global, NOT resource-specific)'},
+  {id:21,d:'d1',q:'What extra header does Translator require?',a:'Ocp-Apim-Subscription-Region'},
+  // Domain 2
+  {id:22,d:'d2',q:'What parameter controls randomness? Range?',a:'temperature, 0.0–2.0'},
+  {id:23,d:'d2',q:'What parameter does nucleus sampling? Range?',a:'top_p, 0.0–1.0'},
+  {id:24,d:'d2',q:'Should you set both temperature AND top_p?',a:'No — modify one, leave the other at default'},
+  {id:25,d:'d2',q:'Low temperature (0.0-0.3) is best for?',a:'Deterministic, factual: code gen, data extraction'},
+  {id:26,d:'d2',q:'What reduces word repetition based on frequency?',a:'frequency_penalty (-2.0 to 2.0)'},
+  {id:27,d:'d2',q:'What encourages new topics?',a:'presence_penalty (-2.0 to 2.0)'},
+  {id:28,d:'d2',q:'Max stop sequences?',a:'4'},
+  {id:29,d:'d2',q:'Message role that defines AI behavior/persona?',a:'system'},
+  {id:30,d:'d2',q:'Message role used for few-shot examples?',a:'assistant (paired with user messages)'},
+  {id:31,d:'d2',q:'RAG pattern in one sentence?',a:'Query → Search retrieves docs → docs as context → LLM generates grounded answer'},
+  {id:32,d:'d2',q:'In RAG, what converts text to vectors?',a:'Embedding model (text-embedding-3-small/large)'},
+  {id:33,d:'d2',q:'GPT-4o context: input? output?',a:'128K input / 16K output'},
+  {id:34,d:'d2',q:'Foundry: top-level shared resource?',a:'Hub'},
+  {id:35,d:'d2',q:'Foundry: isolated workspace within a hub?',a:'Project'},
+  {id:36,d:'d2',q:'Foundry tool for visual LLM orchestration?',a:'Prompt flow'},
+  {id:37,d:'d2',q:'Name 4 Foundry evaluation metrics.',a:'Groundedness, Relevance, Coherence, Fluency'},
+  {id:38,d:'d2',q:'Fine-tuning vs RAG: when use which?',a:'RAG for dynamic data grounding. Fine-tuning for style/format/domain behavior.'},
+  {id:39,d:'d2',q:'Fine-tuning minimum examples?',a:'10 (50-100+ recommended)'},
+  {id:40,d:'d2',q:'Fine-tuning data format?',a:'JSONL with {"messages": [...]} per line'},
+  // Domain 3
+  {id:41,d:'d3',q:'Agent vs chatbot: key difference?',a:'Agent plans, uses tools, iterates autonomously. Chatbot just responds.'},
+  {id:42,d:'d3',q:'Name 3 Foundry Agent Service built-in tools.',a:'Code Interpreter, File Search, Function Calling'},
+  {id:43,d:'d3',q:'Agent API object that holds conversation?',a:'Thread'},
+  {id:44,d:'d3',q:'Agent API object that triggers processing?',a:'Run'},
+  {id:45,d:'d3',q:'Name 3 multi-agent orchestration patterns.',a:'Sequential, Parallel, Hierarchical, Collaborative'},
+  {id:46,d:'d3',q:'Semantic Kernel: what auto-creates plans?',a:'Planner'},
+  // Domain 4
+  {id:47,d:'d4',q:'Name all 7 Image Analysis 4.0 features.',a:'caption, denseCaptions, tags, objects, people, smartCrops, read'},
+  {id:48,d:'d4',q:'Face detection model best for blurry faces?',a:'detection_02 (or detection_03 for best overall)'},
+  {id:49,d:'d4',q:'Which detection model returns NO landmarks?',a:'detection_02'},
+  {id:50,d:'d4',q:'Best overall face detection model?',a:'detection_03'},
+  {id:51,d:'d4',q:'Best face recognition model? Special feature?',a:'recognition_04 — works with face masks'},
+  {id:52,d:'d4',q:'Default detection model if unspecified?',a:'detection_01'},
+  {id:53,d:'d4',q:'Default recognition model if unspecified?',a:'recognition_01'},
+  {id:54,d:'d4',q:'Can you change a PersonGroup\'s recognition model?',a:'No — immutable once created'},
+  {id:55,d:'d4',q:'QualityForRecognition: what level for enrollment?',a:'High'},
+  {id:56,d:'d4',q:'Face ID time-to-live default?',a:'86400 seconds (24 hours)'},
+  {id:57,d:'d4',q:'Custom Vision classification min images/tag?',a:'5 (30+ recommended)'},
+  {id:58,d:'d4',q:'Custom Vision object detection min images/tag?',a:'15 (50+ recommended)'},
+  {id:59,d:'d4',q:'Precision measures what?',a:'Of predicted positives, how many are correct'},
+  {id:60,d:'d4',q:'Recall measures what?',a:'Of actual positives, how many were found'},
+  {id:61,d:'d4',q:'High precision + low recall means?',a:'Rarely wrong when it says "yes", but misses many actual positives'},
+  {id:62,d:'d4',q:'Spatial Analysis runs on what?',a:'Edge devices (Docker container, NVIDIA GPU, RTSP video)'},
+  {id:63,d:'d4',q:'Minimum detectable face size?',a:'36 × 36 pixels'},
+  // Domain 5
+  {id:64,d:'d5',q:'Sentiment analysis possible values?',a:'positive, negative, neutral, mixed'},
+  {id:65,d:'d5',q:'Key phrase extraction: confidence scores?',a:'No — just strings'},
+  {id:66,d:'d5',q:'What links entities to Wikipedia?',a:'Entity Linking'},
+  {id:67,d:'d5',q:'PII detection replaces entities with?',a:'***** (asterisks) in redactedText'},
+  {id:68,d:'d5',q:'Language detection: need language field in request?',a:'No — it auto-detects'},
+  {id:69,d:'d5',q:'Max document size for Text Analytics?',a:'5,120 characters'},
+  {id:70,d:'d5',q:'Translator: translate to multiple languages in one call?',a:'Yes — to=fr&to=de&to=ja'},
+  {id:71,d:'d5',q:'SSML tag for rate, pitch, volume?',a:'<prosody>'},
+  {id:72,d:'d5',q:'SSML tag for a pause?',a:'<break time="500ms"/>'},
+  {id:73,d:'d5',q:'SSML tag for emotional style?',a:'<mstts:express-as style="cheerful">'},
+  {id:74,d:'d5',q:'SDK class for speech + intent recognition?',a:'IntentRecognizer (not SpeechRecognizer)'},
+  {id:75,d:'d5',q:'SDK class for speech translation?',a:'TranslationRecognizer'},
+  {id:76,d:'d5',q:'CLU: what is an "intent"?',a:'What the user wants to do (e.g., BookFlight)'},
+  {id:77,d:'d5',q:'Name the 4 CLU entity types.',a:'Learned, List, Prebuilt, Regex'},
+  {id:78,d:'d5',q:'What CLU intent must you always include?',a:'None intent (catches out-of-scope)'},
+  {id:79,d:'d5',q:'Question Answering: what\'s multi-turn?',a:'Follow-up prompts to drill deeper'},
+  {id:80,d:'d5',q:'Custom Translator min parallel sentences?',a:'10,000+ for good quality'},
+  // Domain 6
+  {id:81,d:'d6',q:'Name 5 Azure AI Search core components.',a:'Data source, Indexer, Skillset, Index, Knowledge Store'},
+  {id:82,d:'d6',q:'fieldMappings vs outputFieldMappings?',a:'fieldMappings = before enrichment. outputFieldMappings = after skillset.'},
+  {id:83,d:'d6',q:'Custom skill implemented as what?',a:'Azure Function (HTTP trigger, Web API skill)'},
+  {id:84,d:'d6',q:'Custom skill response must include what 3 fields?',a:'data, errors, warnings'},
+  {id:85,d:'d6',q:'Field attribute needed for $filter?',a:'filterable'},
+  {id:86,d:'d6',q:'Field attribute needed for $orderby?',a:'sortable'},
+  {id:87,d:'d6',q:'Simple query: space = OR or AND?',a:'OR'},
+  {id:88,d:'d6',q:'Enable full Lucene syntax how?',a:'queryType=full'},
+  {id:89,d:'d6',q:'searchMode=all vs any?',a:'all = AND, any = OR (default)'},
+  {id:90,d:'d6',q:'Name the 4 scoring profile function types.',a:'magnitude, freshness, distance, tag'},
+  {id:91,d:'d6',q:'Suggester searchMode value?',a:'analyzingInfixMatching'},
+  {id:92,d:'d6',q:'Knowledge store table projections → stored where?',a:'Azure Table Storage'},
+  {id:93,d:'d6',q:'What skill reshapes data for projections?',a:'Shaper skill'},
+  {id:94,d:'d6',q:'HNSW vs Exhaustive KNN?',a:'HNSW = fast approximate. Exhaustive KNN = slow exact, 100% recall.'},
+  {id:95,d:'d6',q:'Best vector metric for text embeddings?',a:'cosine'},
+  {id:96,d:'d6',q:'Prebuilt invoice model ID?',a:'prebuilt-invoice'},
+  {id:97,d:'d6',q:'Min training docs for custom Doc Intelligence?',a:'5 labeled documents'},
+  {id:98,d:'d6',q:'Composed model in Doc Intelligence?',a:'Combines custom models; auto-routes to correct sub-model'},
+  {id:99,d:'d6',q:'Semantic search provides what 2 extras?',a:'Semantic captions and semantic answers'},
+  {id:100,d:'d6',q:'How does hybrid search merge results?',a:'Reciprocal Rank Fusion (RRF)'},
+];
+
+const QUIZ_QUESTIONS = [
+  {d:'d1',q:'You need to use Azure AI Language and Azure AI Vision with a single endpoint. What resource type?',
+   opts:['Azure AI Language resource','Azure AI Vision resource','Azure AI Services multi-service resource','Two resources with a load balancer'],
+   ans:2, exp:'Multi-service resource provides a single endpoint and key for multiple Azure AI services.'},
+  {d:'d1',q:'API keys must be stored securely with rotation and no downtime. What should you use?',
+   opts:['App settings','Azure Key Vault with managed identity','SAS tokens','Hardcode secondary key as backup'],
+   ans:1, exp:'Key Vault + managed identity = secure storage with rotation, no credentials in code.'},
+  {d:'d1',q:'You need to block the word "CompetitorName" from Azure OpenAI responses. What do you configure?',
+   opts:['Content filters with high severity','A custom blocklist','Prompt shields','System message instruction'],
+   ans:1, exp:'Blocklists block specific terms. Content filters work on categories (hate/sexual/violence/self-harm), not custom words.'},
+  {d:'d1',q:'Which is NOT a Microsoft Responsible AI principle?',
+   opts:['Fairness','Profitability','Transparency','Inclusiveness'],
+   ans:1, exp:'The 6 principles are: Fairness, Reliability & Safety, Privacy & Security, Inclusiveness, Transparency, Accountability.'},
+  {d:'d2',q:'You want highly creative marketing copy. Which parameter should you increase?',
+   opts:['max_tokens','frequency_penalty','temperature','presence_penalty'],
+   ans:2, exp:'Higher temperature (0.7-1.5) = more random/creative output.'},
+  {d:'d2',q:'The model generates answers not found in provided documents. What should you implement?',
+   opts:['Content filters','Groundedness detection','Prompt shields','Fine-tuning'],
+   ans:1, exp:'Groundedness detection checks if the response is supported by the provided context.'},
+  {d:'d2',q:'In a chat completion, which message role defines the assistant\'s behavior?',
+   opts:['user','assistant','system','function'],
+   ans:2, exp:'The system message sets behavior, persona, and constraints.'},
+  {d:'d2',q:'You need guaranteed minimum tokens per minute. Which deployment type?',
+   opts:['Standard','Global Standard','Provisioned Throughput','Data Zone Standard'],
+   ans:2, exp:'Provisioned Throughput (PTU) reserves capacity with guaranteed tokens/min.'},
+  {d:'d4',q:'You need bounding box coordinates for objects in an image. Which feature?',
+   opts:['tags','caption','objects','people'],
+   ans:2, exp:'The objects feature returns detected objects with bounding boxes.'},
+  {d:'d4',q:'Images are blurry and small. Which Face detection model?',
+   opts:['detection_01','detection_02','detection_03','recognition_04'],
+   ans:1, exp:'detection_02 is optimized for small, side-view, and blurry faces. detection_03 also handles small faces well.'},
+  {d:'d4',q:'You need face landmarks from blurry images. Which model?',
+   opts:['detection_01','detection_02','detection_03','Any model'],
+   ans:2, exp:'detection_02 handles blur but returns NO landmarks. detection_03 handles blur AND returns landmarks.'},
+  {d:'d4',q:'Custom Vision model has high precision but low recall for "roses". What does this mean?',
+   opts:['Misidentifies other flowers as roses','Rarely wrong when saying "rose" but misses many actual roses','Performs perfectly','Too many rose images in training'],
+   ans:1, exp:'High precision = few false positives. Low recall = many false negatives (misses real roses).'},
+  {d:'d5',q:'Detect if a review is positive, negative, or neutral. Which feature?',
+   opts:['Key phrase extraction','Entity recognition','Sentiment analysis','Language detection'],
+   ans:2, exp:'Sentiment analysis returns positive, negative, neutral, or mixed.'},
+  {d:'d5',q:'"Book me a flight to Paris tomorrow." What is the intent and what are entities?',
+   opts:['Intent: Paris, Entities: Book, tomorrow','Intent: BookFlight, Entities: Paris (dest), tomorrow (date)','Intent: tomorrow, Entities: Paris, flight','Intent: travel, Entities: BookFlight'],
+   ans:1, exp:'BookFlight is the intent (action). Paris and tomorrow are entities (parameters).'},
+  {d:'d5',q:'You want TTS with slower pace and higher pitch. What SSML tag?',
+   opts:['<voice>','<prosody rate="slow" pitch="+10%">','<break>','<emphasis>'],
+   ans:1, exp:'<prosody> controls rate, pitch, and volume of synthesized speech.'},
+  {d:'d5',q:'You need to detect and redact SSNs and emails from text. Which feature?',
+   opts:['Entity recognition','PII detection','Key phrase extraction','Sentiment analysis'],
+   ans:1, exp:'PII detection identifies personal data and provides redactedText.'},
+  {d:'d5',q:'Your FAQ bot should ask follow-up clarification questions. What feature?',
+   opts:['Chit-chat','Alternate phrasing','Multi-turn conversation','Active learning'],
+   ans:2, exp:'Multi-turn conversations enable follow-up prompts for clarification.'},
+  {d:'d6',q:'Enrich documents with AI key phrases during indexing. What to configure?',
+   opts:['A data source','An indexer','A skillset','A synonym map'],
+   ans:2, exp:'A skillset defines the AI enrichment pipeline applied during indexing.'},
+  {d:'d6',q:'Custom AI enrichment calling your own API. What to create?',
+   opts:['Built-in skill','Custom skill (Azure Function)','Knowledge store projection','Scoring profile'],
+   ans:1, exp:'Custom skills are Azure Functions with the Web API skill type.'},
+  {d:'d6',q:'Return only hotels rated 4+, sorted by price. Which query parameters?',
+   opts:['$filter=rating ge 4&$orderby=price asc','search=rating:4&sort=price','$select=rating,price&$top=4','queryType=full&search=rating:[4 TO *]'],
+   ans:0, exp:'$filter for conditions, $orderby for sorting — OData query syntax.'},
+  {d:'d6',q:'Invoices from various vendors with different layouts. Which approach?',
+   opts:['Prebuilt Invoice model','Custom template model','Custom neural model','Build from scratch'],
+   ans:0, exp:'The prebuilt-invoice model handles varying invoice layouts out of the box.'},
+  {d:'d6',q:'Three custom models, one endpoint, auto-routing. What to create?',
+   opts:['Custom skill','Composed model','Prebuilt model','An indexer'],
+   ans:1, exp:'A composed model combines custom models and routes automatically.'},
+  {d:'d6',q:'Store enriched data in Azure Table Storage for Power BI. What to configure?',
+   opts:['An index','A data source','Knowledge store with table projections','A custom skill'],
+   ans:2, exp:'Knowledge store table projections save enriched data to Azure Table Storage.'},
+  {d:'d3',q:'Build an AI agent that searches web, queries DB, generates reports. Which service?',
+   opts:['Azure AI Language','Microsoft Foundry Agent Service','Azure AI Search','Azure Logic Apps'],
+   ans:1, exp:'Foundry Agent Service builds autonomous agents with tool use.'},
+  {d:'d3',q:'In the Agent API, what object do you create to trigger the agent to process a conversation?',
+   opts:['Agent','Thread','Message','Run'],
+   ans:3, exp:'A Run executes the agent on a thread. Thread holds messages, Run triggers processing.'},
+];
+
+// ==================== CHEAT SHEET DATA ====================
+const CHEATSHEETS = [
+  {d:'d1', title:'Service Selection Matrix', content:`<table class="cs-table"><tr><th>Need</th><th>Service</th></tr>
+<tr><td>Chat, text gen, code</td><td><b>Azure OpenAI</b> (GPT-4o)</td></tr>
+<tr><td>Image generation</td><td><b>Azure OpenAI</b> (gpt-image-1)</td></tr>
+<tr><td>Image analysis (tags, objects)</td><td><b>Azure AI Vision</b> (Image Analysis 4.0)</td></tr>
+<tr><td>OCR</td><td><b>Azure AI Vision</b> (Read API)</td></tr>
+<tr><td>Face detection/recognition</td><td><b>Azure AI Face</b></td></tr>
+<tr><td>Custom image classify/detect</td><td><b>Custom Vision</b></td></tr>
+<tr><td>Video analysis</td><td><b>Azure AI Video Indexer</b></td></tr>
+<tr><td>Sentiment, entities, PII</td><td><b>Azure AI Language</b></td></tr>
+<tr><td>Text translation</td><td><b>Azure AI Translator</b></td></tr>
+<tr><td>Speech-to-text / TTS</td><td><b>Azure AI Speech</b></td></tr>
+<tr><td>Search + AI enrichment</td><td><b>Azure AI Search</b></td></tr>
+<tr><td>Invoice/receipt extraction</td><td><b>Document Intelligence</b></td></tr>
+<tr><td>Content moderation</td><td><b>Azure AI Content Safety</b></td></tr>
+<tr><td>AI agents</td><td><b>Foundry Agent Service</b></td></tr></table>`},
+  {d:'d1', title:'Authentication Methods', content:`<table class="cs-table"><tr><th>Method</th><th>Header / Code</th><th>When</th></tr>
+<tr><td>Subscription key</td><td><code>Ocp-Apim-Subscription-Key</code></td><td>Dev/test</td></tr>
+<tr><td>Entra ID token</td><td><code>Authorization: Bearer &lt;token&gt;</code></td><td>Production (RBAC)</td></tr>
+<tr><td>Managed Identity</td><td><code>DefaultAzureCredential()</code></td><td>No creds in code</td></tr>
+<tr><td>Key Vault</td><td>Store + rotate keys</td><td>Secure storage</td></tr></table>
+<p style="margin-top:12px"><b>Translator trap:</b> Uses global endpoint <code>api.cognitive.microsofttranslator.com</code> + requires <code>Ocp-Apim-Subscription-Region</code> header.</p>`},
+  {d:'d1', title:'Responsible AI — Content Safety', content:`<table class="cs-table"><tr><th>Feature</th><th>What</th></tr>
+<tr><td><b>Content filter</b></td><td>Blocks by category (hate/sexual/violence/self-harm) at severity levels</td></tr>
+<tr><td><b>Blocklist</b></td><td>Blocks specific terms YOU define</td></tr>
+<tr><td><b>Prompt shields</b></td><td>Detects prompt injection / jailbreak</td></tr>
+<tr><td><b>Groundedness</b></td><td>Checks response is supported by context</td></tr>
+<tr><td><b>Protected material</b></td><td>Detects copyrighted content</td></tr></table>`},
+  {d:'d2', title:'OpenAI Parameters', content:`<table class="cs-table"><tr><th>Param</th><th>Controls</th><th>Range</th></tr>
+<tr><td><code>temperature</code></td><td>Randomness</td><td>0.0–2.0</td></tr>
+<tr><td><code>top_p</code></td><td>Nucleus sampling</td><td>0.0–1.0</td></tr>
+<tr><td><code>max_tokens</code></td><td>Output length</td><td>1 – model max</td></tr>
+<tr><td><code>frequency_penalty</code></td><td>Reduce repetition</td><td>-2.0–2.0</td></tr>
+<tr><td><code>presence_penalty</code></td><td>Encourage new topics</td><td>-2.0–2.0</td></tr>
+<tr><td><code>stop</code></td><td>Stop sequences</td><td>Up to 4</td></tr></table>
+<p style="margin-top:12px"><b>Rule:</b> Don't set both temperature AND top_p — pick one.</p>`},
+  {d:'d2', title:'RAG Pattern', content:`<p><code>User query → Azure AI Search (retrieves docs) → Docs injected as context → Azure OpenAI generates grounded answer</code></p>
+<table class="cs-table" style="margin-top:12px"><tr><th>Component</th><th>Service</th></tr>
+<tr><td>Embeddings</td><td>text-embedding-3-small/large</td></tr>
+<tr><td>Vector/Semantic search</td><td>Azure AI Search</td></tr>
+<tr><td>Generation</td><td>Azure OpenAI (GPT-4o)</td></tr></table>`},
+  {d:'d4', title:'Face API Models — MEMORIZE', content:`<table class="cs-table"><tr><th>Model</th><th>Best For</th><th>Landmarks?</th></tr>
+<tr><td><code>detection_01</code></td><td>General (default)</td><td>Yes</td></tr>
+<tr><td><code>detection_02</code></td><td><b>Blurry, small, side-view</b></td><td><b>No</b></td></tr>
+<tr><td><code>detection_03</code></td><td><b>Best overall</b></td><td>Yes</td></tr></table>
+<table class="cs-table" style="margin-top:12px"><tr><th>Model</th><th>Best For</th></tr>
+<tr><td><code>recognition_04</code></td><td><b>Best accuracy + face masks</b></td></tr></table>
+<p style="margin-top:12px"><b>Rules:</b> Can't change model after PersonGroup creation. detection_02 = NO landmarks, NO attributes. Default = detection_01 + recognition_01.</p>`},
+  {d:'d5', title:'SSML Tags', content:`<table class="cs-table"><tr><th>Tag</th><th>Purpose</th></tr>
+<tr><td><code>&lt;speak&gt;</code></td><td>Root element</td></tr>
+<tr><td><code>&lt;voice&gt;</code></td><td>Select voice</td></tr>
+<tr><td><code>&lt;prosody&gt;</code></td><td>Rate, pitch, volume</td></tr>
+<tr><td><code>&lt;break&gt;</code></td><td>Pause</td></tr>
+<tr><td><code>&lt;emphasis&gt;</code></td><td>Emphasize word</td></tr>
+<tr><td><code>&lt;say-as&gt;</code></td><td>Pronunciation (date, phone, cardinal)</td></tr>
+<tr><td><code>&lt;mstts:express-as&gt;</code></td><td>Emotional style (cheerful, sad)</td></tr></table>`},
+  {d:'d5', title:'CLU Concepts', content:`<table class="cs-table"><tr><th>Concept</th><th>Example</th></tr>
+<tr><td><b>Intent</b></td><td>BookFlight, GetWeather</td></tr>
+<tr><td><b>Entity</b></td><td>destination=Paris, date=tomorrow</td></tr>
+<tr><td><b>Utterance</b></td><td>"Book me a flight to Paris"</td></tr>
+<tr><td><b>None intent</b></td><td>Always include — catches out-of-scope</td></tr></table>
+<p style="margin-top:12px"><b>Entity types:</b> Learned, List, Prebuilt, Regex</p>`},
+  {d:'d6', title:'Search Architecture', content:`<p><code>Data Source → Indexer → [Skillset] → Index → Queries</code></p>
+<table class="cs-table" style="margin-top:12px"><tr><th>Mapping</th><th>When</th></tr>
+<tr><td><code>fieldMappings</code></td><td>Before enrichment (source → index)</td></tr>
+<tr><td><code>outputFieldMappings</code></td><td>After enrichment (skillset → index)</td></tr></table>`},
+  {d:'d6', title:'Search Query Syntax', content:`<table class="cs-table"><tr><th>Param</th><th>Purpose</th></tr>
+<tr><td><code>$filter</code></td><td>Exact match / comparison</td></tr>
+<tr><td><code>$orderby</code></td><td>Sort results</td></tr>
+<tr><td><code>$select</code></td><td>Choose returned fields</td></tr>
+<tr><td><code>$top / $skip</code></td><td>Pagination</td></tr>
+<tr><td><code>queryType=full</code></td><td>Enable Lucene (fuzzy, wildcard, regex)</td></tr>
+<tr><td><code>searchMode=all</code></td><td>All terms must match (AND)</td></tr></table>
+<p style="margin-top:12px"><b>Operators:</b> eq, ne, gt, ge, lt, le, and, or, not, search.in(), geo.distance(), any(), all()</p>`},
+  {d:'d6', title:'Document Intelligence Models', content:`<table class="cs-table"><tr><th>Model ID</th><th>Extracts</th></tr>
+<tr><td><code>prebuilt-invoice</code></td><td>Vendor, dates, line items</td></tr>
+<tr><td><code>prebuilt-receipt</code></td><td>Merchant, items, total</td></tr>
+<tr><td><code>prebuilt-idDocument</code></td><td>Name, DOB, doc number</td></tr>
+<tr><td><code>prebuilt-read</code></td><td>OCR text extraction</td></tr>
+<tr><td><code>prebuilt-layout</code></td><td>Tables + structure</td></tr></table>
+<p style="margin-top:12px"><b>Custom:</b> Template (fixed layout) vs Neural (variable). Min 5 labeled docs. <b>Composed</b> = combine + auto-route.</p>`},
+];
+
+// ==================== STATE ====================
+const LS = {
+  get(k,d){ try{return JSON.parse(localStorage.getItem('ai102_'+k))||d}catch{return d} },
+  set(k,v){ localStorage.setItem('ai102_'+k,JSON.stringify(v)) }
+};
+
+// ==================== COUNTDOWN ====================
+function updateCountdown(){
+  const exam = new Date('2026-05-18T09:00:00');
+  const now = new Date();
+  const diff = exam - now;
+  const el = document.getElementById('countdown');
+  if(diff<=0){ el.textContent='🚀 Exam day!'; return; }
+  const d=Math.floor(diff/864e5), h=Math.floor(diff%864e5/36e5), m=Math.floor(diff%36e5/6e4);
+  el.textContent=`⏰ ${d}d ${h}h ${m}m until exam`;
+}
+updateCountdown(); setInterval(updateCountdown,60000);
+
+// ==================== NAV ====================
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='progress') renderProgress();
+  });
+});
+
+// ==================== FLASHCARDS ====================
+let fcDeck=[], fcIndex=0, fcFlipped=false, fcFilter='all', fcCorrect=0, fcWrong=0;
+let starred = LS.get('starred',{});
+let mastered = LS.get('mastered',{});
+
+function buildDeck(filter, onlyStarred){
+  let cards = FLASHCARDS.filter(c=> filter==='all' || c.d===filter);
+  if(onlyStarred) cards = cards.filter(c=>starred[c.id]);
+  // Shuffle
+  for(let i=cards.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]; }
+  // Put starred/unmastered first
+  cards.sort((a,b)=>{
+    const aP=(starred[a.id]?0:1)+(mastered[a.id]?2:0);
+    const bP=(starred[b.id]?0:1)+(mastered[b.id]?2:0);
+    return aP-bP;
+  });
+  return cards;
+}
+
+function initFlashcards(){
+  const filtersEl = document.getElementById('fc-filters');
+  filtersEl.innerHTML = `<button class="active" onclick="setFcFilter('all')">All</button>`;
+  DOMAINS.forEach(d=>{ filtersEl.innerHTML += `<button onclick="setFcFilter('${d.id}')">${d.name}</button>`; });
+  startDeck();
+}
+
+function setFcFilter(f){
+  fcFilter=f;
+  document.querySelectorAll('#fc-filters button').forEach((b,i)=>{
+    b.classList.toggle('active', f==='all'?i===0:b.textContent===DOMAINS.find(d=>d.id===f)?.name);
+  });
+  startDeck();
+}
+
+function startDeck(onlyStarred){
+  fcDeck=buildDeck(fcFilter, onlyStarred);
+  fcIndex=0; fcCorrect=0; fcWrong=0;
+  document.getElementById('fc-done').style.display='none';
+  if(fcDeck.length===0){
+    document.getElementById('fc-card').style.display='none';
+    document.getElementById('fc-actions').style.display='none';
+    document.getElementById('fc-done').style.display='block';
+    document.getElementById('fc-summary').textContent=onlyStarred?'No starred cards!':'No cards in this filter.';
+    return;
+  }
+  document.getElementById('fc-card').style.display='';
+  showCard();
+}
+
+function resetDeck(){ startDeck(); }
+function reviewStarred(){ startDeck(true); }
+
+function showCard(){
+  if(fcIndex>=fcDeck.length){
+    document.getElementById('fc-card').style.display='none';
+    document.getElementById('fc-actions').style.display='none';
+    document.getElementById('fc-done').style.display='block';
+    const pct = fcDeck.length?Math.round(fcCorrect/fcDeck.length*100):0;
+    document.getElementById('fc-summary').textContent=`${fcCorrect}/${fcDeck.length} correct (${pct}%) — ${Object.keys(starred).filter(k=>starred[k]).length} cards starred for review`;
+    renderProgress();
+    return;
+  }
+  const c = fcDeck[fcIndex];
+  const dom = DOMAINS.find(d=>d.id===c.d);
+  document.getElementById('fc-domain').textContent = `${dom.name} · Card ${fcIndex+1}/${fcDeck.length}` + (starred[c.id]?' ★':'');
+  document.getElementById('fc-question').textContent = c.q;
+  document.getElementById('fc-answer').textContent = c.a;
+  const card = document.getElementById('fc-card');
+  card.classList.remove('flipped');
+  card.style.display='';
+  document.getElementById('fc-actions').style.display='none';
+  fcFlipped=false;
+  // Progress
+  const pct = Math.round(fcIndex/fcDeck.length*100);
+  document.getElementById('fc-count').textContent=`${fcIndex+1}/${fcDeck.length}`;
+  document.getElementById('fc-bar').style.width=pct+'%';
+  document.getElementById('fc-pct').textContent=pct+'%';
+}
+
+function flipCard(){
+  if(fcFlipped) return;
+  fcFlipped=true;
+  document.getElementById('fc-card').classList.add('flipped');
+  document.getElementById('fc-actions').style.display='flex';
+}
+
+function markCard(correct){
+  const c = fcDeck[fcIndex];
+  if(correct){
+    fcCorrect++;
+    mastered[c.id]=true;
+    if(starred[c.id]) { delete starred[c.id]; }
+  } else {
+    fcWrong++;
+    starred[c.id]=true;
+    delete mastered[c.id];
+  }
+  LS.set('starred',starred);
+  LS.set('mastered',mastered);
+  // Track session
+  const today = new Date().toISOString().slice(0,10);
+  const sessions = LS.get('sessions',{});
+  if(!sessions[today]) sessions[today]={reviewed:0,correct:0};
+  sessions[today].reviewed++;
+  if(correct) sessions[today].correct++;
+  LS.set('sessions',sessions);
+
+  fcIndex++;
+  showCard();
+}
+
+// ==================== QUIZ ====================
+let quizQs=[], quizIdx=0, quizScore=0, quizAnswered=false, quizDomain='all';
+
+function initQuiz(){
+  const el = document.getElementById('quiz-domain-filters');
+  el.innerHTML = `<button class="active" onclick="setQuizDomain('all',this)">All Domains</button>`;
+  DOMAINS.forEach(d=>{ el.innerHTML += `<button onclick="setQuizDomain('${d.id}',this)">${d.name}</button>`; });
+}
+
+function setQuizDomain(d,btn){
+  quizDomain=d;
+  document.querySelectorAll('#quiz-domain-filters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function startQuiz(n){
+  let pool = QUIZ_QUESTIONS.filter(q=>quizDomain==='all'||q.d===quizDomain);
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  quizQs=pool.slice(0,Math.min(n,pool.length));
+  quizIdx=0; quizScore=0;
+  document.getElementById('quiz-setup').style.display='none';
+  document.getElementById('quiz-active').style.display='block';
+  document.getElementById('quiz-results').style.display='none';
+  showQuizQ();
+}
+
+function showQuizQ(){
+  if(quizIdx>=quizQs.length){ showQuizResults(); return; }
+  quizAnswered=false;
+  const q=quizQs[quizIdx];
+  const dom=DOMAINS.find(d=>d.id===q.d);
+  document.getElementById('quiz-domain').textContent=dom.name;
+  document.getElementById('quiz-question').textContent=`Q${quizIdx+1}. ${q.q}`;
+  document.getElementById('quiz-explanation').style.display='none';
+  document.getElementById('quiz-next').style.display='none';
+  const optsEl=document.getElementById('quiz-opts');
+  optsEl.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    optsEl.innerHTML+=`<label id="qopt${i}" onclick="answerQuiz(${i})"><input type="radio" name="quiz">${String.fromCharCode(65+i)}) ${o}</label>`;
+  });
+  const pct=Math.round(quizIdx/quizQs.length*100);
+  document.getElementById('quiz-count').textContent=`${quizIdx+1}/${quizQs.length}`;
+  document.getElementById('quiz-bar').style.width=pct+'%';
+  document.getElementById('quiz-score-live').textContent=`${quizScore} correct`;
+}
+
+function answerQuiz(i){
+  if(quizAnswered) return;
+  quizAnswered=true;
+  const q=quizQs[quizIdx];
+  const correct=i===q.ans;
+  if(correct) quizScore++;
+  document.getElementById(`qopt${i}`).classList.add(correct?'correct':'wrong');
+  if(!correct) document.getElementById(`qopt${q.ans}`).classList.add('correct');
+  const expEl=document.getElementById('quiz-explanation');
+  expEl.textContent=(correct?'✓ Correct! ':'✗ Wrong. ')+q.exp;
+  expEl.style.display='block';
+  document.getElementById('quiz-next').style.display='';
+  document.getElementById('quiz-score-live').textContent=`${quizScore} correct`;
+}
+
+function nextQuizQ(){ quizIdx++; showQuizQ(); }
+
+function showQuizResults(){
+  document.getElementById('quiz-active').style.display='none';
+  document.getElementById('quiz-results').style.display='block';
+  const pct=Math.round(quizScore/quizQs.length*100);
+  document.getElementById('quiz-final-score').textContent=`${quizScore} / ${quizQs.length}`;
+  document.getElementById('quiz-final-pct').textContent=`${pct}%`;
+  const msgEl=document.getElementById('quiz-pass-msg');
+  if(pct>=70) msgEl.innerHTML=`<span style="color:var(--green);font-size:1.2rem;font-weight:700">✓ Pass (≥70%)</span>`;
+  else msgEl.innerHTML=`<span style="color:var(--red);font-size:1.2rem;font-weight:700">✗ Below passing — review starred flashcards</span>`;
+  // Save
+  const today=new Date().toISOString().slice(0,10);
+  const quizHist=LS.get('quizHistory',[]);
+  quizHist.push({date:today,score:quizScore,total:quizQs.length,pct});
+  LS.set('quizHistory',quizHist);
+}
+
+function resetQuiz(){
+  document.getElementById('quiz-setup').style.display='block';
+  document.getElementById('quiz-active').style.display='none';
+  document.getElementById('quiz-results').style.display='none';
+}
+
+// ==================== PROGRESS ====================
+function renderProgress(){
+  const sessions=LS.get('sessions',{});
+  const quizHist=LS.get('quizHistory',[]);
+  const totalReviewed=Object.values(sessions).reduce((s,v)=>s+v.reviewed,0);
+  const totalCorrect=Object.values(sessions).reduce((s,v)=>s+v.correct,0);
+  const masteredCount=Object.keys(mastered).filter(k=>mastered[k]).length;
+  const starredCount=Object.keys(starred).filter(k=>starred[k]).length;
+  const streak=calcStreak(sessions);
+  const lastQuiz=quizHist.length?quizHist[quizHist.length-1]:null;
+
+  document.getElementById('stats-grid').innerHTML=`
+    <div class="stat-card"><div class="num" style="color:var(--accent)">${masteredCount}</div><div class="lbl">Cards Mastered</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--orange)">${starredCount}</div><div class="lbl">★ Need Review</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--green)">${totalReviewed}</div><div class="lbl">Total Reviews</div></div>
+    <div class="stat-card"><div class="num" style="color:${lastQuiz&&lastQuiz.pct>=70?'var(--green)':'var(--red)'}">${lastQuiz?lastQuiz.pct+'%':'—'}</div><div class="lbl">Last Quiz</div></div>`;
+
+  // Domain bars
+  const barsEl=document.getElementById('progress-bars');
+  barsEl.innerHTML='';
+  DOMAINS.forEach(d=>{
+    const domCards=FLASHCARDS.filter(c=>c.d===d.id);
+    const domMastered=domCards.filter(c=>mastered[c.id]).length;
+    const pct=domCards.length?Math.round(domMastered/domCards.length*100):0;
+    barsEl.innerHTML+=`<div class="progress-domain">
+      <div class="label">${d.name}</div>
+      <div class="bar"><div class="bar-fill" style="width:${pct}%;background:${d.color}">${pct>8?pct+'%':''}</div></div>
+      <span style="font-size:.8rem;color:var(--text3);width:50px;text-align:right">${domMastered}/${domCards.length}</span>
+    </div>`;
+  });
+
+  document.getElementById('streak-info').innerHTML=`
+    <div style="font-size:2rem;font-weight:800;color:var(--orange)">${streak} day${streak!==1?'s':''}</div>
+    <div style="color:var(--text2);font-size:.85rem;margin-top:4px">${streak>0?'Keep it up!':'Study today to start your streak!'}</div>`;
+}
+
+function calcStreak(sessions){
+  let streak=0, d=new Date();
+  // Check if studied today
+  const today=d.toISOString().slice(0,10);
+  if(!sessions[today]){ d.setDate(d.getDate()-1); }
+  while(true){
+    const key=d.toISOString().slice(0,10);
+    if(sessions[key]) { streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return streak;
+}
+
+// ==================== CHEAT SHEETS ====================
+function initCheatSheets(){
+  const filtersEl=document.getElementById('cs-filters');
+  filtersEl.innerHTML=`<button class="active" onclick="setCsFilter('all',this)">All</button>`;
+  DOMAINS.forEach(d=>{filtersEl.innerHTML+=`<button onclick="setCsFilter('${d.id}',this)">${d.name}</button>`;});
+  renderCheatSheets('all');
+}
+
+function setCsFilter(f,btn){
+  document.querySelectorAll('#cs-filters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCheatSheets(f);
+}
+
+function renderCheatSheets(filter){
+  const el=document.getElementById('cs-content');
+  const items=CHEATSHEETS.filter(c=>filter==='all'||c.d===filter);
+  el.innerHTML='';
+  items.forEach((cs,i)=>{
+    const dom=DOMAINS.find(d=>d.id===cs.d);
+    el.innerHTML+=`<div class="cs-section" onclick="this.classList.toggle('open')">
+      <div class="cs-header"><span><span class="tag tag-blue">${dom.name}</span> ${cs.title}</span><span class="arrow">▶</span></div>
+      <div class="cs-body">${cs.content}</div>
+    </div>`;
+  });
+}
+
+// ==================== INIT ====================
+initFlashcards();
+initQuiz();
+initCheatSheets();
+renderProgress();
+</script>
+</body>
+</html>
