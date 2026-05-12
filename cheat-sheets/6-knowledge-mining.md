@@ -178,15 +178,15 @@ Implemented as an **Azure Function** (HTTP trigger) or any Web API.
 
 ## Index Schema — Field Attributes
 
-| Attribute | Purpose | Default (strings) |
-|-----------|---------|-------------------|
-| `searchable` | Full-text search (analyzed/tokenized) | true |
-| `filterable` | Use in `$filter` expressions | true |
-| `sortable` | Use in `$orderby` | true |
-| `facetable` | Faceted navigation (counts by category) | true |
-| `retrievable` | Returned in search results | true |
-| `stored` | Persisted on disk (can disable for vectors) | true |
-| `key` | Unique document identifier | false (exactly one must be true) |
+| Attribute | Purpose | Default (strings) | Use When |
+|-----------|---------|-------------------|----------|
+| `searchable` | Full-text search (analyzed/tokenized) | true | Users type free-text queries to find this field's content |
+| `filterable` | Use in `$filter` expressions | true | You need exact match, range, or comparison (e.g., `rating ge 4`) |
+| `sortable` | Use in `$orderby` | true | Users sort results by this field (e.g., by price, date) |
+| `facetable` | Faceted navigation (counts by category) | true | You want a sidebar showing "Category: Hotels (42), Restaurants (18)" |
+| `retrievable` | Returned in search results | true | You want this field in the API response |
+| `stored` | Persisted on disk (can disable for vectors) | true | Set false only for vector fields you don't need to return |
+| `key` | Unique document identifier | false (exactly one must be true) | One field must be the document ID |
 
 ### Field Data Types
 | Type | Description |

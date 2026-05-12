@@ -420,6 +420,10 @@ const FLASHCARDS = [
   {id:134,d:'d6',q:'Max composed model components?',a:'200'},
   {id:135,d:'d6',q:'AI Search free tier limits?',a:'50 MB storage, 3 indexes'},
   {id:136,d:'d6',q:'Field attribute for faceted navigation?',a:'facetable'},
+  {id:147,d:'d6',q:'You want a sidebar showing "Category: Hotels (42), Restaurants (18)". What attribute?',a:'facetable — enables count-by-category navigation'},
+  {id:148,d:'d6',q:'You need $filter=rating ge 4. What attribute must the rating field have?',a:'filterable'},
+  {id:149,d:'d6',q:'You want users to sort results by price. What attribute on the price field?',a:'sortable'},
+  {id:150,d:'d6',q:'A field should be searchable by free text but NOT appear in results. What attributes?',a:'searchable=true, retrievable=false'},
   {id:137,d:'d6',q:'Vector search algorithm types?',a:'HNSW (approximate, default) and Exhaustive KNN (exact, brute force)'},
   {id:138,d:'d6',q:'Semantic config prioritizedFields includes?',a:'titleField, prioritizedContentFields, prioritizedKeywordsFields'},
   {id:139,d:'d4',q:'Image Analysis 4.0: gender-neutral-caption option does what?',a:'Replaces "man/woman" with "person", "boy/girl" with "child"'},
@@ -591,6 +595,13 @@ const QUIZ_QUESTIONS = [
   {d:'d3',q:'A manager agent delegates subtasks to specialized worker agents. What pattern is this?',
    opts:['Sequential','Parallel','Hierarchical','Collaborative'],
    ans:2, exp:'Hierarchical: a manager agent delegates to worker agents. Sequential chains agents in order. Collaborative has agents discuss together.'},
+  // Field attribute scenario questions
+  {d:'d6',q:'Your search UI needs a sidebar showing count of results per category (e.g., "Hotels: 42"). What field attribute do you need on the category field?',
+   opts:['searchable','filterable','facetable','sortable'],
+   ans:2, exp:'Facetable enables faceted navigation — count-by-category sidebars. Filterable is for $filter conditions, not category counts.'},
+  {d:'d6',q:'A field contains internal scoring data. It should be used in $filter but NOT shown in search results. What attributes?',
+   opts:['filterable=true, retrievable=true','filterable=true, retrievable=false','searchable=true, retrievable=false','sortable=true, filterable=false'],
+   ans:1, exp:'filterable=true allows $filter usage. retrievable=false hides it from API results. searchable is for free-text search, not filtering.'},
 ];
 
 // ==================== CHEAT SHEET DATA ====================
@@ -817,12 +828,12 @@ const CHEATSHEETS = [
 <tr><td>Custom (Web API)</td><td><code>#Microsoft.Skills.Custom.WebApiSkill</code></td></tr></table>
 <p style="margin-top:12px"><b>Context paths:</b> <code>/document</code>, <code>/document/content</code>, <code>/document/normalized_images/*</code>, <code>/document/pages/*</code></p>`},
   {d:'d6', title:'Index Fields & Data Types', content:`<table class="cs-table"><tr><th>Attribute</th><th>For</th></tr>
-<tr><td><code>searchable</code></td><td>Full-text search (tokenized)</td></tr>
-<tr><td><code>filterable</code></td><td>$filter expressions</td></tr>
-<tr><td><code>sortable</code></td><td>$orderby</td></tr>
-<tr><td><code>facetable</code></td><td>Faceted navigation</td></tr>
-<tr><td><code>retrievable</code></td><td>Returned in results</td></tr>
-<tr><td><code>key</code></td><td>Unique doc ID (exactly one)</td></tr></table>
+<tr><td><code>searchable</code></td><td>Full-text search (tokenized). Use when users type free-text queries.</td></tr>
+<tr><td><code>filterable</code></td><td>$filter expressions. Use for exact match, range, comparison (e.g., <code>rating ge 4</code>).</td></tr>
+<tr><td><code>sortable</code></td><td>$orderby. Use when users sort by this field (price, date).</td></tr>
+<tr><td><code>facetable</code></td><td>Faceted navigation. Use for sidebar counts: "Hotels (42), Restaurants (18)".</td></tr>
+<tr><td><code>retrievable</code></td><td>Returned in results. Set false to hide internal fields.</td></tr>
+<tr><td><code>key</code></td><td>Unique doc ID (exactly one per index).</td></tr></table>
 <p style="margin-top:12px"><b>Types:</b> Edm.String, Edm.Int32/64, Edm.Double, Edm.Boolean, Edm.DateTimeOffset, Edm.GeographyPoint, Edm.ComplexType, Collection(Edm.Single) = vector</p>`},
   {d:'d6', title:'Vector & Semantic Search', content:`<p><b>Vector search:</b> Store embeddings in <code>Collection(Edm.Single)</code> fields.</p>
 <table class="cs-table" style="margin-top:8px"><tr><th>Algorithm</th><th>Type</th></tr>
@@ -1755,11 +1766,11 @@ const MINDMAPS = [
 - /document/pages/* (after text split)
 ## Index Schema
 ### Field Attributes
-- searchable (full-text, tokenized)
-- filterable ($filter expressions)
-- sortable ($orderby)
-- facetable (faceted navigation)
-- retrievable (returned in results)
+- searchable (free-text queries)
+- filterable (exact match: $filter=rating ge 4)
+- sortable (sort: $orderby=price)
+- facetable (sidebar counts: \"Hotels (42)\")
+- retrievable (show in results? set false to hide)
 - stored (persisted on disk)
 - key (unique doc ID — exactly one)
 ### Data Types
