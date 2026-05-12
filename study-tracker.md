@@ -1,12 +1,12 @@
-# AI-102 — 6-Day Cram Plan (Exam: Monday May 18)
+# AI-102 — 6-Day Cram Plan
 
-> Focus on high-weight domains first. Check off as you go.
+> Adapt to your own schedule — day 1 = 6 days before exam, day 6 = exam day.
 > **METHOD:** Each day has 3 phases: READ → DRILL → RECALL.
-> Don't just re-read. Test yourself with flashcards.md after each topic.
+> Use the [interactive app](https://demo-ninjas.github.io/pass_az_102/) for flashcards and quizzes.
 
 ---
 
-## Day 1 — Tuesday May 13: Plan & Manage Azure AI (20–25%)
+## Day 1: Plan & Manage Azure AI (20–25%)
 This is the highest-weighted domain. Nail it.
 
 ### READ (cheat-sheets/1-plan-manage.md)
@@ -25,13 +25,13 @@ This is the highest-weighted domain. Nail it.
 **Do:** Take the [practice assessment](https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-engineer/practice/assessment?assessment-type=practice&assessmentId=61&practice-assessment-type=certification) once to see your baseline
 
 ### RECALL (evening — 30 min)
-- [ ] Flashcards #1–23 (cover answer column, say answer out loud)
+- [ ] Open the app → Flashcards → filter **Plan & Manage** → drill all cards
 - [ ] Star ★ the ones you got wrong
 - [ ] Read traps-and-distinctions.md sections 1, 2, 5
 
 ---
 
-## Day 2 — Wednesday May 14: Generative AI & Azure OpenAI (15–20%)
+## Day 2: Generative AI & Azure OpenAI (15–20%)
 Second-highest weight. Very testable.
 
 ### READ (cheat-sheets/2-generative-ai.md)
@@ -52,13 +52,13 @@ Second-highest weight. Very testable.
 **Do:** [MS Learn - Implement RAG with Azure OpenAI](https://learn.microsoft.com/en-us/training/modules/use-own-data-azure-openai/)
 
 ### RECALL (evening — 30 min)
-- [ ] Flashcards #24–47
+- [ ] Open the app → Flashcards → filter **Generative AI** → drill all cards
 - [ ] Re-do ★ starred cards from Day 1
 - [ ] Read traps-and-distinctions.md section 2 (Parameter Traps)
 
 ---
 
-## Day 3 — Thursday May 15: NLP — Language & Speech (15–20%)
+## Day 3: NLP — Language & Speech (15–20%)
 Lots of services to know here.
 
 ### READ (cheat-sheets/5-nlp.md)
@@ -80,13 +80,13 @@ Lots of services to know here.
 **Do:** [MS Learn - Create question answering solution](https://learn.microsoft.com/en-us/training/modules/create-question-answer-solution-ai-language/)
 
 ### RECALL (evening — 30 min)
-- [ ] Flashcards #76–99
+- [ ] Open the app → Flashcards → filter **NLP & Speech** → drill all cards
 - [ ] Re-do ALL ★ starred cards from Days 1-2
 - [ ] Read traps-and-distinctions.md sections 7, 3 (NLP + Endpoint traps)
 
 ---
 
-## Day 4 — Friday May 16: Knowledge Mining & Document Intelligence (15–20%)
+## Day 4: Knowledge Mining & Document Intelligence (15–20%)
 
 ### READ (cheat-sheets/6-knowledge-mining.md)
 - [ ] Azure AI Search architecture: data source → indexer → skillset → index
@@ -107,13 +107,13 @@ Lots of services to know here.
 **Do:** [MS Learn - Extract data from forms](https://learn.microsoft.com/en-us/training/modules/work-form-recognizer/)
 
 ### RECALL (evening — 30 min)
-- [ ] Flashcards #100–130
+- [ ] Open the app → Flashcards → filter **Knowledge Mining** → drill all cards
 - [ ] Re-do ALL ★ starred cards from Days 1-3
 - [ ] Read traps-and-distinctions.md sections 4, 8, 9 (Search, Doc Intelligence, Skillset traps)
 
 ---
 
-## Day 5 — Saturday May 17: Computer Vision + Agents + Full Recall
+## Day 5: Computer Vision + Agents + Full Recall
 
 ### READ (cheat-sheets/4-computer-vision.md + cheat-sheets/3-agentic.md)
 
@@ -140,14 +140,14 @@ Lots of services to know here.
 - [ ] Review all wrong answers — read the explanations carefully
 
 ### RECALL (evening — FULL DECK)
-- [ ] Flashcards #48–75 (Vision + Agents)
-- [ ] Run through ALL 130 flashcards — time yourself
+- [ ] Open the app → Flashcards → filter **Computer Vision**, then **Agentic** → drill cards
+- [ ] Then switch to **All** → run through the entire deck — time yourself
 - [ ] Re-do ALL ★ starred cards until you get them right
 - [ ] Read traps-and-distinctions.md sections 1, 6, 10 (Service confusions, Lifecycle, Numbers)
 
 ---
 
-## Day 6 — Sunday May 18 (Exam Day Eve / Morning)
+## Day 6 (Exam Day Eve / Morning)
 
 - [ ] Read traps-and-distinctions.md ONLY — cover to cover (this is your highest-ROI file)
 - [ ] Run through ★ starred flashcards one final time

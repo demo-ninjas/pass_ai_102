@@ -320,6 +320,12 @@ const FLASHCARDS = [
   {id:44,d:'d3',q:'Agent API object that triggers processing?',a:'Run'},
   {id:45,d:'d3',q:'Name 3 multi-agent orchestration patterns.',a:'Sequential, Parallel, Hierarchical, Collaborative'},
   {id:46,d:'d3',q:'Semantic Kernel: what auto-creates plans?',a:'Planner'},
+  {id:141,d:'d3',q:'What is the Agent Service API flow (5 steps)?',a:'Create Agent → Create Thread → Add Messages → Create Run → Poll results'},
+  {id:142,d:'d3',q:'Agent built-in tool that executes Python in a sandbox?',a:'Code Interpreter'},
+  {id:143,d:'d3',q:'Agent tool that searches uploaded files with vectors?',a:'File Search'},
+  {id:144,d:'d3',q:'Semantic Kernel: what is a Kernel?',a:'Central orchestrator that holds services, plugins, and memory'},
+  {id:145,d:'d3',q:'Semantic Kernel: what links to AI services like OpenAI?',a:'Connector'},
+  {id:146,d:'d3',q:'Human-in-the-loop in multi-agent means?',a:'Involving a human for approval at key decision points'},
   // Domain 4
   {id:47,d:'d4',q:'Name all 7 Image Analysis 4.0 features.',a:'caption, denseCaptions, tags, objects, people, smartCrops, read'},
   {id:48,d:'d4',q:'Face detection model best for blurry faces?',a:'detection_02 (or detection_03 for best overall)'},
@@ -554,6 +560,37 @@ const QUIZ_QUESTIONS = [
   {d:'d4',q:'What QualityForRecognition level is recommended for person identification?',
    opts:['Low or better','Medium or better','High only','Any quality'],
    ans:1, exp:'Medium or better for identification. High is recommended for enrollment.'},
+  // SSML questions
+  {d:'d5',q:'Which SSML tag adds a 500ms pause between sentences?',
+   opts:['<prosody time="500ms">','<break time="500ms"/>','<pause duration="500ms"/>','<silence length="500ms"/>'],
+   ans:1, exp:'<break time="500ms"/> inserts a pause. <prosody> controls rate/pitch/volume, not pauses.'},
+  {d:'d5',q:'You need TTS to read "12/25/2024" as a date rather than a math expression. Which SSML tag?',
+   opts:['<prosody interpret-as="date">','<say-as interpret-as="date" format="mdy">','<format type="date">','<voice style="date">'],
+   ans:1, exp:'<say-as interpret-as="date" format="mdy"> tells the synthesizer to read it as month/day/year.'},
+  {d:'d5',q:'SSML: the <mstts:express-as> tag requires what namespace declaration?',
+   opts:['xmlns:mstts="http://www.w3.org/2001/mstts"','xmlns:mstts="http://schemas.microsoft.com/speech"','No namespace needed','xmlns:ssml="http://www.w3.org/2001/10/synthesis"'],
+   ans:0, exp:'The mstts namespace must be declared: xmlns:mstts="http://www.w3.org/2001/mstts". Without it, the SSML is invalid.'},
+  // Container/edge questions
+  {d:'d1',q:'You deploy an Azure AI container on-premises. It stops working after 24 hours. Why?',
+   opts:['Container license expired','Container lost billing connection (phone-home)','Container needs GPU','Container image is too old'],
+   ans:1, exp:'Azure AI containers require periodic billing connections. Without it, they stop after the grace period. Disconnected containers need special approval.'},
+  {d:'d1',q:'Where does Spatial Analysis run?',
+   opts:['Azure cloud only','Any Docker host','Edge device with NVIDIA GPU','Azure Kubernetes Service only'],
+   ans:2, exp:'Spatial Analysis runs as a Docker container on edge devices with NVIDIA GPU, processing RTSP video streams.'},
+  // Video Indexer / Spatial Analysis
+  {d:'d4',q:'You need to extract topics, keywords, and detect scenes from a corporate training video. Which service?',
+   opts:['Azure AI Vision - Image Analysis','Azure AI Video Indexer','Azure AI Vision - Spatial Analysis','Azure Media Services'],
+   ans:1, exp:'Video Indexer extracts topics, keywords, transcript, scenes, faces, and more from video. Spatial Analysis is for real-time people detection.'},
+  {d:'d4',q:'You need to count how many people enter a retail store zone from a security camera feed. Which service?',
+   opts:['Azure AI Video Indexer','Azure AI Vision - Image Analysis','Azure AI Vision - Spatial Analysis','Custom Vision'],
+   ans:2, exp:'Spatial Analysis processes live video (RTSP) to count people, detect zone crossings, and measure dwell time. Video Indexer is for recorded video analysis.'},
+  // More D3 (agentic)
+  {d:'d3',q:'In Semantic Kernel, what is a collection of callable functions that an agent can use?',
+   opts:['Kernel','Plugin','Planner','Connector'],
+   ans:1, exp:'A Plugin is a collection of functions. The Kernel orchestrates them. The Planner auto-creates execution plans.'},
+  {d:'d3',q:'A manager agent delegates subtasks to specialized worker agents. What pattern is this?',
+   opts:['Sequential','Parallel','Hierarchical','Collaborative'],
+   ans:2, exp:'Hierarchical: a manager agent delegates to worker agents. Sequential chains agents in order. Collaborative has agents discuss together.'},
 ];
 
 // ==================== CHEAT SHEET DATA ====================
@@ -956,7 +993,7 @@ function markCard(correct){
 }
 
 // ==================== QUIZ ====================
-let quizQs=[], quizIdx=0, quizScore=0, quizAnswered=false, quizDomain='all';
+let quizQs=[], quizIdx=0, quizScore=0, quizAnswered=false, quizDomain='all', quizAnswers=[];
 
 function initQuiz(){
   const el = document.getElementById('quiz-domain-filters');
@@ -974,7 +1011,7 @@ function startQuiz(n){
   let pool = QUIZ_QUESTIONS.filter(q=>quizDomain==='all'||q.d===quizDomain);
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
   quizQs=pool.slice(0,Math.min(n,pool.length));
-  quizIdx=0; quizScore=0;
+  quizIdx=0; quizScore=0; quizAnswers=[];
   document.getElementById('quiz-setup').style.display='none';
   document.getElementById('quiz-active').style.display='block';
   document.getElementById('quiz-results').style.display='none';
@@ -1004,6 +1041,7 @@ function showQuizQ(){
 function answerQuiz(i){
   if(quizAnswered) return;
   quizAnswered=true;
+  quizAnswers[quizIdx]=i;
   const q=quizQs[quizIdx];
   const correct=i===q.ans;
   if(correct) quizScore++;
@@ -1027,6 +1065,25 @@ function showQuizResults(){
   const msgEl=document.getElementById('quiz-pass-msg');
   if(pct>=70) msgEl.innerHTML=`<span style="color:var(--green);font-size:1.2rem;font-weight:700">✓ Pass (≥70%)</span>`;
   else msgEl.innerHTML=`<span style="color:var(--red);font-size:1.2rem;font-weight:700">✗ Below passing — review starred flashcards</span>`;
+  // Build review of wrong answers
+  const reviewEl=document.getElementById('quiz-review');
+  const wrongQs = quizQs.filter((_,i)=>quizAnswers[i]!==undefined && quizAnswers[i]!==quizQs[i].ans);
+  if(wrongQs.length>0){
+    let html=`<div class="card mt-20"><h3 style="margin-bottom:16px;color:var(--red)">✗ Review Wrong Answers (${wrongQs.length})</h3>`;
+    wrongQs.forEach(q=>{
+      const dom=DOMAINS.find(d=>d.id===q.d);
+      html+=`<div style="margin-bottom:16px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
+        <div class="fc-domain">${dom.name}</div>
+        <div style="font-size:.95rem;margin-bottom:8px">${q.q}</div>
+        <div style="font-size:.85rem;color:var(--green)">✓ ${q.opts[q.ans]}</div>
+        <div style="font-size:.85rem;color:var(--text2);margin-top:4px">${q.exp}</div>
+      </div>`;
+    });
+    html+=`</div>`;
+    reviewEl.innerHTML=html;
+  } else {
+    reviewEl.innerHTML=`<div class="card mt-20 text-center" style="color:var(--green)"><b>Perfect score! 🎉</b></div>`;
+  }
   // Save
   const today=new Date().toISOString().slice(0,10);
   const quizHist=LS.get('quizHistory',[]);
