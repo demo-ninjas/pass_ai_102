@@ -380,3 +380,26 @@ POST https://<endpoint>/language/:query-knowledgebases?api-version=2021-10-01
 | Chit-chat personalities | Professional, Friendly, Witty, Caring, Enthusiastic |
 | Face landmarks count | 27 points |
 | SSML namespace for mstts | xmlns:mstts="http://www.w3.org/2001/mstts" |
+
+---
+
+## Decision Guide: When to Use Which Service
+
+| Scenario | Service |
+|----------|----------|
+| "Book a flight to Paris" → extract action + parameters | **CLU** (intent + entities) |
+| "How do I reset my password?" → return FAQ answer | **Custom Question Answering** |
+| Real-time speech recognition with custom vocabulary | **Azure AI Speech** (Custom Speech model) |
+| Batch transcribe audio files | **Azure OpenAI Whisper** |
+| Real-time streaming STT with intent extraction | **IntentRecognizer** (Speech + CLU) |
+| Translate spoken English to spoken French in real-time | **TranslationRecognizer** + voice_name |
+| Detect wake word ("Hey Computer") | **KeywordRecognizer** |
+
+### CLU Entity Type Decision
+
+| Entity Behavior | Type |
+|----------------|------|
+| Extracted from context by ML (you label examples) | **Learned** |
+| Fixed set of values with synonyms (e.g., small/medium/large) | **List** |
+| Common types: datetime, number, email, URL | **Prebuilt** |
+| Matches a pattern (e.g., flight number AB-1234) | **Regex** |

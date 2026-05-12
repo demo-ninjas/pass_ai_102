@@ -191,6 +191,16 @@ POST https://<resource>.openai.azure.com/openai/deployments/<model>/images/gener
 
 **Exam tip:** Fine-tuning ≠ RAG. Use RAG for grounding in dynamic data. Use fine-tuning for teaching the model a specific style/format/domain behavior.
 
+### When to Use Which Approach
+
+| Scenario | Approach |
+|----------|----------|
+| Model makes up facts / needs access to your documents | **RAG** (ground in data via AI Search) |
+| Model needs to respond in a specific JSON schema / domain tone | **Fine-tuning** (teach style/format) |
+| Simple instruction changes fix the issue | **Prompt engineering** (try this first) |
+| Need up-to-date information that changes frequently | **RAG** (data can be refreshed in index) |
+| Need the model to learn a brand voice across all responses | **Fine-tuning** |
+
 ---
 
 ## Deployment & Operationalization

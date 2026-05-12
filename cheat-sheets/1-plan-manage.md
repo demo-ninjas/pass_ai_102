@@ -92,6 +92,15 @@
 - Still require billing connection (phone-home) unless using **disconnected containers** (special approval)
 - Container images from: `mcr.microsoft.com/azure-cognitive-services/`
 
+### When to Use Containers vs Cloud
+
+| Scenario | Deploy As |
+|----------|----------|
+| Standard cloud app, good internet | **Cloud** (easiest) |
+| On-premises, low latency, data residency | **Connected container** (needs billing phone-home) |
+| Factory floor, no internet at all | **Disconnected container** (requires special approval) |
+| Edge device with live camera (Spatial Analysis) | **Edge container** (NVIDIA GPU required) |
+
 ---
 
 ## Monitoring & Cost Management

@@ -227,6 +227,18 @@ GET /indexes/hotels/docs?search=hotel~2 "ocean view"&queryType=full
 - `/regex/` = regex search
 - `term^boost` = boost a term
 
+### When to Use Simple vs Full Lucene
+
+| Scenario | Query Type |
+|----------|------------|
+| Basic keyword search: `pool wifi` | Simple (default) |
+| Exact phrase: `"ocean view"` | Simple works |
+| Fuzzy search: `hotel~2` | **Full Lucene** (`queryType=full`) |
+| Wildcards: `ho*`, `h?tel` | **Full Lucene** |
+| Field-scoped: `title:luxury` | **Full Lucene** |
+| Regex: `/[0-9]{3}/` | **Full Lucene** |
+| Term boosting: `pool^2 wifi` | **Full Lucene** |
+
 ### OData Filter Expressions
 ```
 $filter=rating ge 4 and city eq 'Seattle'
@@ -302,6 +314,16 @@ $filter=rooms/any(r: r/baseRate lt 100)
 | `dotProduct` | When vectors are normalized |
 | `hamming` | Binary/bit-packed vectors only |
 
+### When to Use Semantic vs Vector vs Hybrid
+
+| Scenario | Search Type |
+|----------|-------------|
+| Best overall results (recommended default) | **Hybrid** (text + vector + RRF) |
+| Conceptual/meaning-based search ("things similar to X") | **Vector** |
+| Re-rank text results with deep learning + get captions/answers | **Semantic** |
+| Keyword-heavy queries where exact terms matter | **Text (simple/Lucene)** |
+| Combine all for maximum recall + relevance | **Hybrid + Semantic** |
+
 ### Hybrid Search
 - Combines text search + vector search in a single query
 - Results fused using Reciprocal Rank Fusion (RRF)
@@ -329,6 +351,14 @@ $filter=rooms/any(r: r/baseRate lt 100)
 ```
 
 Use the **Shaper skill** to reshape data into the structure you need for projections.
+
+### When to Use Which Projection Type
+
+| Scenario | Projection |
+|----------|------------|
+| Structured rows for Power BI / analytics | **Table** (→ Azure Table Storage) |
+| Full enriched document as JSON | **Object** (→ Azure Blob Storage) |
+| Extracted images from documents | **File** (→ Azure Blob Storage) |
 
 ---
 
@@ -424,6 +454,16 @@ Body: { "urlSource": "https://example.com/invoice.pdf" }
 | **Neural** | Variable-layout forms (different vendors/formats) | Semi-structured |
 
 Training: Minimum **5 labeled documents** per model.
+
+### When to Use Which Doc Intelligence Model
+
+| Scenario | Model |
+|----------|-------|
+| Invoices from various vendors (different layouts) | **Prebuilt invoice** (handles varied layouts) |
+| Your company's unique internal form | **Custom model** |
+| Forms with identical fixed layout every time | **Custom template** |
+| Forms with variable layout from different sources | **Custom neural** |
+| Multiple custom form types, one endpoint | **Composed model** (auto-routes) |
 
 ### Composed Models
 - Combine multiple custom models behind a single model ID
