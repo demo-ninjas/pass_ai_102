@@ -129,7 +129,6 @@ a { color:var(--accent); }
 
 <div class="header">
   <h1>🎯 AI-102 Exam Prep</h1>
-  <div class="countdown" id="countdown"></div>
   <div class="subtitle">Designing and Implementing a Microsoft Azure AI Solution</div>
 </div>
 
@@ -812,17 +811,7 @@ const LS = {
   set(k,v){ localStorage.setItem('ai102_'+k,JSON.stringify(v)) }
 };
 
-// ==================== COUNTDOWN ====================
-function updateCountdown(){
-  const exam = new Date('2026-05-18T09:00:00');
-  const now = new Date();
-  const diff = exam - now;
-  const el = document.getElementById('countdown');
-  if(diff<=0){ el.textContent='🚀 Exam day!'; return; }
-  const d=Math.floor(diff/864e5), h=Math.floor(diff%864e5/36e5), m=Math.floor(diff%36e5/6e4);
-  el.textContent=`⏰ ${d}d ${h}h ${m}m until exam`;
-}
-updateCountdown(); setInterval(updateCountdown,60000);
+
 
 // ==================== NAV ====================
 document.querySelectorAll('.nav button').forEach(btn=>{
