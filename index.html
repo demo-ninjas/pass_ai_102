@@ -91,6 +91,17 @@ a { color:var(--accent); }
 .cs-section.open .arrow { transform:rotate(90deg); }
 .cs-body { padding:0 18px; max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s; }
 .cs-section.open .cs-body { max-height:5000px; padding:16px 18px; }
+
+/* Mind Maps */
+.mm-section { border:1px solid var(--surface2); border-radius:var(--radius); margin-bottom:12px; overflow:hidden; }
+.mm-header { padding:16px 18px; background:var(--surface); cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:1rem; transition:background .2s; }
+.mm-header:hover { background:var(--surface2); }
+.mm-header .arrow { transition:transform .3s; color:var(--text3); font-size:.9rem; }
+.mm-section.open .arrow { transform:rotate(90deg); }
+.mm-body { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+.mm-section.open .mm-body { max-height:2000px; }
+.mm-wrap { height:500px; background:var(--bg); border-top:1px solid var(--surface2); }
+.mm-wrap svg { width:100%; height:100%; }
 .cs-table { width:100%; border-collapse:collapse; font-size:.85rem; }
 .cs-table th { text-align:left; padding:8px; border-bottom:2px solid var(--surface2); color:var(--accent); font-weight:600; }
 .cs-table td { padding:8px; border-bottom:1px solid rgba(255,255,255,.05); }
@@ -135,6 +146,7 @@ a { color:var(--accent); }
 <div class="nav" id="nav">
   <button data-tab="flashcards" class="active">🃏 Flashcards</button>
   <button data-tab="quiz">📝 Quiz</button>
+  <button data-tab="mindmaps">🧠 Mind Maps</button>
   <button data-tab="progress">📊 Progress</button>
   <button data-tab="cheatsheets">📋 Cheat Sheets</button>
 </div>
@@ -215,6 +227,14 @@ a { color:var(--accent); }
     </div>
     <div id="quiz-review"></div>
   </div>
+</div>
+
+<!-- MIND MAPS -->
+<div class="panel" id="tab-mindmaps">
+  <div class="card mb-16" style="text-align:center;padding:16px">
+    <p style="color:var(--text2);font-size:.9rem">💡 Click a domain to expand its mind map. Scroll to zoom, drag to pan.</p>
+  </div>
+  <div id="mm-container"></div>
 </div>
 
 <!-- PROGRESS -->
@@ -1096,11 +1116,484 @@ function renderCheatSheets(filter){
   });
 }
 
+// ==================== MIND MAPS ====================
+const MINDMAPS = [
+  {id:'d1', title:'Domain 1: Plan & Manage (20-25%)', color:'#3b82f6', md:`# Plan & Manage Azure AI
+## Service Selection
+### Azure OpenAI
+- GPT-4o, GPT-4o-mini
+- gpt-image-1 (images)
+- Whisper (audio)
+### Azure AI Vision
+- Image Analysis 4.0
+- Read API (OCR)
+- Face API
+- Custom Vision
+- Spatial Analysis
+### Azure AI Language
+- Text Analytics
+- CLU
+- Custom QA
+### Azure AI Speech
+- STT / TTS
+- SSML
+- Translation
+### Azure AI Search
+- Indexers + Skillsets
+- Semantic + Vector
+### Document Intelligence
+- Prebuilt models
+- Custom + Composed
+### Others
+- Translator
+- Video Indexer
+- Content Safety
+- Foundry
+## Resource Types
+### Multi-service
+- Single key + endpoint
+- Multiple services
+### Single-service
+- Separate billing
+- Free tier (F0)
+## Authentication
+### Subscription Key
+- Ocp-Apim-Subscription-Key header
+- Dev/test only
+### Entra ID (Azure AD)
+- Authorization: Bearer token
+- RBAC-based
+### Managed Identity
+- DefaultAzureCredential()
+- No creds in code
+### Key Vault
+- Secure storage
+- Key rotation
+## Security
+### Networking
+- Private Endpoint (private IP)
+- Service Endpoint (optimized route)
+- Firewall rules
+### Containers
+- Docker from mcr.microsoft.com
+- Phone-home for billing
+- Disconnected = special approval
+## Responsible AI
+### Content Filters
+- Hate / Sexual / Violence / Self-harm
+- Severity: safe → low → medium → high
+- Applied to input AND output
+### Additional
+- Blocklists (custom terms)
+- Prompt shields (injection)
+- Groundedness detection
+- Protected material detection
+### 6 Principles
+- Fairness
+- Reliability & Safety
+- Privacy & Security
+- Inclusiveness
+- Transparency
+- Accountability
+## Deployment Types
+- Standard (pay-per-token)
+- Global Standard (multi-region)
+- Provisioned Throughput (PTU)
+- Data Zone Standard
+## Monitoring
+- Azure Monitor
+- Diagnostic settings
+- Application Insights
+- Cost Management`},
+  {id:'d2', title:'Domain 2: Generative AI (15-20%)', color:'#8b5cf6', md:`# Generative AI
+## Models
+### GPT-4o
+- 128K in / 16K out
+- Multimodal
+### GPT-4o-mini
+- Replaces GPT-3.5
+- Fast + cheap
+### gpt-image-1
+- Image generation
+- Sizes: 1024², 1792×1024, 1024×1792
+### Whisper
+- Audio transcription
+- 25 MB limit
+### Embeddings
+- text-embedding-3-large (3072 dims)
+- text-embedding-3-small (1536 dims)
+## API Parameters
+### temperature (0-2)
+- Low = deterministic
+- High = creative
+### top_p (0-1)
+- Nucleus sampling
+- Don't set both!
+### frequency_penalty (-2 to 2)
+- Reduce repetition
+### presence_penalty (-2 to 2)
+- Encourage new topics
+### Others
+- max_tokens
+- stop (up to 4)
+- n, logprobs
+## Message Roles
+- system (behavior)
+- user (input)
+- assistant (response / few-shot)
+- tool / function
+## Prompt Engineering
+- Zero-shot
+- Few-shot
+- Chain-of-thought
+- Grounding (RAG)
+## RAG Pattern
+### Flow
+- Query → AI Search → Docs → OpenAI → Response
+### Components
+- Embedding model (vectorize)
+- Azure AI Search (retrieve)
+- Azure OpenAI (generate)
+### "On your data"
+- No-code RAG
+- Auto-cites sources
+## Microsoft Foundry
+### Hub
+- Shared infrastructure
+### Project
+- Isolated workspace
+### Prompt Flow
+- LLM / Python / Prompt / Tool nodes
+### Evaluation
+- Groundedness
+- Relevance
+- Coherence
+- Fluency
+## Fine-Tuning
+- JSONL format
+- Min 10 examples
+- GPT-4o, 4o-mini, 4.1 series
+- ≠ RAG (style vs data)`},
+  {id:'d3', title:'Domain 3: Agentic Solutions (5-10%)', color:'#06b6d4', md:`# Agentic Solutions
+## What is an Agent?
+- Receives goal
+- Plans steps
+- Uses tools
+- Iterates
+- Returns result
+## Foundry Agent Service
+### API Objects
+- Agent (model + instructions + tools)
+- Thread (conversation)
+- Message (user/assistant)
+- Run (execution)
+- RunStep (individual action)
+### Built-in Tools
+- Code Interpreter
+- File Search
+- Function Calling
+- Azure AI Search
+- Bing Search
+## Semantic Kernel
+### Concepts
+- Kernel (orchestrator)
+- Plugin (function collection)
+- Function (callable action)
+- Planner (auto-plan)
+- Memory (history)
+- Connector (AI services)
+## Multi-Agent Patterns
+- Sequential (chain)
+- Parallel (simultaneous)
+- Hierarchical (manager → workers)
+- Collaborative (discuss + refine)
+## Deployment
+- Microsoft Foundry portal/SDK
+- Application Insights tracing
+- Content safety filters
+- Rate limiting + auth`},
+  {id:'d4', title:'Domain 4: Computer Vision (10-15%)', color:'#f59e0b', md:`# Computer Vision
+## Image Analysis 4.0
+### Features
+- caption / denseCaptions
+- tags
+- objects (bounding boxes)
+- people
+- smartCrops (0.75-1.8)
+- read (OCR)
+## Face API
+### Detection Models
+#### detection_01 (default)
+- General purpose
+- Landmarks: YES
+- Attributes: ALL
+#### detection_02
+- Blurry / small / side-view
+- Landmarks: NO
+- Attributes: NO
+#### detection_03 (best)
+- Best accuracy
+- Small faces (64×64)
+- Landmarks: YES
+- Mask attribute: YES
+### Recognition Models
+- recognition_01 (default, legacy)
+- recognition_02 (improved)
+- recognition_03 (better)
+- recognition_04 (BEST + face masks)
+### Key Rules
+- Can't change model after creation
+- Models must be consistent
+- High quality for enrollment
+- Medium+ for identification
+- Face ID TTL: 86400s (24h)
+- Min face: 36×36px
+### Operations
+- Detect → Identify → Verify
+- Find Similar
+- Group
+## Custom Vision
+### Types
+- Classification (5 img/tag min)
+- Object Detection (15 img/tag min)
+### Metrics
+- Precision / Recall / AP / mAP
+### Domains
+- General / Compact (exportable)
+- Food / Landmarks / Retail
+### ⚠️ Retiring Sept 2028
+## Video Indexer
+- Faces, OCR, topics
+- Keywords, sentiment
+- Scenes, transcript
+- Brands, named entities
+## Spatial Analysis
+- Person counting
+- Distance measurement
+- Zone / line crossing
+- Dwell time
+- Edge device + NVIDIA GPU`},
+  {id:'d5', title:'Domain 5: NLP & Speech (15-20%)', color:'#22c55e', md:`# NLP & Speech
+## Text Analytics
+### Features
+- Sentiment (pos/neg/neutral/mixed)
+- Key Phrases (no scores)
+- Named Entities
+- PII Detection (redactedText)
+- Language Detection
+- Entity Linking (Wikipedia)
+### Limits
+- 5,120 chars/doc
+- 1,000 docs/request
+## Translator
+### Key Details
+- Global endpoint (not resource-specific)
+- Requires Ocp-Apim-Subscription-Region
+- Multi-target: to=fr&to=de
+### Features
+- Translate / Transliterate
+- Detect / Dictionary
+- Document Translation (batch)
+- Custom Translator (10K+ sentences)
+## Speech Service
+### SDK Classes
+- SpeechRecognizer (STT)
+- SpeechSynthesizer (TTS)
+- IntentRecognizer (speech + CLU)
+- TranslationRecognizer
+- KeywordRecognizer
+### SSML Tags
+- speak (root)
+- voice (select voice)
+- prosody (rate/pitch/volume)
+- break (pause)
+- emphasis (strong/moderate)
+- say-as (date/phone/cardinal)
+- mstts:express-as (emotion)
+- sub (alias)
+- phoneme (pronunciation)
+### Custom Speech
+- Custom STT models
+- Audio + transcripts
+## CLU
+### Concepts
+- Intent (BookFlight)
+- Entity (destination=Paris)
+- Utterance (example sentence)
+- None intent (always include)
+### Entity Types
+- Learned (ML)
+- List (fixed + synonyms)
+- Prebuilt (datetime, number)
+- Regex (patterns)
+## Custom Question Answering
+### Sources
+- URL / File / Manual / Chit-chat
+### Features
+- Multi-turn (follow-up)
+- Alternate phrasing
+- Chit-chat personalities
+- Active learning
+- Precise answering`},
+  {id:'d6', title:'Domain 6: Knowledge Mining (15-20%)', color:'#ef4444', md:`# Knowledge Mining
+## Azure AI Search
+### Architecture
+- Data Source → Indexer → Skillset → Index
+- Knowledge Store (side output)
+### Data Sources
+- Azure Blob / ADLS Gen2
+- Azure SQL / Cosmos DB
+- Table Storage / MySQL
+### Indexer
+- fieldMappings (before enrichment)
+- outputFieldMappings (after skillset)
+- Schedule: ISO 8601 (PT2H, P1D)
+- Change detection / Soft delete
+## Skillsets
+### Built-in Skills
+- OCR (Vision.OcrSkill)
+- Image Analysis
+- Key Phrase Extraction
+- Entity Recognition (V3)
+- Sentiment (V3)
+- Language Detection
+- Translation
+- Text Split / Merge
+- Shaper
+- PII Detection
+### Custom Skills
+- Azure Function (WebApiSkill)
+- Request: values[].recordId + data
+- Response: data + errors + warnings
+- recordId MUST match
+## Index Schema
+### Field Attributes
+- searchable (full-text)
+- filterable ($filter)
+- sortable ($orderby)
+- facetable (facets)
+- retrievable (in results)
+- key (unique ID)
+### Data Types
+- Edm.String / Int32 / Int64
+- Edm.Double / Boolean
+- Edm.DateTimeOffset
+- Edm.GeographyPoint
+- Collection(Edm.Single) = vector
+## Query Syntax
+### Simple (default)
+- Space = OR
+- "phrase" = exact
+- +term = must include
+### Full Lucene (queryType=full)
+- ~N fuzzy
+- * ? wildcards
+- field:value
+- /regex/
+### OData Filters
+- eq, ne, gt, ge, lt, le
+- and, or, not
+- search.in(), geo.distance()
+- any(), all()
+### Parameters
+- $filter, $orderby, $select
+- $top, $skip, $count
+- searchMode (any/all)
+- scoringProfile
+## Vector & Semantic Search
+### Vector
+- HNSW (fast approximate)
+- Exhaustive KNN (exact)
+- Metrics: cosine, euclidean, dotProduct, hamming
+### Semantic
+- queryType=semantic
+- Captions + answers
+- prioritizedFields config
+### Hybrid
+- Text + vector
+- Reciprocal Rank Fusion
+## Knowledge Store
+- Table → Azure Table Storage
+- Object → Blob (JSON)
+- File → Blob (images)
+- Use Shaper skill
+## Scoring Profiles
+### Functions
+- magnitude / freshness
+- distance / tag
+### Interpolation
+- linear (default)
+- constant
+- quadratic (NOT for tag)
+- logarithmic (NOT for tag)
+## Document Intelligence
+### Prebuilt
+- prebuilt-invoice
+- prebuilt-receipt
+- prebuilt-idDocument
+- prebuilt-read / layout
+### Custom
+- Template (fixed layout)
+- Neural (variable layout)
+- Min 5 labeled docs
+### Composed
+- Combine models
+- Auto-route
+- Max 200 components
+## Suggesters & Synonyms
+- analyzingInfixMatching
+- One suggester per index
+- Synonym maps (5K rules)`}
+];
+
+function initMindMaps(){
+  const container = document.getElementById('mm-container');
+  container.innerHTML = '';
+  MINDMAPS.forEach((mm, idx) => {
+    const section = document.createElement('div');
+    section.className = 'mm-section';
+    section.innerHTML = `
+      <div class="mm-header" onclick="toggleMindMap(this, ${idx})">
+        <span><span class="tag" style="background:${mm.color}22;color:${mm.color}">${mm.id.toUpperCase()}</span> ${mm.title}</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="mm-body">
+        <div class="mm-wrap" id="mm-wrap-${idx}">
+          <div class="markmap" id="mm-${idx}">
+            <script type="text/template">${mm.md}<\/script>
+          </div>
+        </div>
+      </div>`;
+    container.appendChild(section);
+  });
+}
+
+function toggleMindMap(header, idx){
+  const section = header.parentElement;
+  const wasOpen = section.classList.contains('open');
+  section.classList.toggle('open');
+  if(!wasOpen && !section.dataset.rendered){
+    section.dataset.rendered = '1';
+    setTimeout(()=>{
+      if(window.markmap && window.markmap.autoLoader){
+        window.markmap.autoLoader.renderAll();
+      }
+    }, 100);
+  }
+}
+
 // ==================== INIT ====================
 initFlashcards();
 initQuiz();
 initCheatSheets();
+initMindMaps();
 renderProgress();
 </script>
+<script>
+window.markmap = {
+  autoLoader: { manual: true }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@latest"></script>
 </body>
 </html>
