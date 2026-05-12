@@ -1184,67 +1184,78 @@ const MINDMAPS = [
 ### Azure AI Vision
 - Image Analysis 4.0
 - Read API (OCR)
-- Face API
-- Custom Vision
-- Spatial Analysis
+- Face API (limited access)
+- Custom Vision (retiring 9/2028)
+- Spatial Analysis (edge)
 ### Azure AI Language
-- Text Analytics
-- CLU
-- Custom QA
+- Text Analytics (sentiment, entities, PII)
+- CLU (intents + entities)
+- Custom Question Answering
 ### Azure AI Speech
-- STT / TTS
+- STT / TTS (neural voices)
 - SSML
 - Translation
+- Intent + Keyword recognition
 ### Azure AI Search
 - Indexers + Skillsets
-- Semantic + Vector
+- Semantic + Vector + Hybrid
 ### Document Intelligence
-- Prebuilt models
-- Custom + Composed
+- Prebuilt (invoice, receipt, ID, W-2)
+- Custom (template, neural)
+- Composed models
 ### Others
-- Translator
+- Translator (global endpoint!)
 - Video Indexer
 - Content Safety
-- Foundry
+- Microsoft Foundry
 ## Resource Types
 ### Multi-service
 - Single key + endpoint
 - Multiple services
+- Can't get free tier
 ### Single-service
 - Separate billing
 - Free tier (F0)
+- Standard tier (S0)
 ## Authentication
 ### Subscription Key
-- Ocp-Apim-Subscription-Key header
+- Header: Ocp-Apim-Subscription-Key
 - Dev/test only
 ### Entra ID (Azure AD)
-- Authorization: Bearer token
-- RBAC-based
+- Header: Authorization: Bearer token
+- RBAC-based (production)
 ### Managed Identity
 - DefaultAzureCredential()
-- No creds in code
+- No credentials in code
 ### Key Vault
-- Secure storage
-- Key rotation
+- Secure key storage
+- Key rotation pattern
+- App uses Key1 → regen Key2 → switch → regen Key1
+### RBAC Roles
+- Cognitive Services User (call APIs)
+- Cognitive Services Contributor (manage + call)
+- CS OpenAI User (call OpenAI)
+- CS OpenAI Contributor (manage + call OpenAI)
 ## Security
 ### Networking
-- Private Endpoint (private IP)
-- Service Endpoint (optimized route)
-- Firewall rules
+- Private Endpoint (private IP in VNet)
+- Service Endpoint (optimized route, public IP)
+- Firewall rules (IP allowlist)
 ### Containers
 - Docker from mcr.microsoft.com
 - Phone-home for billing
 - Disconnected = special approval
+- Spatial Analysis = edge + NVIDIA GPU
 ## Responsible AI
 ### Content Filters
 - Hate / Sexual / Violence / Self-harm
 - Severity: safe → low → medium → high
-- Applied to input AND output
-### Additional
-- Blocklists (custom terms)
-- Prompt shields (injection)
-- Groundedness detection
-- Protected material detection
+- Applied to BOTH input AND output
+### Additional Protections
+- Blocklists (custom terms YOU define)
+- Prompt shields (injection/jailbreak)
+- Groundedness detection (context check)
+- Protected material detection (copyright)
 ### 6 Principles
 - Fairness
 - Reliability & Safety
@@ -1254,353 +1265,624 @@ const MINDMAPS = [
 - Accountability
 ## Deployment Types
 - Standard (pay-per-token)
-- Global Standard (multi-region)
-- Provisioned Throughput (PTU)
-- Data Zone Standard
+- Global Standard (multi-region routing)
+- Provisioned Throughput PTU (guaranteed tokens/min)
+- Data Zone Standard (data residency)
 ## Monitoring
-- Azure Monitor
-- Diagnostic settings
-- Application Insights
-- Cost Management`},
+- Azure Monitor (metrics, logs, alerts)
+- Diagnostic settings (Log Analytics, Storage, Event Hubs)
+- Application Insights (tracing)
+- Cost Management (budgets, alerts)
+- Key metrics: Total Calls, Errors, Latency, 429s
+## REST Endpoints
+- Multi-service: <resource>.cognitiveservices.azure.com
+- OpenAI: <resource>.openai.azure.com/openai/deployments/<dep>/...
+- Search: <service>.search.windows.net
+- Translator: api.cognitive.microsofttranslator.com (GLOBAL)
+- Speech: <region>.api.cognitive.microsoft.com
+- Translator needs Ocp-Apim-Subscription-Region header`},
   {id:'d2', title:'Domain 2: Generative AI (15-20%)', color:'#8b5cf6', md:`# Generative AI
 ## Models
 ### GPT-4o
 - 128K in / 16K out
-- Multimodal
+- Multimodal (text + images + audio)
 ### GPT-4o-mini
-- Replaces GPT-3.5
-- Fast + cheap
+- 128K in / 16K out
+- Replaces GPT-3.5 (fast + cheap)
+### GPT-4 Turbo
+- 128K in / 4K out
+- Complex reasoning + vision
 ### gpt-image-1
-- Image generation
-- Sizes: 1024², 1792×1024, 1024×1792
+- Image generation (replaces DALL-E)
+- Sizes: 1024x1024, 1792x1024, 1024x1792
+- Quality: standard or hd
 ### Whisper
 - Audio transcription
-- 25 MB limit
+- 25 MB file limit
 ### Embeddings
-- text-embedding-3-large (3072 dims)
-- text-embedding-3-small (1536 dims)
+- text-embedding-3-large (3,072 dims)
+- text-embedding-3-small (1,536 dims)
+- text-embedding-ada-002 (1,536 dims, legacy)
+- Max 2,048 items per batch
 ## API Parameters
-### temperature (0-2)
-- Low = deterministic
-- High = creative
-### top_p (0-1)
+### temperature (0.0-2.0)
+- Low (0-0.3) = deterministic (code, data)
+- High (0.7-1.5) = creative (marketing, stories)
+### top_p (0.0-1.0)
 - Nucleus sampling
-- Don't set both!
-### frequency_penalty (-2 to 2)
-- Reduce repetition
-### presence_penalty (-2 to 2)
+- Don't set BOTH temperature AND top_p
+### frequency_penalty (-2.0 to 2.0)
+- Reduce word repetition
+### presence_penalty (-2.0 to 2.0)
 - Encourage new topics
 ### Others
-- max_tokens
-- stop (up to 4)
-- n, logprobs
+- max_tokens (output length)
+- stop (up to 4 sequences)
+- n (number of completions)
+- logprobs (token probabilities)
 ## Message Roles
-- system (behavior)
-- user (input)
-- assistant (response / few-shot)
-- tool / function
+- system (behavior/persona — first message)
+- user (human input)
+- assistant (AI response / few-shot examples)
+- tool / function (tool call results)
 ## Prompt Engineering
-- Zero-shot
-- Few-shot
-- Chain-of-thought
-- Grounding (RAG)
+### Techniques
+- Zero-shot (no examples)
+- One-shot / Few-shot (with examples)
+- Chain-of-thought ("think step by step")
+- Grounding (provide reference docs — RAG)
+### Best Practices
+- Use delimiters to separate instructions
+- Specify output format (JSON, bullets)
+- Provide examples of desired output
+- System message for persistent rules
 ## RAG Pattern
 ### Flow
-- Query → AI Search → Docs → OpenAI → Response
-### Components
-- Embedding model (vectorize)
-- Azure AI Search (retrieve)
-- Azure OpenAI (generate)
-### "On your data"
-- No-code RAG
-- Auto-cites sources
+- User query → Azure AI Search retrieves docs
+- Docs injected as context in system message
+- Azure OpenAI generates grounded answer
+### Key Components
+- Embedding model (text → vectors)
+- Azure AI Search (vector/semantic/hybrid)
+- Azure OpenAI (generate answer)
+### "On your data" Feature
+- No-code RAG in Azure OpenAI Studio
+- Connects to AI Search, Blob, uploaded files
+- Auto-cites sources in response
 ## Microsoft Foundry
 ### Hub
-- Shared infrastructure
+- Top-level shared resource
+- Compute, connections, policies
 ### Project
-- Isolated workspace
+- Isolated workspace per team/use case
+### Connections
+- Links to OpenAI, AI Search, storage
 ### Prompt Flow
-- LLM / Python / Prompt / Tool nodes
-### Evaluation
-- Groundedness
-- Relevance
-- Coherence
-- Fluency
+- Visual LLM orchestration
+- Node types: LLM, Python, Prompt, Tool
+### Evaluation Metrics
+- Groundedness (supported by context?)
+- Relevance (addresses the question?)
+- Coherence (logically consistent?)
+- Fluency (grammatically correct?)
+- Similarity (close to ground truth?)
+### Tracing
+- Debug request pipeline end-to-end
 ## Fine-Tuning
-- JSONL format
-- Min 10 examples
-- GPT-4o, 4o-mini, 4.1 series
-- ≠ RAG (style vs data)`},
+- When prompt engineering isn't enough
+- JSONL format: {"messages": [...]} per line
+- Min 10 examples (50-100+ recommended)
+- Models: GPT-4o, GPT-4o-mini, GPT-4.1 series
+- Result = new custom deployment
+- Cost = training + hosting
+- Fine-tuning ≠ RAG
+  - RAG = dynamic data grounding
+  - Fine-tuning = style/format/domain behavior
+## Deployment & Operations
+### Types
+- Standard (pay-per-token, shared)
+- Global Standard (multi-region, highest availability)
+- Provisioned PTU (reserved tokens/min)
+- Data Zone (data stays in geography)
+### Monitoring
+- Azure Monitor + Application Insights
+- Diagnostic settings → Log Analytics
+- Content Safety dashboard
+- Token usage metrics`},
   {id:'d3', title:'Domain 3: Agentic Solutions (5-10%)', color:'#06b6d4', md:`# Agentic Solutions
 ## What is an Agent?
-- Receives goal
-- Plans steps
-- Uses tools
-- Iterates
-- Returns result
+- Receives a goal or task
+- Plans steps to accomplish it
+- Uses tools (APIs, functions, data)
+- Iterates — observes results, adjusts
+- Returns final answer or outcome
+### Agent vs Chatbot
+- Chatbot: responds to prompts, no tools, stateless
+- Agent: plans autonomously, uses tools, maintains state
 ## Foundry Agent Service
 ### API Objects
 - Agent (model + instructions + tools)
-- Thread (conversation)
-- Message (user/assistant)
-- Run (execution)
-- RunStep (individual action)
+- Thread (conversation container)
+- Message (user or assistant)
+- Run (execution of agent on thread)
+- RunStep (individual action: tool call, message)
+### API Flow
+- Create Agent → Create Thread → Add Messages
+- Create Run → Poll Run status → Get results
 ### Built-in Tools
-- Code Interpreter
-- File Search
-- Function Calling
-- Azure AI Search
-- Bing Search
+- Code Interpreter (Python sandbox)
+- File Search (vector retrieval on uploads)
+- Function Calling (your custom APIs)
+- Azure AI Search (RAG)
+- Bing Search (web grounding)
+- Azure Functions (serverless code)
+- Microsoft 365 (Graph API)
 ## Semantic Kernel
-### Concepts
-- Kernel (orchestrator)
-- Plugin (function collection)
-- Function (callable action)
-- Planner (auto-plan)
-- Memory (history)
-- Connector (AI services)
+### Key Concepts
+- Kernel (central orchestrator)
+- Plugin (collection of callable functions)
+- Function (single action: native or prompt)
+- Planner (auto-creates execution plan)
+- Memory (conversation history + facts)
+- Connector (links to AI services)
+### SDKs
+- .NET, Python, Java
 ## Multi-Agent Patterns
-- Sequential (chain)
-- Parallel (simultaneous)
-- Hierarchical (manager → workers)
-- Collaborative (discuss + refine)
-## Deployment
-- Microsoft Foundry portal/SDK
-- Application Insights tracing
+- Sequential (chain: output → next input)
+- Parallel (simultaneous subtasks)
+- Hierarchical (manager → worker agents)
+- Collaborative (agents discuss + refine)
+### Key Considerations
+- Handoff (transfer control between agents)
+- Shared state (context/memory sharing)
+- Conflict resolution (contradictions)
+- Human-in-the-loop (approval at key points)
+## Testing & Deployment
+### Testing
+- Unit test individual tools/functions
+- End-to-end test with ground truth
+- Test edge cases + adversarial inputs
+### Optimization
+- Refine system instructions
+- Optimize tool descriptions (agent picks by description)
+- Use smaller models for simple subtasks
+### Deployment
+- Microsoft Foundry portal or SDK
+- Application Insights / tracing
 - Content safety filters
-- Rate limiting + auth`},
+- Rate limiting + authentication`},
   {id:'d4', title:'Domain 4: Computer Vision (10-15%)', color:'#f59e0b', md:`# Computer Vision
 ## Image Analysis 4.0
-### Features
-- caption / denseCaptions
-- tags
-- objects (bounding boxes)
-- people
-- smartCrops (0.75-1.8)
-- read (OCR)
+### Visual Features (API values)
+- caption (single description + confidence)
+- denseCaptions (multiple regions + bounding boxes)
+- tags (content tags + confidence)
+- objects (detected objects + bounding boxes)
+- people (detected people + bounding boxes)
+- smartCrops (crop regions, 0.75-1.8 ratio)
+- read (OCR text + bounding polygons)
+### Options
+- language (en, ja, zh...)
+- gender-neutral-caption (person/child instead of man/woman)
+- model-version
+### Region Availability
+- caption + denseCaptions only in certain regions
+## Service Selection
+- Detect people (boxes): Image Analysis 4.0
+- Identify WHO: Face API (Identify)
+- "Cat or dog?": Custom Vision (classification)
+- "Where are cats?": Custom Vision (object detection)
+- Extract text: Read API or Document Intelligence
 ## Face API
 ### Detection Models
-#### detection_01 (default)
+#### detection_01 (DEFAULT)
 - General purpose
 - Landmarks: YES
-- Attributes: ALL
+- Attributes: ALL (except mask)
 #### detection_02
-- Blurry / small / side-view
+- Blurry / small / side-view faces
 - Landmarks: NO
 - Attributes: NO
-#### detection_03 (best)
-- Best accuracy
-- Small faces (64×64)
+#### detection_03 (BEST)
+- Best accuracy overall
+- Small faces (64x64), rotated
 - Landmarks: YES
-- Mask attribute: YES
+- Mask attribute: YES (only model!)
 ### Recognition Models
-- recognition_01 (default, legacy)
-- recognition_02 (improved)
-- recognition_03 (better)
-- recognition_04 (BEST + face masks)
-### Key Rules
-- Can't change model after creation
-- Models must be consistent
-- High quality for enrollment
-- Medium+ for identification
-- Face ID TTL: 86400s (24h)
-- Min face: 36×36px
+- recognition_01 (DEFAULT, legacy 2017)
+- recognition_02 (improved 2019)
+- recognition_03 (better 2020)
+- recognition_04 (BEST 2021 + face masks)
+### Critical Rules
+- Can't change model after PersonGroup creation
+- Models must be consistent within a group
+- detection_02 = NO landmarks, NO attributes
+- Default if unspecified: detection_01 + recognition_01
+### Face Attributes
+- blur (low/medium/high) — detection_01, _03
+- exposure (under/good/over) — detection_01, _03
+- glasses (No/Reading/Sun/Swimming) — detection_01, _03
+- headPose (roll, yaw, pitch) — detection_01, _03
+- mask (type + noseAndMouthCovered) — detection_03 ONLY
+- noise (low/medium/high) — detection_01, _03
+- occlusion (eye/forehead/mouth) — detection_01, _03
+- qualityForRecognition — detection_01/_03 + recognition_03/_04
+### Quality Rules
+- High quality → enrollment
+- Medium+ → identification
+### Parameters
+- detectionModel (01, 02, 03)
+- recognitionModel (01-04)
+- returnFaceId (true for recognition)
+- returnFaceLandmarks (27 points)
+- returnFaceAttributes (comma list)
+- faceIdTimeToLive (default 86400s = 24h)
 ### Operations
-- Detect → Identify → Verify
-- Find Similar
-- Group
+- Detect (find faces, bounding boxes)
+- Identify (match against PersonGroup, 1:many)
+- Verify (same person? 1:1)
+- Find Similar (FaceList)
+- Group (cluster similar faces)
+### PersonGroup Workflow
+- Create group → Add persons → Add faces → Train → Identify
+- PersonGroup/FaceList: immutable recognition model
+- LargePersonGroup/LargeFaceList: >1000 items
+### Limited Access
+- Recognition requires approval (intake form)
+- Detection is generally available
+### Numbers
+- Min face: 36x36 px
+- Max face: 4096x4096 px
+- Max image: 6 MB
+- Formats: JPEG, PNG, GIF (1st frame), BMP
+- Face ID TTL: 86400s (24h)
+- Landmarks: 27 points
 ## Custom Vision
-### Types
-- Classification (5 img/tag min)
-- Object Detection (15 img/tag min)
-### Metrics
-- Precision / Recall / AP / mAP
+### Model Types
+- Classification (what is it?) — min 5 img/tag (30+ rec)
+- Multilabel (multiple tags per image)
+- Object Detection (where is it?) — min 15 img/tag (50+ rec)
+### Evaluation Metrics
+- Precision (of predicted positives, how many correct)
+- Recall (of actual positives, how many found)
+- AP (area under PR curve)
+- mAP (mean across classes)
+### Workflow
+- Create project → Upload + tag → Train → Evaluate → Publish → Consume
 ### Domains
-- General / Compact (exportable)
+- General (best accuracy, cloud)
+- General Compact (export to ONNX/TF/CoreML)
 - Food / Landmarks / Retail
+### Compact Export
+- ONNX, TensorFlow, CoreML
+- For mobile / edge / IoT
 ### ⚠️ Retiring Sept 2028
+- Migrate to Azure ML AutoML or Content Understanding
 ## Video Indexer
-- Faces, OCR, topics
-- Keywords, sentiment
-- Scenes, transcript
-- Brands, named entities
+### Insights Extracted
+- Faces, OCR, topics, keywords
+- Sentiment, scenes, shots
+- Transcript, translation
+- Labels, brands, named entities
+- Observed people (tracking)
+### Access
+- Portal: videoindexer.ai
+- REST API
+- Input: URL, upload, Azure Blob
 ## Spatial Analysis
-- Person counting
-- Distance measurement
-- Zone / line crossing
-- Dwell time
-- Edge device + NVIDIA GPU`},
+### Operations
+- Person counting (in a zone)
+- Person distance (between people)
+- Person zone crossing (enter/exit)
+- Person line crossing (virtual line)
+- Person dwell time (duration in zone)
+### Requirements
+- Edge device (Docker container)
+- NVIDIA GPU required
+- RTSP video stream input
+- Use: retail, workplace safety, occupancy`},
   {id:'d5', title:'Domain 5: NLP & Speech (15-20%)', color:'#22c55e', md:`# NLP & Speech
 ## Text Analytics
+### API Endpoints
+- /text/analytics/v3.1/sentiment
+- /text/analytics/v3.1/keyPhrases
+- /text/analytics/v3.1/entities/recognition/general
+- /text/analytics/v3.1/entities/recognition/pii
+- /text/analytics/v3.1/languages
+- /text/analytics/v3.1/entities/linking
 ### Features
-- Sentiment (pos/neg/neutral/mixed)
-- Key Phrases (no scores)
-- Named Entities
-- PII Detection (redactedText)
-- Language Detection
-- Entity Linking (Wikipedia)
+- Sentiment (positive/negative/neutral/mixed)
+- Key Phrases (strings, NO confidence scores)
+- Named Entities (Person, Location, Org, DateTime...)
+- PII Detection (redactedText with *****)
+- Language Detection (no language field needed!)
+- Entity Linking (links to Wikipedia)
 ### Limits
-- 5,120 chars/doc
-- 1,000 docs/request
+- Max 5,120 chars/doc
+- Max 1,000 docs/request
+- Max 1 MB/request
+### Language Detection Gotcha
+- No language field needed in request
+- Returns "unknown" with confidence 1.0 (not 0.0!)
 ## Translator
-### Key Details
-- Global endpoint (not resource-specific)
-- Requires Ocp-Apim-Subscription-Region
-- Multi-target: to=fr&to=de
+### Unique Properties
+- Global endpoint: api.cognitive.microsofttranslator.com
+- Requires Ocp-Apim-Subscription-Region header
+- NOT resource-specific endpoint
 ### Features
-- Translate / Transliterate
-- Detect / Dictionary
-- Document Translation (batch)
-- Custom Translator (10K+ sentences)
+- Translate: to=fr&to=de&to=ja (multi-target)
+- Source language: from=en (optional, auto-detect)
+- Transliterate (script conversion, not translation)
+- Detect (source language)
+- Dictionary Lookup / Examples
+- Document Translation (async batch: Word, PDF)
+### Custom Translator
+- Domain-specific parallel text
+- 10,000+ sentence pairs for quality
+- Publish → use category parameter in API
 ## Speech Service
 ### SDK Classes
 - SpeechRecognizer (STT)
 - SpeechSynthesizer (TTS)
-- IntentRecognizer (speech + CLU)
-- TranslationRecognizer
-- KeywordRecognizer
-### SSML Tags
-- speak (root)
-- voice (select voice)
+- IntentRecognizer (speech + CLU intent)
+- TranslationRecognizer (speech translation)
+- KeywordRecognizer (wake word, .table file)
+### Config Classes
+- SpeechConfig (STT/TTS)
+- SpeechTranslationConfig (translation)
+- AudioConfig (file or microphone)
+### Recognition Results
+- result.reason: RecognizedSpeech / NoMatch / Canceled
+- result.text: the recognized text
+- result.offset / duration
+### SSML Tags (EXAM FAVORITE)
+- speak (root: version, xml:lang)
+- voice (name="en-US-JennyNeural")
 - prosody (rate/pitch/volume)
-- break (pause)
-- emphasis (strong/moderate)
-- say-as (date/phone/cardinal)
-- mstts:express-as (emotion)
-- sub (alias)
-- phoneme (pronunciation)
+- break (time="500ms" or strength)
+- emphasis (level: strong/moderate/reduced)
+- say-as (interpret-as: date/telephone/cardinal/ordinal/spell-out)
+- mstts:express-as (style: cheerful/sad/angry/excited)
+- phoneme (alphabet: ipa/sapi, ph)
+- sub (alias: "UN" → "United Nations")
+- p / s (paragraph / sentence)
+### SSML Namespace
+- xmlns:mstts="http://www.w3.org/2001/mstts"
+- Required for mstts:express-as tag!
+### Prosody Values
+- rate: x-slow/slow/medium/fast/x-fast/+50%
+- pitch: x-low/low/medium/high/x-high/+10%
+- volume: silent/x-soft/soft/medium/loud/x-loud
+### Speech Translation
+- Speech-to-text: add_target_language("fr")
+- Speech-to-speech: also add voice_name
 ### Custom Speech
-- Custom STT models
-- Audio + transcripts
-## CLU
-### Concepts
-- Intent (BookFlight)
-- Entity (destination=Paris)
-- Utterance (example sentence)
-- None intent (always include)
+- Custom STT with your audio + transcripts
+- For accents, domain terms, noisy environments
+### Intent Recognition
+- IntentRecognizer + CLU model
+- Recognizes speech AND extracts intent + entities
+### Keyword Recognition
+- KeywordRecognizer + .table file
+- Wake word detection (e.g., "Hey Computer")
+- Generated via Speech Studio
+## CLU (Conversational Language Understanding)
+### Key Concepts
+- Intent: what user wants (BookFlight)
+- Entity: parameters (destination=Paris)
+- Utterance: example sentence
+- None intent: ALWAYS include (out-of-scope)
 ### Entity Types
-- Learned (ML)
-- List (fixed + synonyms)
-- Prebuilt (datetime, number)
-- Regex (patterns)
+- Learned (ML from labeled examples)
+- List (fixed values + synonyms)
+- Prebuilt (datetime, number, email, URL)
+- Regex (pattern match: flight numbers)
+### Workflow
+- Create project → Define intents/entities
+- Add utterances (5+ per intent)
+- Train → Evaluate (precision/recall/F1)
+- Deploy to named slot → Query via API
+### CLU vs Custom Question Answering
+- CLU: "Book a flight to Paris" → intent + entities
+- QA: "How do I reset password?" → FAQ answer
+- CLU = commands/actions
+- QA = information retrieval
 ## Custom Question Answering
 ### Sources
-- URL / File / Manual / Chit-chat
+- URL (FAQ pages)
+- File (PDF, DOCX, XLSX, TXT, TSV)
+- Manual (QnA pairs)
+- Chit-chat (personality presets)
 ### Features
-- Multi-turn (follow-up)
-- Alternate phrasing
-- Chit-chat personalities
-- Active learning
-- Precise answering`},
+- Multi-turn (follow-up prompts)
+- Alternate phrasing (multiple Qs → same A)
+- Chit-chat: Professional/Friendly/Witty/Caring/Enthusiastic
+- Active learning (suggests from traffic)
+- Metadata (key-value filtering)
+- Precise answering (short answer from passage)
+- Multi-language
+### Workflow
+- Create → Add sources → Edit QnA → Add phrasing
+- Multi-turn prompts → Chit-chat → Test → Deploy → Query
+## Numbers to Remember
+- Text Analytics: 5,120 chars/doc, 1,000 docs/req
+- Custom Translator: 10,000+ parallel sentences
+- SSML namespace: xmlns:mstts="http://www.w3.org/2001/mstts"
+- Chit-chat: 5 personalities`},
   {id:'d6', title:'Domain 6: Knowledge Mining (15-20%)', color:'#ef4444', md:`# Knowledge Mining
 ## Azure AI Search
 ### Architecture
-- Data Source → Indexer → Skillset → Index
-- Knowledge Store (side output)
+- Data Source → Indexer → [Skillset] → Index → Queries
+- Knowledge Store (side output to storage)
 ### Data Sources
-- Azure Blob / ADLS Gen2
-- Azure SQL / Cosmos DB
-- Table Storage / MySQL
+- Azure Blob / ADLS Gen2 (azureblob/adlsgen2)
+- Azure SQL / Cosmos DB (azuresql/cosmosdb)
+- Table Storage / MySQL (azuretable/mysql)
 ### Indexer
-- fieldMappings (before enrichment)
-- outputFieldMappings (after skillset)
-- Schedule: ISO 8601 (PT2H, P1D)
-- Change detection / Soft delete
+- fieldMappings (BEFORE enrichment: source → index)
+- outputFieldMappings (AFTER enrichment: skillset → index)
+- Schedule: ISO 8601 (PT2H = 2hrs, P1D = daily)
+- Change detection (high watermark)
+- Soft delete (flag column)
 ## Skillsets
-### Built-in Skills
-- OCR (Vision.OcrSkill)
-- Image Analysis
-- Key Phrase Extraction
-- Entity Recognition (V3)
-- Sentiment (V3)
-- Language Detection
-- Translation
-- Text Split / Merge
-- Shaper
-- PII Detection
+### Built-in Skills (@odata.type)
+- OCR: #Microsoft.Skills.Vision.OcrSkill
+- Image Analysis: Vision.ImageAnalysisSkill
+- Key Phrases: Text.KeyPhraseExtractionSkill
+- Entity Recognition: Text.V3.EntityRecognitionSkill
+- Entity Linking: Text.V3.EntityLinkingSkill
+- Sentiment: Text.V3.SentimentSkill
+- Language Detection: Text.LanguageDetectionSkill
+- Translation: Text.TranslationSkill
+- Text Split: Text.SplitSkill
+- Text Merge: Text.MergeSkill
+- Shaper: Util.ShaperSkill
+- Document Extraction: Util.DocumentExtractionSkill
+- PII Detection: Text.PIIDetectionSkill
+- Custom Entity Lookup: Text.CustomEntityLookupSkill
+- Conditional: Util.ConditionalSkill
 ### Custom Skills
 - Azure Function (WebApiSkill)
+- @odata.type: #Microsoft.Skills.Custom.WebApiSkill
 - Request: values[].recordId + data
 - Response: data + errors + warnings
-- recordId MUST match
+- recordId in response MUST match request
+- Timeout: 30s default, 230s max
+### Context Paths
+- /document (root)
+- /document/content (text)
+- /document/normalized_images/* (images)
+- /document/pages/* (after text split)
 ## Index Schema
 ### Field Attributes
-- searchable (full-text)
-- filterable ($filter)
+- searchable (full-text, tokenized)
+- filterable ($filter expressions)
 - sortable ($orderby)
-- facetable (facets)
-- retrievable (in results)
-- key (unique ID)
+- facetable (faceted navigation)
+- retrievable (returned in results)
+- stored (persisted on disk)
+- key (unique doc ID — exactly one)
 ### Data Types
 - Edm.String / Int32 / Int64
 - Edm.Double / Boolean
 - Edm.DateTimeOffset
 - Edm.GeographyPoint
-- Collection(Edm.Single) = vector
+- Edm.ComplexType (nested)
+- Collection(Edm.String)
+- Collection(Edm.Single) = VECTOR field
 ## Query Syntax
 ### Simple (default)
 - Space = OR
-- "phrase" = exact
-- +term = must include
+- "phrase" = exact match
+- +term = must include (AND)
+- -term = must exclude (NOT)
 ### Full Lucene (queryType=full)
-- ~N fuzzy
+- ~N fuzzy (edit distance)
 - * ? wildcards
-- field:value
-- /regex/
+- field:value (field-scoped)
+- /regex/ (regex)
+- term^boost (boost a term)
 ### OData Filters
 - eq, ne, gt, ge, lt, le
 - and, or, not
-- search.in(), geo.distance()
-- any(), all()
-### Parameters
-- $filter, $orderby, $select
-- $top, $skip, $count
-- searchMode (any/all)
-- scoringProfile
+- search.in() (value in list)
+- geo.distance() (geographic)
+- any() / all() (collection filters)
+### Key Parameters
+- $filter (exact match/comparison)
+- $orderby (sort)
+- $select (choose fields)
+- $top / $skip (pagination)
+- $count (include total)
+- facets (category counts)
+- highlight (hit highlighting)
+- searchFields (limit search fields)
+- scoringProfile (boost profile)
+- queryType: simple (default) or full (Lucene)
+- searchMode: any (OR default) or all (AND)
 ## Vector & Semantic Search
-### Vector
-- HNSW (fast approximate)
-- Exhaustive KNN (exact)
+### Vector Search
+- Store in Collection(Edm.Single) fields
+- HNSW (fast approximate, default)
+- Exhaustive KNN (slow exact, 100% recall)
 - Metrics: cosine, euclidean, dotProduct, hamming
-### Semantic
-- queryType=semantic
-- Captions + answers
-- prioritizedFields config
-### Hybrid
-- Text + vector
-- Reciprocal Rank Fusion
+- HNSW params: m (4-10), efConstruction (100-1000), efSearch (100-1000)
+### Semantic Search
+- queryType=semantic&semanticConfiguration=name
+- Provides semantic captions + answers
+- Config: titleField, prioritizedContentFields, prioritizedKeywordsFields
+### Hybrid Search
+- Text + vector in single query
+- Reciprocal Rank Fusion (RRF)
 ## Knowledge Store
-- Table → Azure Table Storage
-- Object → Blob (JSON)
-- File → Blob (images)
-- Use Shaper skill
+### Projection Types
+- Table → Azure Table Storage (analytics/Power BI)
+- Object → Azure Blob Storage (JSON)
+- File → Azure Blob Storage (images)
+### Shaper Skill
+- Reshape data structure for projections
 ## Scoring Profiles
 ### Functions
-- magnitude / freshness
-- distance / tag
+- magnitude (numeric value: rating, clicks)
+- freshness (date recency)
+- distance (geographic proximity)
+- tag (matching tags from query param)
 ### Interpolation
-- linear (default)
-- constant
-- quadratic (NOT for tag)
-- logarithmic (NOT for tag)
-## Document Intelligence
-### Prebuilt
-- prebuilt-invoice
-- prebuilt-receipt
-- prebuilt-idDocument
-- prebuilt-read / layout
-### Custom
-- Template (fixed layout)
-- Neural (variable layout)
-- Min 5 labeled docs
-### Composed
-- Combine models
-- Auto-route
-- Max 200 components
+- linear (default, steady decrease)
+- constant (flat boost)
+- quadratic (slow then sharp — NOT for tag)
+- logarithmic (fast then slow — NOT for tag)
+### Aggregation
+- sum (default) / average / minimum / maximum / firstMatching
+### Limits
+- Max 100 scoring profiles per index
 ## Suggesters & Synonyms
-- analyzingInfixMatching
+### Suggesters
+- Enable autocomplete + search suggestions
+- searchMode: analyzingInfixMatching (only value)
 - One suggester per index
-- Synonym maps (5K rules)`}
+- String fields only, default/language analyzer
+- Adding to existing fields requires index rebuild
+### Synonym Maps
+- "hotel, motel, inn" (bidirectional)
+- "US, United States => USA" (directional)
+- One map per field
+- Max 5,000 rules per map
+## Document Intelligence
+### Prebuilt Models
+- prebuilt-invoice (vendor, dates, line items)
+- prebuilt-receipt (merchant, items, total)
+- prebuilt-idDocument (name, DOB, doc number)
+- prebuilt-businessCard (name, company, phone)
+- prebuilt-tax.us.w2 (employer, wages, tax)
+- prebuilt-read (OCR text)
+- prebuilt-layout (tables + structure)
+- prebuilt-document (key-value pairs)
+### Custom Models
+- Template (fixed layout forms)
+- Neural (variable layout forms)
+- Min 5 labeled documents
+### Composed Models
+- Combine multiple custom models
+- Auto-routes to correct sub-model
+- Max 200 components
+### API
+- Async: POST returns Operation-Location → poll
+### Content Understanding
+- Broader than Doc Intelligence
+- Summarize, classify, detect attributes
+- Multi-modal: docs, images, video, audio
+## Numbers to Remember
+- AI Search free: 50 MB, 3 indexes
+- AI Search Basic: 2 GB, 15 indexes
+- Custom skill timeout: 30s default, 230s max
+- Indexer max run (free): 3 min
+- Indexer max run (standard): 2 hours
+- Doc Intelligence min: 5 labeled docs
+- Composed model max: 200 components
+- Max scoring profiles: 100 per index
+- Synonym maps: 5,000 rules max
+- HNSW m: 4-10, efConstruction: 100-1000, efSearch: 100-1000`}
 ];
 
 function initMindMaps(){
