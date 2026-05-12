@@ -358,6 +358,47 @@ const FLASHCARDS = [
   {id:98,d:'d6',q:'Composed model in Doc Intelligence?',a:'Combines custom models; auto-routes to correct sub-model'},
   {id:99,d:'d6',q:'Semantic search provides what 2 extras?',a:'Semantic captions and semantic answers'},
   {id:100,d:'d6',q:'How does hybrid search merge results?',a:'Reciprocal Rank Fusion (RRF)'},
+  // Missing cards from flashcards.md
+  {id:101,d:'d1',q:'Content filter severity levels in order?',a:'safe → low → medium → high'},
+  {id:102,d:'d1',q:'What detects copyrighted text/code in AI output?',a:'Protected material detection'},
+  {id:103,d:'d1',q:'Name the 4 Azure OpenAI deployment types.',a:'Standard, Global Standard, Provisioned Throughput (PTU), Data Zone Standard'},
+  {id:104,d:'d1',q:'Multi-service endpoint URL pattern?',a:'<name>.cognitiveservices.azure.com'},
+  {id:105,d:'d1',q:'Azure OpenAI endpoint URL pattern?',a:'<resource>.openai.azure.com/openai/deployments/<deployment>/...'},
+  {id:106,d:'d1',q:'Container images come from what registry?',a:'mcr.microsoft.com/azure-cognitive-services/'},
+  {id:107,d:'d1',q:'Free tier label?',a:'F0 (Standard = S0)'},
+  {id:108,d:'d2',q:'High temperature (0.7-1.5) best for?',a:'Creative: marketing copy, stories, brainstorming'},
+  {id:109,d:'d2',q:'Azure OpenAI "On your data" feature does what?',a:'Quick RAG setup — connects to AI Search, no code required'},
+  {id:110,d:'d2',q:'Prompt flow node types?',a:'LLM, Python, Prompt, Tool'},
+  {id:111,d:'d2',q:'Name prompt engineering techniques.',a:'Zero-shot, Few-shot, Chain-of-thought, Grounding'},
+  {id:112,d:'d2',q:'Embedding model dimensions: ada-002 vs 3-large?',a:'ada-002 = 1,536. text-embedding-3-large = 3,072'},
+  {id:113,d:'d3',q:'Semantic Kernel: what is a Plugin?',a:'Collection of functions the agent can call'},
+  {id:114,d:'d3',q:'Agent Service API flow (5 steps)?',a:'Create Agent → Create Thread → Add Messages → Create Run → Poll results'},
+  {id:115,d:'d4',q:'Face API: what does Verify do?',a:'Check if two faces are the same person (1:1 comparison)'},
+  {id:116,d:'d4',q:'Face API: what does Identify do?',a:'Match face against a PersonGroup (1:many)'},
+  {id:117,d:'d4',q:'Face API: PersonGroup workflow?',a:'Create group → Add persons → Add faces → Train → Identify'},
+  {id:118,d:'d4',q:'Custom Vision compact models can be exported to?',a:'ONNX, TensorFlow, CoreML (for mobile/edge)'},
+  {id:119,d:'d4',q:'Video Indexer extracts what insights?',a:'Faces, OCR, topics, keywords, sentiment, scenes, transcript, brands'},
+  {id:120,d:'d4',q:'Spatial Analysis operations?',a:'Person count, distance, zone crossing, line crossing, dwell time'},
+  {id:121,d:'d4',q:'Face max image size?',a:'6 MB'},
+  {id:122,d:'d5',q:'SDK class for speech-to-text?',a:'SpeechRecognizer'},
+  {id:123,d:'d5',q:'SDK class for text-to-speech?',a:'SpeechSynthesizer'},
+  {id:124,d:'d5',q:'SSML: what tag for pronunciation hint (e.g., read "12/25" as date)?',a:'<say-as interpret-as="date">'},
+  {id:125,d:'d5',q:'SSML: what tag substitutes text (e.g., "UN" → "United Nations")?',a:'<sub alias="United Nations">'},
+  {id:126,d:'d5',q:'Name chit-chat personality options.',a:'Professional, Friendly, Witty, Caring, Enthusiastic'},
+  {id:127,d:'d5',q:'What is transliteration?',a:'Converting script (e.g., kanji → romaji), NOT translating meaning'},
+  {id:128,d:'d6',q:'@odata.type for a custom Web API skill?',a:'#Microsoft.Skills.Custom.WebApiSkill'},
+  {id:129,d:'d6',q:'Context path for extracted images?',a:'/document/normalized_images/*'},
+  {id:130,d:'d6',q:'Which interpolations NOT allowed for tag scoring?',a:'quadratic and logarithmic'},
+  {id:131,d:'d6',q:'Knowledge store object projections → stored where?',a:'Azure Blob Storage (as JSON)'},
+  {id:132,d:'d6',q:'Template model vs Neural model (Doc Intelligence)?',a:'Template = fixed layout. Neural = variable layout.'},
+  {id:133,d:'d6',q:'Name 5 built-in AI Search skills.',a:'OCR, Key Phrase Extraction, Entity Recognition, Sentiment, Language Detection'},
+  {id:134,d:'d6',q:'Max composed model components?',a:'200'},
+  {id:135,d:'d6',q:'AI Search free tier limits?',a:'50 MB storage, 3 indexes'},
+  {id:136,d:'d6',q:'Field attribute for faceted navigation?',a:'facetable'},
+  {id:137,d:'d6',q:'Vector search algorithm types?',a:'HNSW (approximate, default) and Exhaustive KNN (exact, brute force)'},
+  {id:138,d:'d6',q:'Semantic config prioritizedFields includes?',a:'titleField, prioritizedContentFields, prioritizedKeywordsFields'},
+  {id:139,d:'d4',q:'Image Analysis 4.0: gender-neutral-caption option does what?',a:'Replaces "man/woman" with "person", "boy/girl" with "child"'},
+  {id:140,d:'d4',q:'Smart crops aspect ratio range?',a:'0.75 – 1.8'},
 ];
 
 const QUIZ_QUESTIONS = [
@@ -436,6 +477,64 @@ const QUIZ_QUESTIONS = [
   {d:'d3',q:'In the Agent API, what object do you create to trigger the agent to process a conversation?',
    opts:['Agent','Thread','Message','Run'],
    ans:3, exp:'A Run executes the agent on a thread. Thread holds messages, Run triggers processing.'},
+  // Additional quiz questions
+  {d:'d1',q:'Your company requires Azure AI services in an isolated network. What should you deploy?',
+   opts:['VNet with service endpoints only','Azure AI in a Docker container','Private endpoint for the resource','Both container and private endpoint are valid'],
+   ans:3, exp:'Both containers (disconnected) and private endpoints (network-isolated) work for isolation.'},
+  {d:'d1',q:'You are regenerating API keys. The app currently uses Key 1. Which key should you regenerate FIRST?',
+   opts:['Key 1','Key 2','Both simultaneously','Neither — use managed identity instead'],
+   ans:1, exp:'Regenerate Key 2 first (app doesn\'t use it), then switch app to Key 2, then regenerate Key 1.'},
+  {d:'d2',q:'The model keeps repeating the same paragraph. Which parameter should you increase?',
+   opts:['temperature','frequency_penalty','presence_penalty','max_tokens'],
+   ans:1, exp:'frequency_penalty penalizes tokens based on how often they appeared. presence_penalty is for encouraging new topics.'},
+  {d:'d2',q:'You want to provide few-shot examples in a chat completion. Which message role do you use for the example responses?',
+   opts:['system','user','assistant','function'],
+   ans:2, exp:'Few-shot examples use alternating user/assistant message pairs. The assistant role carries the example responses.'},
+  {d:'d2',q:'What is the minimum fine-tuning data required?',
+   opts:['5 examples','10 examples','50 examples','100 examples'],
+   ans:1, exp:'Minimum is 10 examples, but 50-100+ is recommended for quality.'},
+  {d:'d4',q:'Which Face detection model supports the mask attribute?',
+   opts:['detection_01','detection_02','detection_03','All detection models'],
+   ans:2, exp:'The mask attribute is only available with detection_03.'},
+  {d:'d4',q:'You need to identify WHO a person is from a photo. Which service?',
+   opts:['Image Analysis 4.0 (people feature)','Face API (Identify)','Custom Vision','Video Indexer'],
+   ans:1, exp:'Image Analysis detects people with bounding boxes but NOT identity. Face API Identify matches against a PersonGroup.'},
+  {d:'d4',q:'You created a PersonGroup with recognition_03. Can you add faces detected with recognition_04?',
+   opts:['Yes, models are interchangeable','No, recognition models must match','Yes, but only for Verify operations','Yes, if you retrain the group'],
+   ans:1, exp:'A PersonGroup always uses the recognition model it was created with. Models must be consistent.'},
+  {d:'d5',q:'Language detection returns "unknown" with what confidence score?',
+   opts:['0.0','0.5','1.0','NaN'],
+   ans:2, exp:'Ambiguous content returns "unknown" with confidence 1.0 (not 0.0!). The iso code is NaN.'},
+  {d:'d5',q:'Which SDK class do you use for keyword/wake word detection?',
+   opts:['SpeechRecognizer','IntentRecognizer','KeywordRecognizer','TranslationRecognizer'],
+   ans:2, exp:'KeywordRecognizer detects wake words with a keyword model (.table file).'},
+  {d:'d5',q:'CLU: which entity type uses a fixed list of values with synonyms?',
+   opts:['Learned','List','Prebuilt','Regex'],
+   ans:1, exp:'List entities define fixed values with synonyms. Learned uses ML from labeled examples.'},
+  {d:'d6',q:'You need to add a suggester to existing fields in an index. What happens?',
+   opts:['It works immediately','You must rebuild the index','Just rerun the indexer','Update the skillset'],
+   ans:1, exp:'Adding a suggester to existing fields requires an index rebuild because prefixes must be re-indexed.'},
+  {d:'d6',q:'Map the OCR enrichment output to an index field. Which mapping type?',
+   opts:['fieldMappings','outputFieldMappings','skillset inputs','index projections'],
+   ans:1, exp:'outputFieldMappings maps enrichment outputs (after skillset) to index fields. fieldMappings is for source data before enrichment.'},
+  {d:'d6',q:'Which scoring function interpolation types are NOT allowed for the tag function?',
+   opts:['linear and constant','quadratic and logarithmic','constant and logarithmic','All are allowed'],
+   ans:1, exp:'Quadratic and logarithmic interpolation are not allowed for tag scoring functions.'},
+  {d:'d6',q:'What is the @odata.type for the OCR built-in skill?',
+   opts:['#Microsoft.Skills.Text.OcrSkill','#Microsoft.Skills.Vision.OcrSkill','#Microsoft.Skills.Custom.OcrSkill','#Microsoft.Skills.Util.OcrSkill'],
+   ans:1, exp:'OCR is a Vision skill: #Microsoft.Skills.Vision.OcrSkill'},
+  {d:'d1',q:'What Azure OpenAI deployment type routes traffic globally for highest availability?',
+   opts:['Standard','Global Standard','Provisioned Throughput','Data Zone Standard'],
+   ans:1, exp:'Global Standard provides multi-region routing for highest availability. Standard is regional.'},
+  {d:'d2',q:'In Microsoft Foundry, what measures whether an AI response is supported by provided context?',
+   opts:['Relevance','Coherence','Groundedness','Fluency'],
+   ans:2, exp:'Groundedness checks if the answer is supported by the context. Relevance checks if it addresses the question.'},
+  {d:'d5',q:'You need speech-to-speech translation (spoken English → spoken French). What extra config is needed?',
+   opts:['Add target language only','Add voice_name for target language','Use SpeechSynthesizer separately','Use custom speech model'],
+   ans:1, exp:'Speech-to-text translation just needs add_target_language. Speech-to-speech also needs a voice_name for synthesized output.'},
+  {d:'d4',q:'What QualityForRecognition level is recommended for person identification?',
+   opts:['Low or better','Medium or better','High only','Any quality'],
+   ans:1, exp:'Medium or better for identification. High is recommended for enrollment.'},
 ];
 
 // ==================== CHEAT SHEET DATA ====================
@@ -518,8 +617,193 @@ const CHEATSHEETS = [
 <tr><td><code>prebuilt-receipt</code></td><td>Merchant, items, total</td></tr>
 <tr><td><code>prebuilt-idDocument</code></td><td>Name, DOB, doc number</td></tr>
 <tr><td><code>prebuilt-read</code></td><td>OCR text extraction</td></tr>
-<tr><td><code>prebuilt-layout</code></td><td>Tables + structure</td></tr></table>
-<p style="margin-top:12px"><b>Custom:</b> Template (fixed layout) vs Neural (variable). Min 5 labeled docs. <b>Composed</b> = combine + auto-route.</p>`},
+<tr><td><code>prebuilt-layout</code></td><td>Tables + structure</td></tr>
+<tr><td><code>prebuilt-tax.us.w2</code></td><td>W-2 tax form fields</td></tr>
+<tr><td><code>prebuilt-businessCard</code></td><td>Name, company, phone, email</td></tr>
+<tr><td><code>prebuilt-document</code></td><td>Key-value pairs, entities, tables</td></tr></table>
+<p style="margin-top:12px"><b>Custom:</b> Template (fixed layout) vs Neural (variable). Min 5 labeled docs. <b>Composed</b> = combine + auto-route (max 200 components).</p>`},
+  // NEW cheat sheet sections
+  {d:'d1', title:'Deployment Types', content:`<table class="cs-table"><tr><th>Type</th><th>Key Feature</th></tr>
+<tr><td><b>Standard</b></td><td>Pay-per-token, shared infrastructure</td></tr>
+<tr><td><b>Global Standard</b></td><td>Multi-region routing, highest availability</td></tr>
+<tr><td><b>Provisioned Throughput (PTU)</b></td><td>Reserved capacity, guaranteed tokens/min</td></tr>
+<tr><td><b>Data Zone Standard</b></td><td>Data stays in specified geography</td></tr></table>
+<p style="margin-top:12px"><b>Exam tip:</b> "Guaranteed minimum tokens per minute" = Provisioned Throughput</p>`},
+  {d:'d1', title:'RBAC Roles', content:`<table class="cs-table"><tr><th>Role</th><th>Permissions</th></tr>
+<tr><td><code>Cognitive Services User</code></td><td>Call APIs (read only)</td></tr>
+<tr><td><code>Cognitive Services Contributor</code></td><td>Manage resources + call APIs</td></tr>
+<tr><td><code>Cognitive Services OpenAI User</code></td><td>Call OpenAI APIs specifically</td></tr>
+<tr><td><code>Cognitive Services OpenAI Contributor</code></td><td>Manage OpenAI deployments + call APIs</td></tr></table>`},
+  {d:'d1', title:'Networking & Containers', content:`<table class="cs-table"><tr><th>Feature</th><th>Purpose</th></tr>
+<tr><td><b>Private Endpoint</b></td><td>Private IP within your VNet; no public internet</td></tr>
+<tr><td><b>Service Endpoint</b></td><td>Optimized route from VNet (still public IP)</td></tr>
+<tr><td><b>Firewall rules</b></td><td>Allow specific IP ranges</td></tr></table>
+<p style="margin-top:12px"><b>Containers:</b> Docker images from <code>mcr.microsoft.com/azure-cognitive-services/</code>. Require billing phone-home unless <b>disconnected container</b> (special approval).</p>`},
+  {d:'d1', title:'Monitoring & Key Metrics', content:`<table class="cs-table"><tr><th>Tool</th><th>Purpose</th></tr>
+<tr><td>Azure Monitor</td><td>Metrics, logs, alerts</td></tr>
+<tr><td>Diagnostic settings</td><td>Route to Log Analytics, Storage, Event Hubs</td></tr>
+<tr><td>Application Insights</td><td>End-to-end tracing</td></tr>
+<tr><td>Cost Management</td><td>Budgets, alerts, spending analysis</td></tr></table>
+<p style="margin-top:12px"><b>Metrics:</b> Total Calls, Total Errors, Latency, Blocked Calls (429). <b>Tiers:</b> Free (F0) vs Standard (S0).</p>`},
+  {d:'d1', title:'REST API Endpoint Patterns', content:`<table class="cs-table"><tr><th>Service</th><th>Pattern</th></tr>
+<tr><td>Multi-service</td><td><code>&lt;resource&gt;.cognitiveservices.azure.com/</code></td></tr>
+<tr><td>Azure OpenAI</td><td><code>&lt;resource&gt;.openai.azure.com/openai/deployments/&lt;deployment&gt;/...</code></td></tr>
+<tr><td>AI Search</td><td><code>&lt;service&gt;.search.windows.net/</code></td></tr>
+<tr><td>Translator</td><td><code>api.cognitive.microsofttranslator.com/</code> (GLOBAL)</td></tr>
+<tr><td>Speech</td><td><code>&lt;region&gt;.api.cognitive.microsoft.com/</code></td></tr>
+<tr><td>Face API</td><td><code>&lt;resource&gt;.cognitiveservices.azure.com/face/v1.0/detect</code></td></tr></table>`},
+  {d:'d2', title:'OpenAI Models', content:`<table class="cs-table"><tr><th>Model</th><th>Best For</th><th>Context</th></tr>
+<tr><td><b>GPT-4o</b></td><td>Multimodal, fastest GPT-4 class</td><td>128K in / 16K out</td></tr>
+<tr><td><b>GPT-4o-mini</b></td><td>Fast, cheap (replaces GPT-3.5)</td><td>128K in / 16K out</td></tr>
+<tr><td><b>GPT-4 Turbo</b></td><td>Complex reasoning + vision</td><td>128K in / 4K out</td></tr>
+<tr><td><b>gpt-image-1</b></td><td>Image generation</td><td>N/A</td></tr>
+<tr><td><b>Whisper</b></td><td>Audio transcription</td><td>25 MB file</td></tr>
+<tr><td><b>text-embedding-3-large</b></td><td>Best embeddings (3,072 dims)</td><td>8K tokens</td></tr>
+<tr><td><b>text-embedding-3-small</b></td><td>Cheaper embeddings (1,536 dims)</td><td>8K tokens</td></tr></table>`},
+  {d:'d2', title:'Prompt Engineering', content:`<table class="cs-table"><tr><th>Technique</th><th>Description</th></tr>
+<tr><td><b>Zero-shot</b></td><td>No examples, just instruction</td></tr>
+<tr><td><b>Few-shot</b></td><td>Provide examples in the prompt (user/assistant pairs)</td></tr>
+<tr><td><b>Chain-of-thought</b></td><td>"Think step by step"</td></tr>
+<tr><td><b>Grounding</b></td><td>Provide reference docs as context (RAG)</td></tr></table>
+<p style="margin-top:12px"><b>Best practices:</b> Use delimiters (\`\`\`, """). Specify output format. Use system message for rules. Be specific.</p>`},
+  {d:'d2', title:'Foundry — Hub, Project, Prompt Flow', content:`<table class="cs-table"><tr><th>Concept</th><th>What</th></tr>
+<tr><td><b>Hub</b></td><td>Top-level resource: shared compute, connections, policies</td></tr>
+<tr><td><b>Project</b></td><td>Workspace within a hub (per team/use case)</td></tr>
+<tr><td><b>Connections</b></td><td>Links to OpenAI, AI Search, storage</td></tr>
+<tr><td><b>Prompt flow</b></td><td>Visual LLM orchestration (nodes: LLM, Python, Prompt, Tool)</td></tr>
+<tr><td><b>Evaluation</b></td><td>Groundedness, Relevance, Coherence, Fluency, Similarity</td></tr>
+<tr><td><b>Tracing</b></td><td>Debug request pipeline</td></tr></table>`},
+  {d:'d2', title:'Fine-Tuning & Image Generation', content:`<p><b>Fine-tuning:</b> JSONL format, min 10 examples, models: GPT-4o, GPT-4o-mini, GPT-4.1 series. Result = new deployment. Cost = training + hosting.</p>
+<p style="margin-top:8px"><b>RAG vs Fine-tune:</b> RAG = dynamic data grounding. Fine-tune = style/format/domain behavior.</p>
+<p style="margin-top:12px"><b>Image gen (DALL-E / gpt-image-1):</b></p>
+<table class="cs-table"><tr><th>Size</th><th>Aspect</th></tr>
+<tr><td>1024×1024</td><td>Square</td></tr>
+<tr><td>1792×1024</td><td>Landscape</td></tr>
+<tr><td>1024×1792</td><td>Portrait</td></tr></table>
+<p style="margin-top:8px">Quality: <code>standard</code> (fast) or <code>hd</code> (detailed)</p>`},
+  {d:'d3', title:'Agent Service — API Objects & Flow', content:`<table class="cs-table"><tr><th>Object</th><th>Purpose</th></tr>
+<tr><td><b>Agent</b></td><td>Definition: model, instructions, tools</td></tr>
+<tr><td><b>Thread</b></td><td>Conversation container</td></tr>
+<tr><td><b>Message</b></td><td>Single message (user or assistant)</td></tr>
+<tr><td><b>Run</b></td><td>Execution of agent on a thread</td></tr>
+<tr><td><b>RunStep</b></td><td>Individual step (tool call, message)</td></tr></table>
+<p style="margin-top:12px"><b>Flow:</b> Create Agent → Create Thread → Add Messages → Create Run → Poll results</p>
+<p style="margin-top:8px"><b>Tools:</b> Code Interpreter, File Search, Function Calling, Azure AI Search, Bing, Azure Functions</p>`},
+  {d:'d3', title:'Semantic Kernel & Multi-Agent', content:`<table class="cs-table"><tr><th>Concept</th><th>What</th></tr>
+<tr><td><b>Kernel</b></td><td>Central orchestrator</td></tr>
+<tr><td><b>Plugin</b></td><td>Collection of callable functions</td></tr>
+<tr><td><b>Planner</b></td><td>Auto-creates plans from functions</td></tr>
+<tr><td><b>Memory</b></td><td>Stores conversation history</td></tr></table>
+<p style="margin-top:12px"><b>Multi-agent patterns:</b> Sequential (chain), Parallel (simultaneous), Hierarchical (manager→workers), Collaborative (discuss + refine)</p>`},
+  {d:'d4', title:'Custom Vision', content:`<table class="cs-table"><tr><th>Type</th><th>Task</th><th>Min Images/Tag</th></tr>
+<tr><td>Classification</td><td>What is it?</td><td>5 (30+ rec)</td></tr>
+<tr><td>Object Detection</td><td>Where is it?</td><td>15 (50+ rec)</td></tr></table>
+<p style="margin-top:12px"><b>Metrics:</b> Precision (false positive rate), Recall (false negative rate), AP (area under PR curve), mAP (mean across classes)</p>
+<p style="margin-top:8px"><b>Domains:</b> General, General (compact/exportable), Food, Landmarks, Retail</p>
+<p style="margin-top:8px"><b>Compact models</b> export to ONNX/TensorFlow/CoreML for edge.</p>
+<p style="margin-top:8px"><b>⚠️ Retiring Sept 2028</b> — migrate to Azure ML AutoML or Content Understanding</p>`},
+  {d:'d4', title:'Video Indexer & Spatial Analysis', content:`<p><b>Video Indexer extracts:</b> Faces, OCR, topics, keywords, sentiment, scenes, shots, transcript, translation, labels, brands, named entities</p>
+<p style="margin-top:12px"><b>Spatial Analysis operations:</b></p>
+<table class="cs-table"><tr><th>Operation</th><th>Detects</th></tr>
+<tr><td>Person counting</td><td>Count people in a zone</td></tr>
+<tr><td>Person distance</td><td>Distance between people</td></tr>
+<tr><td>Zone crossing</td><td>Enter/exit a zone</td></tr>
+<tr><td>Line crossing</td><td>Cross a virtual line</td></tr>
+<tr><td>Dwell time</td><td>How long in a zone</td></tr></table>
+<p style="margin-top:12px"><b>Requires:</b> Edge device, Docker container, NVIDIA GPU, RTSP video stream</p>`},
+  {d:'d4', title:'Face API Parameters & Attributes', content:`<table class="cs-table"><tr><th>Parameter</th><th>Purpose</th></tr>
+<tr><td><code>detectionModel</code></td><td>detection_01, _02, _03</td></tr>
+<tr><td><code>recognitionModel</code></td><td>recognition_01 – _04</td></tr>
+<tr><td><code>returnFaceId</code></td><td>Must be true for recognition</td></tr>
+<tr><td><code>returnFaceLandmarks</code></td><td>27 facial landmark points</td></tr>
+<tr><td><code>returnFaceAttributes</code></td><td>blur, exposure, glasses, headPose, mask, noise, occlusion, qualityForRecognition</td></tr>
+<tr><td><code>faceIdTimeToLive</code></td><td>Default: 86400s (24h)</td></tr></table>
+<p style="margin-top:12px"><b>Limits:</b> Min face: 36×36px. Max face: 4096×4096px. Max image: 6 MB. Formats: JPEG, PNG, GIF (1st frame), BMP.</p>
+<p style="margin-top:8px"><b>Quality:</b> High for enrollment, Medium+ for identification. Only with detection_01/03 + recognition_03/04.</p>`},
+  {d:'d5', title:'Text Analytics Endpoints', content:`<table class="cs-table"><tr><th>Feature</th><th>Path</th></tr>
+<tr><td>Sentiment</td><td><code>/text/analytics/v3.1/sentiment</code></td></tr>
+<tr><td>Key Phrases</td><td><code>/text/analytics/v3.1/keyPhrases</code></td></tr>
+<tr><td>Entities</td><td><code>/text/analytics/v3.1/entities/recognition/general</code></td></tr>
+<tr><td>PII</td><td><code>/text/analytics/v3.1/entities/recognition/pii</code></td></tr>
+<tr><td>Language</td><td><code>/text/analytics/v3.1/languages</code></td></tr>
+<tr><td>Entity Linking</td><td><code>/text/analytics/v3.1/entities/linking</code></td></tr></table>
+<p style="margin-top:12px"><b>Limits:</b> Max 1,000 docs/request. Max 5,120 chars/doc. Max 1 MB/request. Language detection doesn't need <code>language</code> field.</p>`},
+  {d:'d5', title:'Speech SDK Classes', content:`<table class="cs-table"><tr><th>Task</th><th>Class</th></tr>
+<tr><td>Speech-to-text</td><td><code>SpeechRecognizer</code></td></tr>
+<tr><td>Text-to-speech</td><td><code>SpeechSynthesizer</code></td></tr>
+<tr><td>Speech + intent</td><td><code>IntentRecognizer</code></td></tr>
+<tr><td>Speech translation</td><td><code>TranslationRecognizer</code></td></tr>
+<tr><td>Keyword/wake word</td><td><code>KeywordRecognizer</code></td></tr></table>
+<p style="margin-top:12px"><b>Config classes:</b> <code>SpeechConfig</code> (STT/TTS), <code>SpeechTranslationConfig</code> (translation). Set <code>speech_recognition_language</code>, <code>speech_synthesis_voice_name</code>.</p>`},
+  {d:'d5', title:'Translator & Question Answering', content:`<p><b>Translator:</b> Global endpoint <code>api.cognitive.microsofttranslator.com</code>. Requires <code>Ocp-Apim-Subscription-Region</code> header.</p>
+<table class="cs-table" style="margin-top:8px"><tr><th>Feature</th><th>Detail</th></tr>
+<tr><td>Multi-target</td><td><code>to=fr&to=de&to=ja</code></td></tr>
+<tr><td>Transliterate</td><td>Script conversion (not translation)</td></tr>
+<tr><td>Custom Translator</td><td>10,000+ parallel sentences needed</td></tr></table>
+<p style="margin-top:12px"><b>Custom Question Answering:</b></p>
+<table class="cs-table"><tr><th>Feature</th><th>Purpose</th></tr>
+<tr><td>Multi-turn</td><td>Follow-up prompts</td></tr>
+<tr><td>Alternate phrasing</td><td>Multiple questions → same answer</td></tr>
+<tr><td>Chit-chat</td><td>Professional, Friendly, Witty, Caring, Enthusiastic</td></tr>
+<tr><td>Active learning</td><td>Suggests questions from traffic</td></tr>
+<tr><td>Precise answering</td><td>Short answer from longer passage</td></tr></table>`},
+  {d:'d6', title:'Built-in Skills (@odata.type)', content:`<table class="cs-table"><tr><th>Skill</th><th>@odata.type</th></tr>
+<tr><td>OCR</td><td><code>#Microsoft.Skills.Vision.OcrSkill</code></td></tr>
+<tr><td>Image Analysis</td><td><code>#Microsoft.Skills.Vision.ImageAnalysisSkill</code></td></tr>
+<tr><td>Key Phrases</td><td><code>#Microsoft.Skills.Text.KeyPhraseExtractionSkill</code></td></tr>
+<tr><td>Entities</td><td><code>#Microsoft.Skills.Text.V3.EntityRecognitionSkill</code></td></tr>
+<tr><td>Sentiment</td><td><code>#Microsoft.Skills.Text.V3.SentimentSkill</code></td></tr>
+<tr><td>Language Detection</td><td><code>#Microsoft.Skills.Text.LanguageDetectionSkill</code></td></tr>
+<tr><td>Translation</td><td><code>#Microsoft.Skills.Text.TranslationSkill</code></td></tr>
+<tr><td>Text Split</td><td><code>#Microsoft.Skills.Text.SplitSkill</code></td></tr>
+<tr><td>Shaper</td><td><code>#Microsoft.Skills.Util.ShaperSkill</code></td></tr>
+<tr><td>PII Detection</td><td><code>#Microsoft.Skills.Text.PIIDetectionSkill</code></td></tr>
+<tr><td>Custom (Web API)</td><td><code>#Microsoft.Skills.Custom.WebApiSkill</code></td></tr></table>
+<p style="margin-top:12px"><b>Context paths:</b> <code>/document</code>, <code>/document/content</code>, <code>/document/normalized_images/*</code>, <code>/document/pages/*</code></p>`},
+  {d:'d6', title:'Index Fields & Data Types', content:`<table class="cs-table"><tr><th>Attribute</th><th>For</th></tr>
+<tr><td><code>searchable</code></td><td>Full-text search (tokenized)</td></tr>
+<tr><td><code>filterable</code></td><td>$filter expressions</td></tr>
+<tr><td><code>sortable</code></td><td>$orderby</td></tr>
+<tr><td><code>facetable</code></td><td>Faceted navigation</td></tr>
+<tr><td><code>retrievable</code></td><td>Returned in results</td></tr>
+<tr><td><code>key</code></td><td>Unique doc ID (exactly one)</td></tr></table>
+<p style="margin-top:12px"><b>Types:</b> Edm.String, Edm.Int32/64, Edm.Double, Edm.Boolean, Edm.DateTimeOffset, Edm.GeographyPoint, Edm.ComplexType, Collection(Edm.Single) = vector</p>`},
+  {d:'d6', title:'Vector & Semantic Search', content:`<p><b>Vector search:</b> Store embeddings in <code>Collection(Edm.Single)</code> fields.</p>
+<table class="cs-table" style="margin-top:8px"><tr><th>Algorithm</th><th>Type</th></tr>
+<tr><td>HNSW</td><td>Fast approximate (default)</td></tr>
+<tr><td>Exhaustive KNN</td><td>Slow exact, 100% recall</td></tr></table>
+<table class="cs-table" style="margin-top:8px"><tr><th>Metric</th><th>Use</th></tr>
+<tr><td>cosine</td><td>Most text embeddings</td></tr>
+<tr><td>euclidean</td><td>Distance-based</td></tr>
+<tr><td>dotProduct</td><td>Normalized vectors</td></tr>
+<tr><td>hamming</td><td>Binary vectors only</td></tr></table>
+<p style="margin-top:12px"><b>Semantic:</b> <code>queryType=semantic&semanticConfiguration=name</code>. Provides captions + answers. Config: titleField, prioritizedContentFields, prioritizedKeywordsFields.</p>
+<p style="margin-top:8px"><b>Hybrid:</b> Text + vector combined via Reciprocal Rank Fusion (RRF).</p>`},
+  {d:'d6', title:'Scoring Profiles & Suggesters', content:`<table class="cs-table"><tr><th>Function</th><th>Boosts By</th></tr>
+<tr><td>magnitude</td><td>Numeric value (rating, clicks)</td></tr>
+<tr><td>freshness</td><td>Date recency</td></tr>
+<tr><td>distance</td><td>Geographic proximity</td></tr>
+<tr><td>tag</td><td>Matching tags from query param</td></tr></table>
+<p style="margin-top:12px"><b>Interpolation:</b> linear (default), constant, quadratic, logarithmic. ⚠️ quadratic + logarithmic NOT allowed for tag.</p>
+<p style="margin-top:8px"><b>Aggregation:</b> sum (default), average, minimum, maximum, firstMatching</p>
+<p style="margin-top:12px"><b>Suggesters:</b> Enable autocomplete + suggestions. <code>searchMode: analyzingInfixMatching</code>. String fields only. One per index.</p>
+<p style="margin-top:8px"><b>Synonym maps:</b> <code>"hotel, motel, inn"</code> or <code>"US => USA"</code>. One map per field, max 5,000 rules.</p>`},
+  {d:'d6', title:'Numbers to Remember', content:`<table class="cs-table"><tr><th>What</th><th>Value</th></tr>
+<tr><td>AI Search free tier</td><td>50 MB storage, 3 indexes</td></tr>
+<tr><td>Custom skill timeout</td><td>30s default, 230s max</td></tr>
+<tr><td>Indexer max run (free)</td><td>3 minutes</td></tr>
+<tr><td>Indexer max run (standard)</td><td>2 hours</td></tr>
+<tr><td>Doc Intelligence min training</td><td>5 labeled documents</td></tr>
+<tr><td>Composed model max</td><td>200 components</td></tr>
+<tr><td>Scoring profiles max</td><td>100 per index</td></tr>
+<tr><td>Custom Vision min (classify)</td><td>5/tag (30+ rec)</td></tr>
+<tr><td>Custom Vision min (detect)</td><td>15/tag (50+ rec)</td></tr>
+<tr><td>Face min detectable</td><td>36×36 px</td></tr>
+<tr><td>Text Analytics max doc</td><td>5,120 chars</td></tr>
+<tr><td>Fine-tuning min</td><td>10 examples</td></tr>
+<tr><td>Max stop sequences</td><td>4</td></tr>
+<tr><td>Face ID TTL default</td><td>86400s (24h)</td></tr>
+<tr><td>Custom Translator min</td><td>10,000+ parallel sentences</td></tr></table>`},
 ];
 
 // ==================== STATE ====================
