@@ -1,229 +1,483 @@
-# Cheat Sheet 1: Plan and Manage an Azure AI Solution (20–25%)
+# Exam Prep App — Implementation Plan (v2)
 
-> Highest-weighted domain. Know service selection and security cold.
+> Use this plan to build an interactive study app for **any** Microsoft certification exam.
+> Start a new project for each exam. Replace `[EXAM-ID]` and `[EXAM-NAME]` throughout.
+> Each phase builds on the previous one — don't skip ahead.
+>
+> **Proven on**: AI-900 (142 flashcards, 33 quiz questions, 5 mind maps, full redesign in ~2 hours)
 
 ---
 
-## Service Selection Matrix (MEMORIZE THIS)
+## Phase 1: Research & Scaffold
 
-| Need | Service | Key Detail |
+### Goal
+Build the knowledge base from official Microsoft sources.
+
+### Prompt
+```
+I need to pass [EXAM-ID]: [EXAM-NAME]. My workspace is empty at c:\source\[exam-id].
+
+1. Research the official exam page and study guide on learn.microsoft.com
+2. Create a README.md with exam overview, domains, weights, and key links
+3. Create a detailed study-guide.md with every exam objective and MS Learn module links
+4. Create a study-tracker.md with a day-by-day cram plan using READ → DRILL → RECALL methodology (make it generic — no hardcoded dates, use "Day 1, Day 2" etc. relative to exam day)
+5. Create a cheat-sheets/ folder with one detailed cheat sheet per exam domain, including:
+   - Exact service names, model names, API parameters, SDK classes
+   - REST endpoint patterns and URL formats
+   - "Numbers to remember" section (minimums, limits, defaults, timeouts)
+   - Decision tables: "when to use A vs B" for every choice the exam tests
+6. Create a practice-questions.md with 25+ scenario-based multiple choice questions with answers and explanations
+
+Focus on EXAM-LEVEL detail — exact parameter names, model versions, config values, CLI commands. Not conceptual overviews. The exam tests specifics.
+```
+
+### Expected Output
+```
+[exam-id]/
+├── README.md
+├── study-guide.md
+├── study-tracker.md
+├── practice-questions.md
+└── cheat-sheets/
+    ├── 1-[domain-name].md
+    ├── 2-[domain-name].md
+    └── ... (one per domain)
+```
+
+### Quality Check
+- [ ] Every exam objective from the study guide has at least one cheat sheet entry
+- [ ] Every cheat sheet has a "Numbers to Remember" section
+- [ ] Every cheat sheet has at least one "When to Use A vs B" decision table
+- [ ] MS Learn links are real and working
+- [ ] Practice questions are scenario-based ("You need to..."), not definitional ("What is...")
+
+---
+
+## Phase 2: Expert Review & Traps
+
+### Goal
+Verify accuracy and build the "tricky stuff" content that separates pass from fail.
+
+### Prompt
+```
+Review all the content we just created with an expert panel approach:
+
+1. Verify all technical claims against the official Microsoft docs. Fix any errors.
+2. Create a traps-and-distinctions.md covering:
+   - "Sounds the same" service confusions (things easily mixed up)
+   - Parameter traps (common wrong answers that sound right)
+   - API endpoint traps (different URL patterns per service)
+   - Lifecycle traps (what's immutable after creation, what requires rebuild)
+   - "When to use A vs B" decision scenarios the exam loves to test
+   - Numbers that trip people up (minimums, limits, defaults)
+   - The exact format: scenario | correct answer | why NOT the other answer
+3. Create a flashcards.md with 130+ Q&A cards across all domains:
+   - Cover every "when to choose" decision
+   - Include exact model names, parameter ranges, SDK classes, CLI commands
+   - Include cards for every trap in the traps file
+   - Instructions at top: cover answer column, say answer out loud, star wrong ones
+```
+
+### Expected Output
+```
+[exam-id]/
+├── ... (existing files)
+├── traps-and-distinctions.md    ← NEW
+└── flashcards.md                ← NEW
+```
+
+### Quality Check
+- [ ] Every "trap" has a scenario + correct answer + "why NOT the other"
+- [ ] Flashcards cover all domains proportionally to exam weight
+- [ ] No factual errors (verified against docs)
+- [ ] At least 10 "when to choose A vs B" flashcards
+
+---
+
+## Phase 3: Build the Interactive App
+
+### Goal
+Create a single-file study app with all features, following the design specs in the Architecture section below.
+
+### Prompt
+```
+Build a single-file HTML/JS interactive study app (index.html) that includes:
+
+1. Sidebar navigation (Notion/Obsidian style) with icons for each section
+2. Dashboard landing page with:
+   - Study flow cards: Explore (Mind Maps) → Review (Cheat Sheets) → Practice (Flashcards) → Validate (Quiz)
+   - Circular mastery ring (SVG) showing overall % mastered
+   - 30-day activity heat map (GitHub contribution style)
+   - XP badge showing total experience points
+   - Domain mastery progress bars
+3. Flashcards tab with:
+   - Domain filter buttons
+   - Click-to-flip card animation (CSS 3D transform)
+   - "Got it" ✓ / "Again" ✗ / ⭐ Star buttons
+   - All/Starred/Unmastered mode switcher
+   - Progress bar showing position in deck
+   - Keyboard shortcuts: Space/Enter=flip, ←=Again, →=Got it, S=Star
+4. Quiz tab with:
+   - Domain filter buttons, choose 10 or 25 question length
+   - Immediate feedback with correct/wrong highlighting + explanation
+   - Score shown as pass/fail (≥70%), quiz history saved
+5. Mind Maps tab — see "Markmap Integration" section below for exact implementation
+6. Cheat Sheets tab with:
+   - Search bar (instant text filter across titles and content)
+   - Domain filter buttons
+   - Click to expand/collapse each section
+7. Progress tab with:
+   - Cards mastered, starred, total reviews, last quiz, day streak, quizzes taken
+   - Domain mastery bars
+   - Reset all progress button
+
+Cross-cutting requirements:
+- XP system: +5 per flashcard review, +10 per quiz answer
+- Activity tracking: log review count per day for heat map
+- Zen mode toggle (🧘): hides sidebar/nav for focused study
+- Light/dark theme toggle with localStorage persistence
+- Inter font from Google Fonts CDN
+- Color palette: Deep Navy base (#0F172A), Sage Green success (#76BA99), Indigo accent (#818CF8), Muted Amber attention (#FF8C42)
+- 12px border radius, soft shadows (0 4px 24px rgba(0,0,0,.3)), generous whitespace
+- Mobile: sidebar becomes bottom tab bar at ≤768px
+- localStorage keys prefixed with exam ID (e.g., [exam-id]_starred)
+- All data embedded in JS arrays at the top of the script
+```
+
+### Content Data Structure
+```js
+const DOMAINS = [{id, name, weight, color}];
+const FLASHCARDS = [{id, d, q, a}];
+const QUIZ_QUESTIONS = [{d, q, opts, ans, exp}];
+const CHEATSHEETS = [{d, title, content}];  // content is HTML string
+const MINDMAPS = [{id, title, color, md}];  // md is markdown string for markmap
+```
+
+### Quality Check
+- [ ] All flashcards from flashcards.md are in the FLASHCARDS array
+- [ ] All practice questions are in the QUIZ_QUESTIONS array
+- [ ] All cheat sheet content is in the CHEATSHEETS array
+- [ ] Mind maps cover every cheat sheet topic
+- [ ] Domain filters work on all tabs
+- [ ] Progress persists across page refreshes
+- [ ] Looks good on mobile (test at 375px width)
+- [ ] Mind maps render when expanded (not blank)
+- [ ] Mind map text is readable on dark AND light themes
+- [ ] XP increments on card review and quiz answers
+- [ ] Dashboard heat map populates from activity data
+- [ ] Zen mode hides sidebar/chrome
+- [ ] Theme toggle persists across refreshes
+- [ ] Cheat sheet search filters sections in real time
+- [ ] Study flow cards on dashboard navigate to correct tabs
+
+---
+
+## Phase 4: Content Sync & Gap Analysis
+
+### Goal
+Ensure 100% content synchronicity between markdown files, app data, and mind maps.
+
+### Prompt
+```
+Do a systematic content audit:
+
+1. Count flashcards, quiz questions, and cheat sheet sections per domain
+2. Identify any domain underrepresented relative to its exam weight
+3. Check that every "when to choose A vs B" decision in the cheat sheets has a matching flashcard AND quiz question
+4. Check every topic in the mind maps matches the cheat sheets (full content synchronicity)
+5. Look for topics where we have the "what" but not the "when to choose" — add decision context
+6. Look for topics where definitions are too thin for exam-level questions
+7. Add missing content to fix ALL gaps found
+8. Ensure flashcard IDs are sequential and don't skip
+9. Update README with current content counts
+```
+
+### Quality Check
+- [ ] Flashcard count per domain is proportional to exam weight (±20%)
+- [ ] Every decision table in cheat sheets has matching flashcard(s) + quiz Q(s)
+- [ ] Mind map nodes match cheat sheet headings 1:1
+- [ ] No "thin" definitions remaining — all have "when to use" context
+- [ ] README content counts match actual counts
+
+---
+
+## Phase 5: Final Expert Panel Review
+
+### Goal
+Catch remaining errors, validate methodology, confirm exam readiness.
+
+### Prompt
+```
+Final expert panel review across all content:
+
+1. Certification exam coach: Are quiz questions scenario-based like the real exam? Are distractors realistic? Any missing question types?
+2. Cognitive scientist: Does the study method support active recall and spaced repetition? Is the READ → DRILL → RECALL cycle sound?
+3. Technical expert: Verify all facts against current Microsoft docs. Flag anything outdated or incorrect.
+4. UX designer: Is the app mobile-friendly? Any friction in the flashcard flow?
+
+Fix everything found. Also:
+- Update study-tracker.md to reference the app (e.g., "Open index.html → Flashcards tab → filter to Domain 1")
+- Ensure study tracker uses generic dates (Day 1, Day 2...)
+
+Then give me a summary of:
+- Total flashcards, quiz questions, cheat sheet sections, mind maps
+- Content coverage per domain vs exam weight
+- Any remaining gaps and whether they matter for passing
+```
+
+### Quality Check
+- [ ] No factual errors remaining
+- [ ] Quiz distractors are realistic (not obviously wrong)
+- [ ] Study tracker references the app (not stale file references)
+- [ ] Study tracker uses generic dates (Day 1, Day 2...)
+- [ ] All content counts in README are accurate
+
+---
+
+## Phase 6: Ship It
+
+### Goal
+Deploy to GitHub Pages and share with team.
+
+### Prompt
+```
+1. Initialize git repo if needed
+2. Push to https://github.com/[org]/pass_[exam-id].git
+3. Update README.md with:
+   - Link to the live GitHub Pages app at the top
+   - Feature table (dashboard, flashcards, quiz, mind maps, cheat sheets, progress) with counts
+   - Full repository file structure
+   - "How to Study" section with READ → DRILL → RECALL instructions referencing the app
+   - Contributing note
+4. Give me a short Teams message I can share with colleagues about the app
+5. Give me a prompt I can use to evaluate whether this app + Microsoft Learn combined is superior to Microsoft Learn alone
+```
+
+### Post-Deploy
+- [ ] Enable GitHub Pages: repo Settings → Pages → Source: main, folder: / (root) → Save
+- [ ] Test the live URL: `https://[org].github.io/pass_[exam-id]/`
+- [ ] Test on mobile
+- [ ] Share with team
+- [ ] Clean up backup files (index-v1.html, index-backup.html) if present
+
+---
+
+## Exam-Specific Tips
+
+When using these prompts, emphasize the key "decision areas" for each exam:
+
+| Exam | High-Value "A vs B" Decisions to Focus On |
+|------|-------------------------------------------|
+| **AZ-104** (Azure Admin) | NSG vs ASG vs Firewall vs WAF, Storage tiers, VM availability sets vs zones vs scale sets, VPN Gateway vs ExpressRoute vs peering, Azure Policy vs RBAC vs Blueprints, Load Balancer vs App Gateway vs Front Door vs Traffic Manager |
+| **AZ-204** (Azure Developer) | App Service vs Functions vs Container Apps vs AKS, Cosmos DB consistency levels, Blob lease vs snapshot vs versioning, Service Bus vs Event Grid vs Event Hub vs Queue Storage, Managed Identity vs SAS vs connection string |
+| **AZ-305** (Azure Architect) | Availability Zones vs Sets vs Regions, RTO/RPO strategies, Azure AD B2B vs B2C, Hub-spoke vs mesh networking, SQL Database vs SQL MI vs SQL on VM vs Cosmos DB, Synapse vs Databricks vs HDInsight |
+| **AZ-400** (DevOps) | Deployment slots vs blue-green vs canary vs rolling, YAML vs Classic pipelines, Artifacts vs Packages, Branch policies vs pull request triggers, SonarQube vs WhiteSource vs OWASP ZAP |
+| **AZ-500** (Azure Security) | Key Vault vs managed identity vs service principal, Defender for Cloud plans, Sentinel workbooks vs analytics rules vs playbooks, Conditional Access vs MFA vs PIM, Private Link vs Service Endpoint vs Firewall rules |
+| **DP-203** (Data Engineer) | Dedicated SQL vs Serverless SQL vs Spark pool, Star schema vs snowflake, Partition strategies, Data Factory vs Synapse pipelines, Delta Lake vs Parquet vs CSV, SCD Type 1 vs 2 vs 3 |
+| **DP-300** (Database Admin) | Azure SQL DB vs Managed Instance vs SQL on VM, DTU vs vCore, Active geo-replication vs failover groups, TDE vs Always Encrypted vs Dynamic Data Masking |
+| **AI-900** (AI Fundamentals) | "Which service for which task" and Responsible AI principles. Service confusion: Azure AI Vision vs Face vs Document Intelligence, Azure AI Language vs Speech vs Translator |
+| **SC-900** (Security Fundamentals) | Authentication vs authorization, Azure AD vs on-premises AD, Conditional Access vs MFA, Defender vs Sentinel vs Monitor, Zero Trust principles |
+
+---
+
+## Architecture & Design Notes
+
+### Why Single HTML File?
+- Zero install friction (just open in browser)
+- Works offline (no server needed)
+- GitHub Pages deploys instantly
+- Works on phone for study-on-the-go
+- All state in localStorage (survives page refresh)
+- Easy to fork and customize
+
+### localStorage Key Strategy
+Prefix all keys with exam ID to avoid conflicts if studying for multiple exams:
+```
+[exam-id]_starred, [exam-id]_mastered, [exam-id]_reviews
+[exam-id]_quizHistory, [exam-id]_streak, [exam-id]_theme
+[exam-id]_xp, [exam-id]_activity
+```
+
+### Visual Design Specifications
+
+Based on cognitive science research for learning tools:
+
+| Element | Spec | Rationale |
+|---------|------|-----------|
+| **Font** | Inter (Google Fonts CDN) | Highly legible at all sizes, modern/clean |
+| **Base dark** | #0F172A (Deep Navy) | Blue linked to focus/productivity |
+| **Base light** | #FDFDFD (Off-white) | Less eye strain than pure white |
+| **Success** | #76BA99 (Sage Green) | Calm progress feeling |
+| **Attention** | #FF8C42 (Muted Amber) | Grabs attention without panic |
+| **Primary accent** | #818CF8 / #6366F1 (Indigo) | Primary actions |
+| **Error/wrong** | #FB7185 (Soft Red) | Not harsh, but clear |
+| **Border radius** | 12px | Modern, friendly feel |
+| **Shadows** | `0 4px 24px rgba(0,0,0,.3)` dark / `.06` light | Cards "float" to signal focus |
+| **Line height** | 1.55–1.6 | Prevents text crowding |
+| **Spacing** | 24–28px content padding, 12px card gaps | Generous whitespace reduces cognitive load |
+
+### Layout Pattern: "Multimodal Knowledge Hub"
+
+The app follows the **Source-to-View** pattern — one dataset rendered in multiple modes:
+
+| Mode | Pattern | UX Purpose |
 |------|---------|------------|
-| Chat, text gen, code | **Azure OpenAI** | GPT-4o, GPT-4o-mini, GPT-4 |
-| Image generation | **Azure OpenAI** | DALL-E 3 / gpt-image-1 |
-| Audio transcription | **Azure OpenAI** (Whisper) OR **Azure AI Speech** (STT) | Whisper = batch; Speech = real-time |
-| Image analysis | **Azure AI Vision** | Image Analysis 4.0 API |
-| OCR (text from images) | **Azure AI Vision** | Read API |
-| Face detection/recognition | **Azure AI Face** | Requires limited access approval |
-| Custom image classification | **Custom Vision** | Part of Azure AI Vision (retiring 9/2028 — migrate to Azure ML AutoML or Content Understanding) |
-| Video analysis | **Azure AI Video Indexer** | Topics, keywords, faces, scenes |
-| People counting in video | **Azure AI Vision** | Spatial Analysis (edge containers) |
-| Sentiment, key phrases, entities, PII | **Azure AI Language** | Text Analytics features |
-| Language detection | **Azure AI Language** | Up to 5,120 characters per doc |
-| Custom Q&A / FAQ bot | **Azure AI Language** | Custom Question Answering |
-| Intent recognition from text | **Azure AI Language** | CLU (Conversational Language Understanding) |
-| Text translation | **Azure AI Translator** | 100+ languages |
-| Document translation | **Azure AI Translator** | Batch translate entire documents |
-| Speech-to-text / text-to-speech | **Azure AI Speech** | Neural voices, SSML |
-| Speech translation | **Azure AI Speech** | Real-time speech-to-speech |
-| Full-text search + AI enrichment | **Azure AI Search** | Skillsets, indexers, semantic/vector |
-| Extract data from invoices/receipts | **Azure Document Intelligence** | Prebuilt models |
-| Extract data from custom forms | **Azure Document Intelligence** | Custom + composed models |
-| Content moderation | **Azure AI Content Safety** | Hate, sexual, violence, self-harm |
-| End-to-end AI project mgmt | **Microsoft Foundry** | Hubs, projects, prompt flow |
-| Build AI agents | **Microsoft Foundry Agent Service** | Tool-using autonomous agents |
+| Dashboard | Learning Hub | Status overview + study flow guidance |
+| Mind Maps | Infinite Canvas | Big-picture connections |
+| Cheat Sheets | High-Density Grid | Quick reference review |
+| Flashcards | Minimalist Overlay | Active recall focus |
+| Quiz | Progressive Disclosure | Validation testing |
 
----
+**Study Flow** (shown on dashboard):
+1. **Explore** → Mind Maps (see connections)
+2. **Review** → Cheat Sheets (familiarize)
+3. **Practice** → Flashcards (active recall)
+4. **Validate** → Quiz (test mastery)
 
-## Azure AI Resource Types
+### Navigation Pattern
 
-| Type | Endpoint | Use When |
-|------|----------|----------|
-| **Multi-service** | `<name>.cognitiveservices.azure.com` | Multiple services, single key + endpoint |
-| **Single-service** | `<name>.cognitiveservices.azure.com` | One service only; separate billing/tracking |
+**Desktop**: Fixed left sidebar (220px) with icon + label buttons
+**Mobile (≤768px)**: Bottom tab bar with icons only, sidebar hidden
 
-**Exam trap:** Multi-service resources use ONE key for all services. Single-service resources get their own key.
+Features:
+- Dashboard as landing page (not flashcards)
+- Zen Mode toggle (🧘): hides sidebar + top bar chrome for deep focus
+- XP badge in top bar for quiet gamification
+- Theme toggle (🌙/☀️) in top bar
 
-### When to use which:
-- **Multi-service**: Simplicity, fewer keys to manage, single billing
-- **Single-service**: Separate cost tracking per service, different regions, free tier (only available for single-service)
+### Markmap Integration — Pitfalls & Solutions
 
-> **Exam trap:** The **Translator** uses a **global endpoint** (`api.cognitive.microsofttranslator.com`), not the resource-specific `.cognitiveservices.azure.com` endpoint. It also requires the `Ocp-Apim-Subscription-Region` header.
+> These lessons were learned the hard way during the AI-900 build. Follow this guide exactly to avoid blank mind maps.
 
----
+**Pitfall 1: markmap-autoloader doesn't work with dynamic content**
+- `markmap-autoloader` scans for `<script type="text/template">` in the DOM
+- `<script>` tags inserted via `innerHTML` are **inert** — the browser ignores them entirely
+- Even `document.createElement('script')` works for the DOM node, but the autoloader still fails because it renders at 0×0 inside `display:none` containers
+- **Solution**: Don't use `markmap-autoloader`. Use the programmatic API instead.
 
-## Authentication — Exact Parameters
-
-| Method | Header / Code | When |
-|--------|---------------|------|
-| **Subscription key** | `Ocp-Apim-Subscription-Key: <key>` header | Dev/test; quick prototyping |
-| **Entra ID token** | `Authorization: Bearer <token>` header | Production; RBAC-based |
-| **Managed Identity** | `DefaultAzureCredential()` in SDK | App → service calls; NO credentials in code |
-| **Key Vault** | Store keys in Key Vault, retrieve at runtime | Secure key storage + rotation |
-
-### Key Rotation Pattern
-1. App uses **Key 1**
-2. Regenerate **Key 2** (safely, since app uses Key 1)
-3. Update app to use **Key 2**
-4. Regenerate **Key 1**
-5. Both keys are now fresh, app never went down
-
-### RBAC Roles for Azure AI
-| Role | Permissions |
-|------|-------------|
-| `Cognitive Services User` | Call APIs (read) |
-| `Cognitive Services Contributor` | Manage resources + call APIs |
-| `Cognitive Services OpenAI User` | Call OpenAI APIs specifically |
-| `Cognitive Services OpenAI Contributor` | Manage OpenAI deployments + call APIs |
-
----
-
-## Networking & Security
-
-| Feature | Purpose |
-|---------|---------|
-| **Virtual Network (VNet)** | Restrict access to specific networks |
-| **Private Endpoint** | Private IP within your VNet; no public internet |
-| **Service Endpoint** | Optimized route from VNet to Azure service (still public IP) |
-| **Firewall rules** | Allow specific IP ranges |
-
-**Containers for disconnected/edge:**
-- Many Azure AI services available as **Docker containers**
-- Run on-premises or at the edge
-- Still require billing connection (phone-home) unless using **disconnected containers** (special approval)
-- Container images from: `mcr.microsoft.com/azure-cognitive-services/`
-
-### When to Use Containers vs Cloud
-
-| Scenario | Deploy As |
-|----------|----------|
-| Standard cloud app, good internet | **Cloud** (easiest) |
-| On-premises, low latency, data residency | **Connected container** (needs billing phone-home) |
-| Factory floor, no internet at all | **Disconnected container** (requires special approval) |
-| Edge device with live camera (Spatial Analysis) | **Edge container** (NVIDIA GPU required) |
-
----
-
-## Monitoring & Cost Management
-
-| Tool | Purpose |
-|------|---------|
-| **Azure Monitor** | Metrics, logs, alerts for AI resources |
-| **Diagnostic settings** | Route logs to Log Analytics, Storage, Event Hubs |
-| **Application Insights** | End-to-end tracing of AI calls |
-| **Cost Management** | Budgets, cost alerts, spending analysis |
-| **Pricing tiers** | Free (F0) vs Standard (S0); free has rate limits |
-
-### Key Metrics to Monitor
-- **Total Calls** — API call volume
-- **Total Errors** — Failed requests (4xx, 5xx)
-- **Latency** — Response time
-- **Blocked Calls** — Rate limiting (HTTP 429)
-
-### Pricing Tiers
-| Tier | Label | Note |
-|------|-------|------|
-| **Free** | F0 | Rate-limited; single-service only |
-| **Standard** | S0 | Production use |
-
----
-
-## Responsible AI — Content Safety Details
-
-### Content Filter Categories (Azure OpenAI)
-| Category | What It Catches |
-|----------|----------------|
-| **Hate** | Discrimination, slurs, stereotyping |
-| **Sexual** | Sexual content, explicit material |
-| **Violence** | Physical harm, weapons, cruelty |
-| **Self-harm** | Suicide, self-injury, eating disorders |
-
-### Severity Levels
-`safe` → `low` → `medium` → `high`
-
-Applied to BOTH **input** (prompt) and **output** (completion).
-
-### Additional Protections (know each one)
-| Feature | What It Does | When To Use |
-|---------|--------------|-------------|
-| **Blocklists** | Block specific terms/phrases you define | Custom banned words |
-| **Prompt shields** | Detect prompt injection / jailbreak attempts | User-facing apps |
-| **Groundedness detection** | Check if response is supported by provided context | RAG solutions |
-| **Protected material detection** | Detect copyrighted text/code | Public-facing content generation |
-
-### Responsible AI Principles (Microsoft's 6)
-1. **Fairness** — AI should treat all people fairly
-2. **Reliability & Safety** — AI should perform reliably and safely
-3. **Privacy & Security** — AI should be secure and respect privacy
-4. **Inclusiveness** — AI should empower and engage everyone
-5. **Transparency** — AI should be understandable
-6. **Accountability** — People should be accountable for AI
-
----
-
-## Deployment Options for AI Models
-
-| Deployment Type | Key Feature |
-|----------------|-------------|
-| **Standard** | Pay-per-token, shared infrastructure |
-| **Global Standard** | Multi-region routing, highest availability |
-| **Provisioned Throughput (PTU)** | Reserved capacity, guaranteed tokens/min |
-| **Data Zone Standard** | Data stays in specified geography |
-
-**Exam tip:** "Guaranteed minimum tokens per minute" = **Provisioned Throughput**
-
----
-
-## CI/CD Integration
-- Azure AI resources can be managed via **ARM templates**, **Bicep**, **Terraform**
-- Model deployments can be automated via **Azure CLI** or **REST API**
-- Use **Azure DevOps** or **GitHub Actions** for CI/CD pipelines
-- **Microsoft Foundry SDK** for programmatic project management
-
----
-
-## REST API Endpoint Patterns
-
+**Pitfall 2: Correct CDN URLs**
+```html
+<!-- Load in this exact order via sequential promise chain -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.js"></script>
 ```
-# Multi-service resource
-https://<resource>.cognitiveservices.azure.com/
+- `markmap-view` needs `d3` as a global — load d3 first
+- `markmap-lib` browser build is at `dist/browser/index.iife.js` (NOT `dist/browser/index.js`)
+- Both libraries expose their API on `window.markmap`
+- **Do NOT guess CDN paths** — verify with `https://data.jsdelivr.com/v1/packages/npm/PACKAGE@VERSION`
 
-# Azure OpenAI
-https://<resource>.openai.azure.com/openai/deployments/<deployment>/chat/completions?api-version=2024-02-01
+**Pitfall 3: SVG needs explicit dimensions BEFORE render**
+- markmap measures the SVG to calculate layout
+- If the SVG is inside a hidden (`display:none`) container, it measures as 0×0
+- **Solution**: Only call `Markmap.create()` AFTER the container is `display:block` and SVG has `height:600px` (not `min-height`, not `auto`)
 
-# Azure AI Search
-https://<service>.search.windows.net/
+**Pitfall 4: Dark theme text is invisible**
+- markmap renders text in dark colors by default (designed for white backgrounds)
+- On a dark theme, the text is invisible
+- **Solution**: Override with CSS `fill` on `svg text` elements. Also update inline fills when theme toggles.
 
-# Document Intelligence
-https://<resource>.cognitiveservices.azure.com/formrecognizer/
+**Working implementation pattern**:
+```js
+// Lazy-load scripts on first use
+function loadScript(url) {
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = url; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
 
-# Face API
-https://<resource>.cognitiveservices.azure.com/face/v1.0/detect
+// Load deps once, cache the promise
+let depsPromise = null;
+function loadDeps() {
+  if (!depsPromise) {
+    depsPromise = loadScript('https://cdn.jsdelivr.net/npm/d3@7')
+      .then(() => loadScript('https://cdn.jsdelivr.net/npm/markmap-view'))
+      .then(() => loadScript('https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.js'));
+  }
+  return depsPromise;
+}
 
-# Speech
-https://<region>.api.cognitive.microsoft.com/
-# OR: https://<region>.tts.speech.microsoft.com/
+// Track rendered maps to avoid re-rendering
+const mmRendered = {};
 
-# Translator
-https://api.cognitive.microsofttranslator.com/
+// Render one mind map (call ONLY when container is visible)
+function renderMindmap(id, containerId, markdown) {
+  if (mmRendered[id]) return;
+  const body = document.getElementById(containerId);
+  body.innerHTML = '<p>Loading mind map…</p>';
+  loadDeps().then(() => {
+    const { Transformer, Markmap } = window.markmap;
+    const { root } = new Transformer().transform(markdown);
+    body.innerHTML = '';
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.style.width = '100%';
+    svg.style.height = '600px';  // MUST be explicit, not min-height
+    body.appendChild(svg);
+    const mm = Markmap.create(svg, { initialExpandLevel: -1 }, root);
+    setTimeout(() => mm.fit(), 100);  // auto-zoom after layout
+    mmRendered[id] = true;
+  }).catch(e => {
+    body.innerHTML = '<p>Failed to load. Check internet connection.<br>' + e + '</p>';
+  });
+}
 ```
 
-### Common Headers
-| Header | Value |
-|--------|-------|
-| `Ocp-Apim-Subscription-Key` | Your subscription key |
-| `Content-Type` | `application/json` (most APIs) |
-| `Ocp-Apim-Subscription-Region` | Required for **Translator** only |
+**Required CSS for theme compatibility**:
+```css
+.mm-body svg text { fill: var(--text) !important; font-size: 14px !important; }
+.mm-body svg .markmap-link { stroke-opacity: .6 !important; }
+```
+
+**Theme toggle must also update mind map text**:
+```js
+// In the theme toggle click handler:
+const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+document.querySelectorAll('.mm-body svg text').forEach(t => { t.style.fill = textColor });
+```
+
+### Gamification Without Distraction
+
+| Feature | Implementation | Purpose |
+|---------|---------------|---------|
+| XP Badge | Top bar, `+5` per card, `+10` per quiz answer | Sense of progress |
+| Day Streak | Consecutive days with activity | Consistency motivation |
+| Heat Map | 30-day grid on dashboard, color-coded by activity | Visual consistency tracking |
+| Mastery Ring | SVG circular progress on dashboard | "How close am I?" at a glance |
+
+All gamification is **non-blocking** — no pop-ups, no level-up screens. Just quiet counters that accumulate.
 
 ---
 
-## Numbers to Remember
+## Estimated Build Time
 
-| Fact | Value |
-|------|-------|
-| Free tier label | F0 |
-| Standard tier label | S0 |
-| Content filter categories | 4 (Hate, Sexual, Violence, Self-harm) |
-| Content filter severity levels | 4 (safe, low, medium, high) |
-| Max stop sequences (OpenAI) | 4 |
-| Passing score | 700/1000 |
-| Exam time | 100 minutes |
+| Phase | Time |
+|-------|------|
+| Phase 1: Research & Scaffold | 15–20 min |
+| Phase 2: Expert Review & Traps | 10–15 min |
+| Phase 3: Build App | 20–30 min |
+| Phase 4: Content Sync | 10–15 min |
+| Phase 5: Final Review | 5–10 min |
+| Phase 6: Ship | 5 min |
+| **Total** | **~75–105 min per exam** |
+
+---
+
+## Final Repository Structure
+
+```
+[exam-id]/
+├── index.html                          ← Interactive study app (open in browser)
+├── README.md                           ← Exam overview, feature table, links
+├── study-guide.md                      ← Exam objectives + MS Learn links
+├── study-tracker.md                    ← 7-day cram plan (references the app)
+├── practice-questions.md               ← Scenario-based questions
+├── flashcards.md                       ← Q&A flashcards (all domains)
+├── traps-and-distinctions.md           ← Common exam traps
+├── exam-prep-implementation-plan.md    ← This file
+└── cheat-sheets/
+    ├── 1-[domain-name].md
+    ├── 2-[domain-name].md
+    └── ... (one per domain)
+```

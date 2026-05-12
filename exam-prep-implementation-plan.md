@@ -229,7 +229,7 @@ Deploy to GitHub Pages and share with team.
 ### Prompt
 ```
 1. Initialize git repo if needed
-2. Push to https://github.com/[org]/pass_[exam-id].git
+2. Push to https://github.com/demo-ninjas/pass_ai_102.git
 3. Update README.md with:
    - Link to the live GitHub Pages app at the top
    - Feature table (flashcards, quiz, mind maps, progress, cheat sheets) with counts
@@ -268,6 +268,9 @@ When using these prompts, emphasize the key "decision areas" for each exam:
 
 ## Architecture Notes
 
+
+## Architecture & Design Notes
+
 ### Why Single HTML File?
 - Zero install friction (just open in browser)
 - Works offline (no server needed)
@@ -278,8 +281,163 @@ When using these prompts, emphasize the key "decision areas" for each exam:
 
 ### localStorage Key Strategy
 Prefix all keys with exam ID to avoid conflicts if studying for multiple exams:
-- `ai102_starred`, `ai102_mastered`, `ai102_sessions`, `ai102_quizHistory`
-- `az104_starred`, `az104_mastered`, etc.
+```
+[exam-id]_starred, [exam-id]_mastered, [exam-id]_reviews
+[exam-id]_quizHistory, [exam-id]_streak, [exam-id]_theme
+[exam-id]_xp, [exam-id]_activity
+```
+
+### Visual Design Specifications
+
+Based on cognitive science research for learning tools:
+
+| Element | Spec | Rationale |
+|---------|------|-----------|
+| **Font** | Inter (Google Fonts CDN) | Highly legible at all sizes, modern/clean |
+| **Base dark** | #0F172A (Deep Navy) | Blue linked to focus/productivity |
+| **Base light** | #FDFDFD (Off-white) | Less eye strain than pure white |
+| **Success** | #76BA99 (Sage Green) | Calm progress feeling |
+| **Attention** | #FF8C42 (Muted Amber) | Grabs attention without panic |
+| **Primary accent** | #818CF8 / #6366F1 (Indigo) | Primary actions |
+| **Error/wrong** | #FB7185 (Soft Red) | Not harsh, but clear |
+| **Border radius** | 12px | Modern, friendly feel |
+| **Shadows** | `0 4px 24px rgba(0,0,0,.3)` dark / `.06` light | Cards "float" to signal focus |
+| **Line height** | 1.55–1.6 | Prevents text crowding |
+| **Spacing** | 24–28px content padding, 12px card gaps | Generous whitespace reduces cognitive load |
+
+### Layout Pattern: "Multimodal Knowledge Hub"
+
+The app follows the **Source-to-View** pattern — one dataset rendered in multiple modes:
+
+| Mode | Pattern | UX Purpose |
+|------|---------|------------|
+| Dashboard | Learning Hub | Status overview + study flow guidance |
+| Mind Maps | Infinite Canvas | Big-picture connections |
+| Cheat Sheets | High-Density Grid | Quick reference review |
+| Flashcards | Minimalist Overlay | Active recall focus |
+| Quiz | Progressive Disclosure | Validation testing |
+
+**Study Flow** (shown on dashboard):
+1. **Explore** → Mind Maps (see connections)
+2. **Review** → Cheat Sheets (familiarize)
+3. **Practice** → Flashcards (active recall)
+4. **Validate** → Quiz (test mastery)
+
+### Navigation Pattern
+
+**Desktop**: Fixed left sidebar (220px) with icon + label buttons
+**Mobile (≤768px)**: Bottom tab bar with icons only, sidebar hidden
+
+Features:
+- Dashboard as landing page (not flashcards)
+- Zen Mode toggle (🧘): hides sidebar + top bar chrome for deep focus
+- XP badge in top bar for quiet gamification
+- Theme toggle (🌙/☀️) in top bar
+
+### Markmap Integration — Pitfalls & Solutions
+
+> These lessons were learned the hard way during the AI-900 build. Follow this guide exactly to avoid blank mind maps.
+
+**Pitfall 1: markmap-autoloader doesn't work with dynamic content**
+- `markmap-autoloader` scans for `<script type="text/template">` in the DOM
+- `<script>` tags inserted via `innerHTML` are **inert** — the browser ignores them entirely
+- Even `document.createElement('script')` works for the DOM node, but the autoloader still fails because it renders at 0×0 inside `display:none` containers
+- **Solution**: Don't use `markmap-autoloader`. Use the programmatic API instead.
+
+**Pitfall 2: Correct CDN URLs**
+```html
+<!-- Load in this exact order via sequential promise chain -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.js"></script>
+```
+- `markmap-view` needs `d3` as a global — load d3 first
+- `markmap-lib` browser build is at `dist/browser/index.iife.js` (NOT `dist/browser/index.js`)
+- Both libraries expose their API on `window.markmap`
+- **Do NOT guess CDN paths** — verify with `https://data.jsdelivr.com/v1/packages/npm/PACKAGE@VERSION`
+
+**Pitfall 3: SVG needs explicit dimensions BEFORE render**
+- markmap measures the SVG to calculate layout
+- If the SVG is inside a hidden (`display:none`) container, it measures as 0×0
+- **Solution**: Only call `Markmap.create()` AFTER the container is `display:block` and SVG has `height:600px` (not `min-height`, not `auto`)
+
+**Pitfall 4: Dark theme text is invisible**
+- markmap renders text in dark colors by default (designed for white backgrounds)
+- On a dark theme, the text is invisible
+- **Solution**: Override with CSS `fill` on `svg text` elements. Also update inline fills when theme toggles.
+
+**Working implementation pattern**:
+```js
+// Lazy-load scripts on first use
+function loadScript(url) {
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = url; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+
+// Load deps once, cache the promise
+let depsPromise = null;
+function loadDeps() {
+  if (!depsPromise) {
+    depsPromise = loadScript('https://cdn.jsdelivr.net/npm/d3@7')
+      .then(() => loadScript('https://cdn.jsdelivr.net/npm/markmap-view'))
+      .then(() => loadScript('https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.js'));
+  }
+  return depsPromise;
+}
+
+// Track rendered maps to avoid re-rendering
+const mmRendered = {};
+
+// Render one mind map (call ONLY when container is visible)
+function renderMindmap(id, containerId, markdown) {
+  if (mmRendered[id]) return;
+  const body = document.getElementById(containerId);
+  body.innerHTML = '<p>Loading mind map…</p>';
+  loadDeps().then(() => {
+    const { Transformer, Markmap } = window.markmap;
+    const { root } = new Transformer().transform(markdown);
+    body.innerHTML = '';
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.style.width = '100%';
+    svg.style.height = '600px';  // MUST be explicit, not min-height
+    body.appendChild(svg);
+    const mm = Markmap.create(svg, { initialExpandLevel: -1 }, root);
+    setTimeout(() => mm.fit(), 100);  // auto-zoom after layout
+    mmRendered[id] = true;
+  }).catch(e => {
+    body.innerHTML = '<p>Failed to load. Check internet connection.<br>' + e + '</p>';
+  });
+}
+```
+
+**Required CSS for theme compatibility**:
+```css
+.mm-body svg text { fill: var(--text) !important; font-size: 14px !important; }
+.mm-body svg .markmap-link { stroke-opacity: .6 !important; }
+```
+
+**Theme toggle must also update mind map text**:
+```js
+// In the theme toggle click handler:
+const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+document.querySelectorAll('.mm-body svg text').forEach(t => { t.style.fill = textColor });
+```
+
+### Gamification Without Distraction
+
+| Feature | Implementation | Purpose |
+|---------|---------------|---------|
+| XP Badge | Top bar, `+5` per card, `+10` per quiz answer | Sense of progress |
+| Day Streak | Consecutive days with activity | Consistency motivation |
+| Heat Map | 30-day grid on dashboard, color-coded by activity | Visual consistency tracking |
+| Mastery Ring | SVG circular progress on dashboard | "How close am I?" at a glance |
+
+All gamification is **non-blocking** — no pop-ups, no level-up screens. Just quiet counters that accumulate.
+
+---
 
 ### Content Data Structure
 All content lives in JS arrays at the top of the script:
