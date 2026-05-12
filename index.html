@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -232,28 +232,28 @@ body.zen .bottom-nav { display:none !important; }
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-left">
-    <button class="topbar-btn sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('mobile-open')">â˜°</button>
+    <button class="topbar-btn sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('mobile-open')">☰</button>
     <div>
-      <div class="topbar-title" id="header-title">ðŸŽ¯ AI-102 Exam Prep</div>
+      <div class="topbar-title" id="header-title">🎯 AI-102 Exam Prep</div>
       <div class="topbar-subtitle" id="header-subtitle"></div>
     </div>
   </div>
   <div class="topbar-right">
     <span class="topbar-countdown" id="header-countdown"></span>
     <span class="topbar-xp" id="xp-badge">0 XP</span>
-    <button class="topbar-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">ðŸŒ™</button>
-    <button class="topbar-btn" id="zen-toggle" onclick="toggleZen()" title="Zen mode">ðŸ§˜</button>
+    <button class="topbar-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <button class="topbar-btn" id="zen-toggle" onclick="toggleZen()" title="Zen mode">🧘</button>
   </div>
 </div>
 
 <!-- SIDEBAR (Desktop) -->
 <nav class="sidebar" id="sidebar">
-  <button class="sidebar-btn active" data-tab="dashboard"><span class="icon">ðŸ </span><span class="label">Dashboard</span></button>
-  <button class="sidebar-btn" data-tab="flashcards"><span class="icon">ðŸƒ</span><span class="label">Flashcards</span></button>
-  <button class="sidebar-btn" data-tab="quiz"><span class="icon">ðŸ“</span><span class="label">Quiz</span></button>
-  <button class="sidebar-btn" data-tab="mindmaps"><span class="icon">ðŸ§ </span><span class="label">Mind Maps</span></button>
-  <button class="sidebar-btn" data-tab="cheatsheets"><span class="icon">ðŸ“‹</span><span class="label">Cheat Sheets</span></button>
-  <button class="sidebar-btn" data-tab="progress"><span class="icon">ðŸ“Š</span><span class="label">Progress</span></button>
+  <button class="sidebar-btn active" data-tab="dashboard"><span class="icon">🏠</span><span class="label">Dashboard</span></button>
+  <button class="sidebar-btn" data-tab="flashcards"><span class="icon">🃏</span><span class="label">Flashcards</span></button>
+  <button class="sidebar-btn" data-tab="quiz"><span class="icon">📝</span><span class="label">Quiz</span></button>
+  <button class="sidebar-btn" data-tab="mindmaps"><span class="icon">🧠</span><span class="label">Mind Maps</span></button>
+  <button class="sidebar-btn" data-tab="cheatsheets"><span class="icon">📋</span><span class="label">Cheat Sheets</span></button>
+  <button class="sidebar-btn" data-tab="progress"><span class="icon">📊</span><span class="label">Progress</span></button>
 </nav>
 
 <!-- MAIN CONTENT -->
@@ -267,22 +267,22 @@ body.zen .bottom-nav { display:none !important; }
   <!-- Study Flow -->
   <div class="dash-flow">
     <div class="dash-flow-step" onclick="switchTab('mindmaps')">
-      <div class="step-icon">ðŸ§ </div>
+      <div class="step-icon">🧠</div>
       <div class="step-label">1. Explore</div>
       <div class="step-desc">Mind Maps</div>
     </div>
     <div class="dash-flow-step" onclick="switchTab('cheatsheets')">
-      <div class="step-icon">ðŸ“‹</div>
+      <div class="step-icon">📋</div>
       <div class="step-label">2. Review</div>
       <div class="step-desc">Cheat Sheets</div>
     </div>
     <div class="dash-flow-step" onclick="switchTab('flashcards')">
-      <div class="step-icon">ðŸƒ</div>
+      <div class="step-icon">🃏</div>
       <div class="step-label">3. Practice</div>
       <div class="step-desc">Flashcards</div>
     </div>
     <div class="dash-flow-step" onclick="switchTab('quiz')">
-      <div class="step-icon">ðŸ“</div>
+      <div class="step-icon">📝</div>
       <div class="step-label">4. Validate</div>
       <div class="step-desc">Quiz</div>
     </div>
@@ -297,13 +297,13 @@ body.zen .bottom-nav { display:none !important; }
       <div class="dash-stat"><div class="num" style="color:var(--accent)" id="dash-mastered">0</div><div class="lbl">Mastered</div></div>
       <div class="dash-stat"><div class="num" style="color:var(--orange)" id="dash-starred">0</div><div class="lbl">Need Review</div></div>
       <div class="dash-stat"><div class="num" style="color:var(--green)" id="dash-streak">0</div><div class="lbl">Day Streak</div></div>
-      <div class="dash-stat"><div class="num" id="dash-quiz">â€”</div><div class="lbl">Last Quiz</div></div>
+      <div class="dash-stat"><div class="num" id="dash-quiz">—</div><div class="lbl">Last Quiz</div></div>
     </div>
   </div>
 
   <!-- Heat Map -->
   <div class="card heat-map">
-    <h3>ðŸ“… 30-Day Activity</h3>
+    <h3>📅 30-Day Activity</h3>
     <div class="heat-grid" id="heat-grid"></div>
   </div>
 </div>
@@ -330,16 +330,16 @@ body.zen .bottom-nav { display:none !important; }
     </div>
   </div>
   <div class="fc-actions" id="fc-actions" style="display:none">
-    <button class="btn-wrong" onclick="markCard(false)">âœ— Again</button>
-    <button class="btn-right" onclick="markCard(true)">âœ“ Got it</button>
+    <button class="btn-wrong" onclick="markCard(false)">✗ Again</button>
+    <button class="btn-right" onclick="markCard(true)">✓ Got it</button>
   </div>
   <div class="text-center mt-20" id="fc-done" style="display:none">
-    <div style="font-size:2.5rem; margin-bottom:12px;">ðŸŽ‰</div>
+    <div style="font-size:2.5rem; margin-bottom:12px;">🎉</div>
     <h2>Deck Complete!</h2>
     <p class="mt-12" style="color:var(--text2)" id="fc-summary"></p>
     <div class="flex-center mt-20">
       <button class="btn btn-primary" onclick="resetDeck()">Start Over</button>
-      <button class="btn btn-secondary" onclick="reviewStarred()">Review â˜… Starred</button>
+      <button class="btn btn-secondary" onclick="reviewStarred()">Review ★ Starred</button>
     </div>
   </div>
 </div>
@@ -369,7 +369,7 @@ body.zen .bottom-nav { display:none !important; }
       <div class="quiz-opts" id="quiz-opts"></div>
       <div class="quiz-explanation" id="quiz-explanation" style="display:none"></div>
       <div class="flex-center mt-20">
-        <button class="btn btn-primary" id="quiz-next" style="display:none" onclick="nextQuizQ()">Next â†’</button>
+        <button class="btn btn-primary" id="quiz-next" style="display:none" onclick="nextQuizQ()">Next →</button>
       </div>
     </div>
   </div>
@@ -420,11 +420,11 @@ body.zen .bottom-nav { display:none !important; }
 
 <!-- BOTTOM NAV (Mobile) -->
 <div class="bottom-nav" id="bottom-nav">
-  <button class="active" data-tab="dashboard"><span class="bnav-icon">ðŸ </span>Home</button>
-  <button data-tab="flashcards"><span class="bnav-icon">ðŸƒ</span>Cards</button>
-  <button data-tab="quiz"><span class="bnav-icon">ðŸ“</span>Quiz</button>
-  <button data-tab="mindmaps"><span class="bnav-icon">ðŸ§ </span>Maps</button>
-  <button data-tab="cheatsheets"><span class="bnav-icon">ðŸ“‹</span>Sheets</button>
+  <button class="active" data-tab="dashboard"><span class="bnav-icon">🏠</span>Home</button>
+  <button data-tab="flashcards"><span class="bnav-icon">🃏</span>Cards</button>
+  <button data-tab="quiz"><span class="bnav-icon">📝</span>Quiz</button>
+  <button data-tab="mindmaps"><span class="bnav-icon">🧠</span>Maps</button>
+  <button data-tab="cheatsheets"><span class="bnav-icon">📋</span>Sheets</button>
 </div>
 
 <script>
@@ -446,7 +446,7 @@ const FLASHCARDS = [
   {id:4,d:'d1',q:'What header passes a subscription key to Azure AI APIs?',a:'Ocp-Apim-Subscription-Key'},
   {id:5,d:'d1',q:'What header passes an Entra ID token?',a:'Authorization: Bearer <token>'},
   {id:6,d:'d1',q:'What SDK class auto-handles Entra ID, managed identity, CLI creds?',a:'DefaultAzureCredential'},
-  {id:7,d:'d1',q:'Key rotation order for zero downtime?',a:'App uses Key1 â†’ regen Key2 â†’ switch to Key2 â†’ regen Key1'},
+  {id:7,d:'d1',q:'Key rotation order for zero downtime?',a:'App uses Key1 → regen Key2 → switch to Key2 → regen Key1'},
   {id:8,d:'d1',q:'Where should you store Azure AI keys in production?',a:'Azure Key Vault'},
   {id:9,d:'d1',q:'RBAC role to call APIs but NOT manage resources?',a:'Cognitive Services User'},
   {id:10,d:'d1',q:'RBAC role to manage AND call Azure OpenAI?',a:'Cognitive Services OpenAI Contributor'},
@@ -454,7 +454,7 @@ const FLASHCARDS = [
   {id:12,d:'d1',q:'Do Azure AI containers need internet?',a:'Yes for billing (phone-home), unless disconnected container (special approval)'},
   {id:13,d:'d1',q:'Deployment type guaranteeing min tokens/minute?',a:'Provisioned Throughput (PTU)'},
   {id:14,d:'d1',q:'Name Microsoft\'s 6 Responsible AI principles.',a:'Fairness, Reliability & Safety, Privacy & Security, Inclusiveness, Transparency, Accountability'},
-  {id:15,d:'d1',q:'What blocks SPECIFIC TERMS you define in Azure OpenAI?',a:'Blocklist (not content filter â€” that\'s category-based)'},
+  {id:15,d:'d1',q:'What blocks SPECIFIC TERMS you define in Azure OpenAI?',a:'Blocklist (not content filter — that\'s category-based)'},
   {id:16,d:'d1',q:'What detects prompt injection / jailbreak?',a:'Prompt shields'},
   {id:17,d:'d1',q:'What checks if response is supported by context?',a:'Groundedness detection'},
   {id:18,d:'d1',q:'Content filters apply to input only, output only, or both?',a:'BOTH input (prompt) AND output (completion)'},
@@ -462,16 +462,16 @@ const FLASHCARDS = [
   {id:20,d:'d1',q:'Azure Translator uses what unique endpoint?',a:'api.cognitive.microsofttranslator.com (global, NOT resource-specific)'},
   {id:21,d:'d1',q:'What extra header does Translator require?',a:'Ocp-Apim-Subscription-Region'},
   // Domain 2
-  {id:22,d:'d2',q:'What parameter controls randomness? Range?',a:'temperature, 0.0â€“2.0'},
-  {id:23,d:'d2',q:'What parameter does nucleus sampling? Range?',a:'top_p, 0.0â€“1.0'},
-  {id:24,d:'d2',q:'Should you set both temperature AND top_p?',a:'No â€” modify one, leave the other at default'},
+  {id:22,d:'d2',q:'What parameter controls randomness? Range?',a:'temperature, 0.0–2.0'},
+  {id:23,d:'d2',q:'What parameter does nucleus sampling? Range?',a:'top_p, 0.0–1.0'},
+  {id:24,d:'d2',q:'Should you set both temperature AND top_p?',a:'No — modify one, leave the other at default'},
   {id:25,d:'d2',q:'Low temperature (0.0-0.3) is best for?',a:'Deterministic, factual: code gen, data extraction'},
   {id:26,d:'d2',q:'What reduces word repetition based on frequency?',a:'frequency_penalty (-2.0 to 2.0)'},
   {id:27,d:'d2',q:'What encourages new topics?',a:'presence_penalty (-2.0 to 2.0)'},
   {id:28,d:'d2',q:'Max stop sequences?',a:'4'},
   {id:29,d:'d2',q:'Message role that defines AI behavior/persona?',a:'system'},
   {id:30,d:'d2',q:'Message role used for few-shot examples?',a:'assistant (paired with user messages)'},
-  {id:31,d:'d2',q:'RAG pattern in one sentence?',a:'Query â†’ Search retrieves docs â†’ docs as context â†’ LLM generates grounded answer'},
+  {id:31,d:'d2',q:'RAG pattern in one sentence?',a:'Query → Search retrieves docs → docs as context → LLM generates grounded answer'},
   {id:32,d:'d2',q:'In RAG, what converts text to vectors?',a:'Embedding model (text-embedding-3-small/large)'},
   {id:33,d:'d2',q:'GPT-4o context: input? output?',a:'128K input / 16K output'},
   {id:34,d:'d2',q:'Foundry: top-level shared resource?',a:'Hub'},
@@ -488,7 +488,7 @@ const FLASHCARDS = [
   {id:44,d:'d3',q:'Agent API object that triggers processing?',a:'Run'},
   {id:45,d:'d3',q:'Name 3 multi-agent orchestration patterns.',a:'Sequential, Parallel, Hierarchical, Collaborative'},
   {id:46,d:'d3',q:'Semantic Kernel: what auto-creates plans?',a:'Planner'},
-  {id:141,d:'d3',q:'What is the Agent Service API flow (5 steps)?',a:'Create Agent â†’ Create Thread â†’ Add Messages â†’ Create Run â†’ Poll results'},
+  {id:141,d:'d3',q:'What is the Agent Service API flow (5 steps)?',a:'Create Agent → Create Thread → Add Messages → Create Run → Poll results'},
   {id:142,d:'d3',q:'Agent built-in tool that executes Python in a sandbox?',a:'Code Interpreter'},
   {id:143,d:'d3',q:'Agent tool that searches uploaded files with vectors?',a:'File Search'},
   {id:144,d:'d3',q:'Semantic Kernel: what is a Kernel?',a:'Central orchestrator that holds services, plugins, and memory'},
@@ -499,10 +499,10 @@ const FLASHCARDS = [
   {id:48,d:'d4',q:'Face detection model best for blurry faces?',a:'detection_02 (or detection_03 for best overall)'},
   {id:49,d:'d4',q:'Which detection model returns NO landmarks?',a:'detection_02'},
   {id:50,d:'d4',q:'Best overall face detection model?',a:'detection_03'},
-  {id:51,d:'d4',q:'Best face recognition model? Special feature?',a:'recognition_04 â€” works with face masks'},
+  {id:51,d:'d4',q:'Best face recognition model? Special feature?',a:'recognition_04 — works with face masks'},
   {id:52,d:'d4',q:'Default detection model if unspecified?',a:'detection_01'},
   {id:53,d:'d4',q:'Default recognition model if unspecified?',a:'recognition_01'},
-  {id:54,d:'d4',q:'Can you change a PersonGroup\'s recognition model?',a:'No â€” immutable once created'},
+  {id:54,d:'d4',q:'Can you change a PersonGroup\'s recognition model?',a:'No — immutable once created'},
   {id:55,d:'d4',q:'QualityForRecognition: what level for enrollment?',a:'High'},
   {id:56,d:'d4',q:'Face ID time-to-live default?',a:'86400 seconds (24 hours)'},
   {id:57,d:'d4',q:'Custom Vision classification min images/tag?',a:'5 (30+ recommended)'},
@@ -511,15 +511,15 @@ const FLASHCARDS = [
   {id:60,d:'d4',q:'Recall measures what?',a:'Of actual positives, how many were found'},
   {id:61,d:'d4',q:'High precision + low recall means?',a:'Rarely wrong when it says "yes", but misses many actual positives'},
   {id:62,d:'d4',q:'Spatial Analysis runs on what?',a:'Edge devices (Docker container, NVIDIA GPU, RTSP video)'},
-  {id:63,d:'d4',q:'Minimum detectable face size?',a:'36 Ã— 36 pixels'},
+  {id:63,d:'d4',q:'Minimum detectable face size?',a:'36 × 36 pixels'},
   // Domain 5
   {id:64,d:'d5',q:'Sentiment analysis possible values?',a:'positive, negative, neutral, mixed'},
-  {id:65,d:'d5',q:'Key phrase extraction: confidence scores?',a:'No â€” just strings'},
+  {id:65,d:'d5',q:'Key phrase extraction: confidence scores?',a:'No — just strings'},
   {id:66,d:'d5',q:'What links entities to Wikipedia?',a:'Entity Linking'},
   {id:67,d:'d5',q:'PII detection replaces entities with?',a:'***** (asterisks) in redactedText'},
-  {id:68,d:'d5',q:'Language detection: need language field in request?',a:'No â€” it auto-detects'},
+  {id:68,d:'d5',q:'Language detection: need language field in request?',a:'No — it auto-detects'},
   {id:69,d:'d5',q:'Max document size for Text Analytics?',a:'5,120 characters'},
-  {id:70,d:'d5',q:'Translator: translate to multiple languages in one call?',a:'Yes â€” to=fr&to=de&to=ja'},
+  {id:70,d:'d5',q:'Translator: translate to multiple languages in one call?',a:'Yes — to=fr&to=de&to=ja'},
   {id:71,d:'d5',q:'SSML tag for rate, pitch, volume?',a:'<prosody>'},
   {id:72,d:'d5',q:'SSML tag for a pause?',a:'<break time="500ms"/>'},
   {id:73,d:'d5',q:'SSML tag for emotional style?',a:'<mstts:express-as style="cheerful">'},
@@ -542,7 +542,7 @@ const FLASHCARDS = [
   {id:89,d:'d6',q:'searchMode=all vs any?',a:'all = AND, any = OR (default)'},
   {id:90,d:'d6',q:'Name the 4 scoring profile function types.',a:'magnitude, freshness, distance, tag'},
   {id:91,d:'d6',q:'Suggester searchMode value?',a:'analyzingInfixMatching'},
-  {id:92,d:'d6',q:'Knowledge store table projections â†’ stored where?',a:'Azure Table Storage'},
+  {id:92,d:'d6',q:'Knowledge store table projections → stored where?',a:'Azure Table Storage'},
   {id:93,d:'d6',q:'What skill reshapes data for projections?',a:'Shaper skill'},
   {id:94,d:'d6',q:'HNSW vs Exhaustive KNN?',a:'HNSW = fast approximate. Exhaustive KNN = slow exact, 100% recall.'},
   {id:95,d:'d6',q:'Best vector metric for text embeddings?',a:'cosine'},
@@ -552,7 +552,7 @@ const FLASHCARDS = [
   {id:99,d:'d6',q:'Semantic search provides what 2 extras?',a:'Semantic captions and semantic answers'},
   {id:100,d:'d6',q:'How does hybrid search merge results?',a:'Reciprocal Rank Fusion (RRF)'},
   // Missing cards from flashcards.md
-  {id:101,d:'d1',q:'Content filter severity levels in order?',a:'safe â†’ low â†’ medium â†’ high'},
+  {id:101,d:'d1',q:'Content filter severity levels in order?',a:'safe → low → medium → high'},
   {id:102,d:'d1',q:'What detects copyrighted text/code in AI output?',a:'Protected material detection'},
   {id:103,d:'d1',q:'Name the 4 Azure OpenAI deployment types.',a:'Standard, Global Standard, Provisioned Throughput (PTU), Data Zone Standard'},
   {id:104,d:'d1',q:'Multi-service endpoint URL pattern?',a:'<name>.cognitiveservices.azure.com'},
@@ -560,15 +560,14 @@ const FLASHCARDS = [
   {id:106,d:'d1',q:'Container images come from what registry?',a:'mcr.microsoft.com/azure-cognitive-services/'},
   {id:107,d:'d1',q:'Free tier label?',a:'F0 (Standard = S0)'},
   {id:108,d:'d2',q:'High temperature (0.7-1.5) best for?',a:'Creative: marketing copy, stories, brainstorming'},
-  {id:109,d:'d2',q:'Azure OpenAI "On your data" feature does what?',a:'Quick RAG setup â€” connects to AI Search, no code required'},
+  {id:109,d:'d2',q:'Azure OpenAI "On your data" feature does what?',a:'Quick RAG setup — connects to AI Search, no code required'},
   {id:110,d:'d2',q:'Prompt flow node types?',a:'LLM, Python, Prompt, Tool'},
   {id:111,d:'d2',q:'Name prompt engineering techniques.',a:'Zero-shot, Few-shot, Chain-of-thought, Grounding'},
   {id:112,d:'d2',q:'Embedding model dimensions: ada-002 vs 3-large?',a:'ada-002 = 1,536. text-embedding-3-large = 3,072'},
   {id:113,d:'d3',q:'Semantic Kernel: what is a Plugin?',a:'Collection of functions the agent can call'},
-  {id:114,d:'d3',q:'Agent Service API flow (5 steps)?',a:'Create Agent â†’ Create Thread â†’ Add Messages â†’ Create Run â†’ Poll results'},
   {id:115,d:'d4',q:'Face API: what does Verify do?',a:'Check if two faces are the same person (1:1 comparison)'},
   {id:116,d:'d4',q:'Face API: what does Identify do?',a:'Match face against a PersonGroup (1:many)'},
-  {id:117,d:'d4',q:'Face API: PersonGroup workflow?',a:'Create group â†’ Add persons â†’ Add faces â†’ Train â†’ Identify'},
+  {id:117,d:'d4',q:'Face API: PersonGroup workflow?',a:'Create group → Add persons → Add faces → Train → Identify'},
   {id:118,d:'d4',q:'Custom Vision compact models can be exported to?',a:'ONNX, TensorFlow, CoreML (for mobile/edge)'},
   {id:119,d:'d4',q:'Video Indexer extracts what insights?',a:'Faces, OCR, topics, keywords, sentiment, scenes, transcript, brands'},
   {id:120,d:'d4',q:'Spatial Analysis operations?',a:'Person count, distance, zone crossing, line crossing, dwell time'},
@@ -576,26 +575,26 @@ const FLASHCARDS = [
   {id:122,d:'d5',q:'SDK class for speech-to-text?',a:'SpeechRecognizer'},
   {id:123,d:'d5',q:'SDK class for text-to-speech?',a:'SpeechSynthesizer'},
   {id:124,d:'d5',q:'SSML: what tag for pronunciation hint (e.g., read "12/25" as date)?',a:'<say-as interpret-as="date">'},
-  {id:125,d:'d5',q:'SSML: what tag substitutes text (e.g., "UN" â†’ "United Nations")?',a:'<sub alias="United Nations">'},
+  {id:125,d:'d5',q:'SSML: what tag substitutes text (e.g., "UN" → "United Nations")?',a:'<sub alias="United Nations">'},
   {id:126,d:'d5',q:'Name chit-chat personality options.',a:'Professional, Friendly, Witty, Caring, Enthusiastic'},
-  {id:127,d:'d5',q:'What is transliteration?',a:'Converting script (e.g., kanji â†’ romaji), NOT translating meaning'},
+  {id:127,d:'d5',q:'What is transliteration?',a:'Converting script (e.g., kanji → romaji), NOT translating meaning'},
   {id:128,d:'d6',q:'@odata.type for a custom Web API skill?',a:'#Microsoft.Skills.Custom.WebApiSkill'},
   {id:129,d:'d6',q:'Context path for extracted images?',a:'/document/normalized_images/*'},
   {id:130,d:'d6',q:'Which interpolations NOT allowed for tag scoring?',a:'quadratic and logarithmic'},
-  {id:131,d:'d6',q:'Knowledge store object projections â†’ stored where?',a:'Azure Blob Storage (as JSON)'},
+  {id:131,d:'d6',q:'Knowledge store object projections → stored where?',a:'Azure Blob Storage (as JSON)'},
   {id:132,d:'d6',q:'Template model vs Neural model (Doc Intelligence)?',a:'Template = fixed layout. Neural = variable layout.'},
   {id:133,d:'d6',q:'Name 5 built-in AI Search skills.',a:'OCR, Key Phrase Extraction, Entity Recognition, Sentiment, Language Detection'},
   {id:134,d:'d6',q:'Max composed model components?',a:'200'},
   {id:135,d:'d6',q:'AI Search free tier limits?',a:'50 MB storage, 3 indexes'},
   {id:136,d:'d6',q:'Field attribute for faceted navigation?',a:'facetable'},
-  {id:147,d:'d6',q:'You want a sidebar showing "Category: Hotels (42), Restaurants (18)". What attribute?',a:'facetable â€” enables count-by-category navigation'},
+  {id:147,d:'d6',q:'You want a sidebar showing "Category: Hotels (42), Restaurants (18)". What attribute?',a:'facetable — enables count-by-category navigation'},
   {id:148,d:'d6',q:'You need $filter=rating ge 4. What attribute must the rating field have?',a:'filterable'},
   {id:149,d:'d6',q:'You want users to sort results by price. What attribute on the price field?',a:'sortable'},
   {id:150,d:'d6',q:'A field should be searchable by free text but NOT appear in results. What attributes?',a:'searchable=true, retrievable=false'},
   {id:137,d:'d6',q:'Vector search algorithm types?',a:'HNSW (approximate, default) and Exhaustive KNN (exact, brute force)'},
   {id:138,d:'d6',q:'Semantic config prioritizedFields includes?',a:'titleField, prioritizedContentFields, prioritizedKeywordsFields'},
   {id:139,d:'d4',q:'Image Analysis 4.0: gender-neutral-caption option does what?',a:'Replaces "man/woman" with "person", "boy/girl" with "child"'},
-  {id:140,d:'d4',q:'Smart crops aspect ratio range?',a:'0.75 â€“ 1.8'},
+  {id:140,d:'d4',q:'Smart crops aspect ratio range?',a:'0.75 – 1.8'},
   // === DECISION SCENARIO CARDS ===
   // When to choose A vs B
   {id:151,d:'d1',q:'Multi-service vs single-service resource: when use single?',a:'Separate cost tracking per service, need free tier (F0), or different regions per service'},
@@ -613,7 +612,7 @@ const FLASHCARDS = [
   {id:163,d:'d1',q:'Standard vs Global Standard vs Provisioned Throughput deployment?',a:'Standard = pay-per-token regional. Global Standard = multi-region routing. PTU = guaranteed reserved capacity.'},
   {id:164,d:'d5',q:'When to use each CLU entity type: Learned vs List vs Prebuilt vs Regex?',a:'Learned = context-dependent (ML). List = fixed values + synonyms. Prebuilt = common types (datetime). Regex = patterns (flight numbers).'},
   {id:165,d:'d4',q:'Image Analysis "people" feature vs Face API Detect?',a:'Image Analysis people = bounding boxes only (who is there count). Face API = identity, landmarks, attributes, recognition.'},
-  {id:166,d:'d6',q:'fieldMappings vs outputFieldMappings: which for OCR output?',a:'outputFieldMappings â€” OCR is an enrichment output (after skillset), not source data.'},
+  {id:166,d:'d6',q:'fieldMappings vs outputFieldMappings: which for OCR output?',a:'outputFieldMappings — OCR is an enrichment output (after skillset), not source data.'},
   {id:167,d:'d5',q:'SpeechRecognizer vs IntentRecognizer vs TranslationRecognizer?',a:'SpeechRecognizer = just STT. IntentRecognizer = STT + CLU intent extraction. TranslationRecognizer = STT + translate to other languages.'},
   {id:168,d:'d4',q:'Video Indexer vs Spatial Analysis: when use which?',a:'Video Indexer = analyze recorded video (topics, transcript, faces). Spatial Analysis = real-time live camera (count people, zones).'},
 ];
@@ -678,7 +677,7 @@ const QUIZ_QUESTIONS = [
    ans:1, exp:'Custom skills are Azure Functions with the Web API skill type.'},
   {d:'d6',q:'Return only hotels rated 4+, sorted by price. Which query parameters?',
    opts:['$filter=rating ge 4&$orderby=price asc','search=rating:4&sort=price','$select=rating,price&$top=4','queryType=full&search=rating:[4 TO *]'],
-   ans:0, exp:'$filter for conditions, $orderby for sorting â€” OData query syntax.'},
+   ans:0, exp:'$filter for conditions, $orderby for sorting — OData query syntax.'},
   {d:'d6',q:'Invoices from various vendors with different layouts. Which approach?',
    opts:['Prebuilt Invoice model','Custom template model','Custom neural model','Build from scratch'],
    ans:0, exp:'The prebuilt-invoice model handles varying invoice layouts out of the box.'},
@@ -699,7 +698,7 @@ const QUIZ_QUESTIONS = [
    opts:['VNet with service endpoints only','Azure AI in a Docker container','Private endpoint for the resource','Both container and private endpoint are valid'],
    ans:3, exp:'Both containers (disconnected) and private endpoints (network-isolated) work for isolation.'},
   {d:'d1',q:'You are regenerating API keys. The app currently uses Key 1. Which key should you regenerate FIRST?',
-   opts:['Key 1','Key 2','Both simultaneously','Neither â€” use managed identity instead'],
+   opts:['Key 1','Key 2','Both simultaneously','Neither — use managed identity instead'],
    ans:1, exp:'Regenerate Key 2 first (app doesn\'t use it), then switch app to Key 2, then regenerate Key 1.'},
   {d:'d2',q:'The model keeps repeating the same paragraph. Which parameter should you increase?',
    opts:['temperature','frequency_penalty','presence_penalty','max_tokens'],
@@ -746,7 +745,7 @@ const QUIZ_QUESTIONS = [
   {d:'d2',q:'In Microsoft Foundry, what measures whether an AI response is supported by provided context?',
    opts:['Relevance','Coherence','Groundedness','Fluency'],
    ans:2, exp:'Groundedness checks if the answer is supported by the context. Relevance checks if it addresses the question.'},
-  {d:'d5',q:'You need speech-to-speech translation (spoken English â†’ spoken French). What extra config is needed?',
+  {d:'d5',q:'You need speech-to-speech translation (spoken English → spoken French). What extra config is needed?',
    opts:['Add target language only','Add voice_name for target language','Use SpeechSynthesizer separately','Use custom speech model'],
    ans:1, exp:'Speech-to-text translation just needs add_target_language. Speech-to-speech also needs a voice_name for synthesized output.'},
   {d:'d4',q:'What QualityForRecognition level is recommended for person identification?',
@@ -760,8 +759,8 @@ const QUIZ_QUESTIONS = [
    opts:['<prosody interpret-as="date">','<say-as interpret-as="date" format="mdy">','<format type="date">','<voice style="date">'],
    ans:1, exp:'<say-as interpret-as="date" format="mdy"> tells the synthesizer to read it as month/day/year.'},
   {d:'d5',q:'SSML: the <mstts:express-as> tag requires what namespace declaration?',
-   opts:['xmlns:mstts="http://www.w3.org/2001/mstts"','xmlns:mstts="http://schemas.microsoft.com/speech"','No namespace needed','xmlns:ssml="http://www.w3.org/2001/10/synthesis"'],
-   ans:0, exp:'The mstts namespace must be declared: xmlns:mstts="http://www.w3.org/2001/mstts". Without it, the SSML is invalid.'},
+   opts:['xmlns:mstts="https://www.w3.org/2001/mstts"','xmlns:mstts="http://schemas.microsoft.com/speech"','No namespace needed','xmlns:ssml="http://www.w3.org/2001/10/synthesis"'],
+   ans:0, exp:'The mstts namespace must be declared: xmlns:mstts="https://www.w3.org/2001/mstts". Without it, the SSML is invalid.'},
   // Container/edge questions
   {d:'d1',q:'You deploy an Azure AI container on-premises. It stops working after 24 hours. Why?',
    opts:['Container license expired','Container lost billing connection (phone-home)','Container needs GPU','Container image is too old'],
@@ -786,7 +785,7 @@ const QUIZ_QUESTIONS = [
   // Field attribute scenario questions
   {d:'d6',q:'Your search UI needs a sidebar showing count of results per category (e.g., "Hotels: 42"). What field attribute do you need on the category field?',
    opts:['searchable','filterable','facetable','sortable'],
-   ans:2, exp:'Facetable enables faceted navigation â€” count-by-category sidebars. Filterable is for $filter conditions, not category counts.'},
+   ans:2, exp:'Facetable enables faceted navigation — count-by-category sidebars. Filterable is for $filter conditions, not category counts.'},
   {d:'d6',q:'A field contains internal scoring data. It should be used in $filter but NOT shown in search results. What attributes?',
    opts:['filterable=true, retrievable=true','filterable=true, retrievable=false','searchable=true, retrievable=false','sortable=true, filterable=false'],
    ans:1, exp:'filterable=true allows $filter usage. retrievable=false hides it from API results. searchable is for free-text search, not filtering.'},
@@ -809,7 +808,7 @@ const QUIZ_QUESTIONS = [
   {d:'d6',q:'You have forms with identical fixed layouts (same positions every time). Which Doc Intelligence model type?',
    opts:['Prebuilt','Custom template','Custom neural','Composed'],
    ans:1, exp:'Template models are for fixed-layout forms where fields are always in the same position. Neural is for variable layouts.'},
-  {d:'d5',q:'User says "Book a flight to Paris" â€” you need to extract the action and destination. Which service?',
+  {d:'d5',q:'User says "Book a flight to Paris" — you need to extract the action and destination. Which service?',
    opts:['Custom Question Answering','Text Analytics (entities)','CLU (intents + entities)','Azure Translator'],
    ans:2, exp:'CLU extracts intent (BookFlight) and entities (destination=Paris). QA returns FAQ answers. Text Analytics finds generic named entities but not custom intents.'},
   {d:'d5',q:'You need real-time speech recognition with custom vocabulary for medical terms. Which service?',
@@ -818,9 +817,6 @@ const QUIZ_QUESTIONS = [
   {d:'d4',q:'Your app needs to detect faces in blurry surveillance footage AND return face landmarks. Which detection model?',
    opts:['detection_01','detection_02','detection_03','recognition_04'],
    ans:2, exp:'detection_03 handles blurry/small faces AND returns landmarks. detection_02 handles blur but returns NO landmarks. recognition_04 is a recognition model, not detection.'},
-  {d:'d6',q:'You want to store enriched key phrases in Azure Table Storage for Power BI analysis. What do you configure?',
-   opts:['An output field mapping to a table','A knowledge store with table projections','A custom skill writing to Table Storage','A scoring profile'],
-   ans:1, exp:'Knowledge store table projections write structured data to Azure Table Storage. Output field mappings go to the search index, not external storage.'},
 ];
 
 // ==================== CHEAT SHEET DATA ====================
@@ -846,26 +842,26 @@ const CHEATSHEETS = [
 <tr><td>Managed Identity</td><td><code>DefaultAzureCredential()</code></td><td>No creds in code</td></tr>
 <tr><td>Key Vault</td><td>Store + rotate keys</td><td>Secure storage</td></tr></table>
 <p style="margin-top:12px"><b>Translator trap:</b> Uses global endpoint <code>api.cognitive.microsofttranslator.com</code> + requires <code>Ocp-Apim-Subscription-Region</code> header.</p>`},
-  {d:'d1', title:'Responsible AI â€” Content Safety', content:`<table class="cs-table"><tr><th>Feature</th><th>What</th></tr>
+  {d:'d1', title:'Responsible AI — Content Safety', content:`<table class="cs-table"><tr><th>Feature</th><th>What</th></tr>
 <tr><td><b>Content filter</b></td><td>Blocks by category (hate/sexual/violence/self-harm) at severity levels</td></tr>
 <tr><td><b>Blocklist</b></td><td>Blocks specific terms YOU define</td></tr>
 <tr><td><b>Prompt shields</b></td><td>Detects prompt injection / jailbreak</td></tr>
 <tr><td><b>Groundedness</b></td><td>Checks response is supported by context</td></tr>
 <tr><td><b>Protected material</b></td><td>Detects copyrighted content</td></tr></table>`},
   {d:'d2', title:'OpenAI Parameters', content:`<table class="cs-table"><tr><th>Param</th><th>Controls</th><th>Range</th></tr>
-<tr><td><code>temperature</code></td><td>Randomness</td><td>0.0â€“2.0</td></tr>
-<tr><td><code>top_p</code></td><td>Nucleus sampling</td><td>0.0â€“1.0</td></tr>
-<tr><td><code>max_tokens</code></td><td>Output length</td><td>1 â€“ model max</td></tr>
-<tr><td><code>frequency_penalty</code></td><td>Reduce repetition</td><td>-2.0â€“2.0</td></tr>
-<tr><td><code>presence_penalty</code></td><td>Encourage new topics</td><td>-2.0â€“2.0</td></tr>
+<tr><td><code>temperature</code></td><td>Randomness</td><td>0.0–2.0</td></tr>
+<tr><td><code>top_p</code></td><td>Nucleus sampling</td><td>0.0–1.0</td></tr>
+<tr><td><code>max_tokens</code></td><td>Output length</td><td>1 – model max</td></tr>
+<tr><td><code>frequency_penalty</code></td><td>Reduce repetition</td><td>-2.0–2.0</td></tr>
+<tr><td><code>presence_penalty</code></td><td>Encourage new topics</td><td>-2.0–2.0</td></tr>
 <tr><td><code>stop</code></td><td>Stop sequences</td><td>Up to 4</td></tr></table>
-<p style="margin-top:12px"><b>Rule:</b> Don't set both temperature AND top_p â€” pick one.</p>`},
-  {d:'d2', title:'RAG Pattern', content:`<p><code>User query â†’ Azure AI Search (retrieves docs) â†’ Docs injected as context â†’ Azure OpenAI generates grounded answer</code></p>
+<p style="margin-top:12px"><b>Rule:</b> Don't set both temperature AND top_p — pick one.</p>`},
+  {d:'d2', title:'RAG Pattern', content:`<p><code>User query → Azure AI Search (retrieves docs) → Docs injected as context → Azure OpenAI generates grounded answer</code></p>
 <table class="cs-table" style="margin-top:12px"><tr><th>Component</th><th>Service</th></tr>
 <tr><td>Embeddings</td><td>text-embedding-3-small/large</td></tr>
 <tr><td>Vector/Semantic search</td><td>Azure AI Search</td></tr>
 <tr><td>Generation</td><td>Azure OpenAI (GPT-4o)</td></tr></table>`},
-  {d:'d4', title:'Face API Models â€” MEMORIZE', content:`<table class="cs-table"><tr><th>Model</th><th>Best For</th><th>Landmarks?</th></tr>
+  {d:'d4', title:'Face API Models — MEMORIZE', content:`<table class="cs-table"><tr><th>Model</th><th>Best For</th><th>Landmarks?</th></tr>
 <tr><td><code>detection_01</code></td><td>General (default)</td><td>Yes</td></tr>
 <tr><td><code>detection_02</code></td><td><b>Blurry, small, side-view</b></td><td><b>No</b></td></tr>
 <tr><td><code>detection_03</code></td><td><b>Best overall</b></td><td>Yes</td></tr></table>
@@ -884,12 +880,12 @@ const CHEATSHEETS = [
 <tr><td><b>Intent</b></td><td>BookFlight, GetWeather</td></tr>
 <tr><td><b>Entity</b></td><td>destination=Paris, date=tomorrow</td></tr>
 <tr><td><b>Utterance</b></td><td>"Book me a flight to Paris"</td></tr>
-<tr><td><b>None intent</b></td><td>Always include â€” catches out-of-scope</td></tr></table>
+<tr><td><b>None intent</b></td><td>Always include — catches out-of-scope</td></tr></table>
 <p style="margin-top:12px"><b>Entity types:</b> Learned, List, Prebuilt, Regex</p>`},
-  {d:'d6', title:'Search Architecture', content:`<p><code>Data Source â†’ Indexer â†’ [Skillset] â†’ Index â†’ Queries</code></p>
+  {d:'d6', title:'Search Architecture', content:`<p><code>Data Source → Indexer → [Skillset] → Index → Queries</code></p>
 <table class="cs-table" style="margin-top:12px"><tr><th>Mapping</th><th>When</th></tr>
-<tr><td><code>fieldMappings</code></td><td>Before enrichment (source â†’ index)</td></tr>
-<tr><td><code>outputFieldMappings</code></td><td>After enrichment (skillset â†’ index)</td></tr></table>`},
+<tr><td><code>fieldMappings</code></td><td>Before enrichment (source → index)</td></tr>
+<tr><td><code>outputFieldMappings</code></td><td>After enrichment (skillset → index)</td></tr></table>`},
   {d:'d6', title:'Search Query Syntax', content:`<table class="cs-table"><tr><th>Param</th><th>Purpose</th></tr>
 <tr><td><code>$filter</code></td><td>Exact match / comparison</td></tr>
 <tr><td><code>$orderby</code></td><td>Sort results</td></tr>
@@ -905,7 +901,7 @@ const CHEATSHEETS = [
 <tr><td><code>prebuilt-read</code></td><td>OCR text extraction</td></tr>
 <tr><td><code>prebuilt-layout</code></td><td>Tables + structure</td></tr>
 <tr><td><code>prebuilt-tax.us.w2</code></td><td>W-2 tax form fields</td></tr>
-<tr><td><code>prebuilt-businessCard</code></td><td>Name, company, phone, email</td></tr>
+<tr><td><code>prebuilt-businessCard</code></td><td>Name, company, phone, email <i>(deprecated v4.0)</i></td></tr>
 <tr><td><code>prebuilt-document</code></td><td>Key-value pairs, entities, tables</td></tr></table>
 <p style="margin-top:12px"><b>Custom:</b> Template (fixed layout) vs Neural (variable). Min 5 labeled docs. <b>Composed</b> = combine + auto-route (max 200 components).</p>`},
   // NEW cheat sheet sections
@@ -952,7 +948,7 @@ const CHEATSHEETS = [
 <tr><td><b>Chain-of-thought</b></td><td>"Think step by step"</td></tr>
 <tr><td><b>Grounding</b></td><td>Provide reference docs as context (RAG)</td></tr></table>
 <p style="margin-top:12px"><b>Best practices:</b> Use delimiters (\`\`\`, """). Specify output format. Use system message for rules. Be specific.</p>`},
-  {d:'d2', title:'Foundry â€” Hub, Project, Prompt Flow', content:`<table class="cs-table"><tr><th>Concept</th><th>What</th></tr>
+  {d:'d2', title:'Foundry — Hub, Project, Prompt Flow', content:`<table class="cs-table"><tr><th>Concept</th><th>What</th></tr>
 <tr><td><b>Hub</b></td><td>Top-level resource: shared compute, connections, policies</td></tr>
 <tr><td><b>Project</b></td><td>Workspace within a hub (per team/use case)</td></tr>
 <tr><td><b>Connections</b></td><td>Links to OpenAI, AI Search, storage</td></tr>
@@ -963,31 +959,31 @@ const CHEATSHEETS = [
 <p style="margin-top:8px"><b>RAG vs Fine-tune:</b> RAG = dynamic data grounding. Fine-tune = style/format/domain behavior.</p>
 <p style="margin-top:12px"><b>Image gen (DALL-E / gpt-image-1):</b></p>
 <table class="cs-table"><tr><th>Size</th><th>Aspect</th></tr>
-<tr><td>1024Ã—1024</td><td>Square</td></tr>
-<tr><td>1792Ã—1024</td><td>Landscape</td></tr>
-<tr><td>1024Ã—1792</td><td>Portrait</td></tr></table>
+<tr><td>1024×1024</td><td>Square</td></tr>
+<tr><td>1792×1024</td><td>Landscape</td></tr>
+<tr><td>1024×1792</td><td>Portrait</td></tr></table>
 <p style="margin-top:8px">Quality: <code>standard</code> (fast) or <code>hd</code> (detailed)</p>`},
-  {d:'d3', title:'Agent Service â€” API Objects & Flow', content:`<table class="cs-table"><tr><th>Object</th><th>Purpose</th></tr>
+  {d:'d3', title:'Agent Service — API Objects & Flow', content:`<table class="cs-table"><tr><th>Object</th><th>Purpose</th></tr>
 <tr><td><b>Agent</b></td><td>Definition: model, instructions, tools</td></tr>
 <tr><td><b>Thread</b></td><td>Conversation container</td></tr>
 <tr><td><b>Message</b></td><td>Single message (user or assistant)</td></tr>
 <tr><td><b>Run</b></td><td>Execution of agent on a thread</td></tr>
 <tr><td><b>RunStep</b></td><td>Individual step (tool call, message)</td></tr></table>
-<p style="margin-top:12px"><b>Flow:</b> Create Agent â†’ Create Thread â†’ Add Messages â†’ Create Run â†’ Poll results</p>
+<p style="margin-top:12px"><b>Flow:</b> Create Agent → Create Thread → Add Messages → Create Run → Poll results</p>
 <p style="margin-top:8px"><b>Tools:</b> Code Interpreter, File Search, Function Calling, Azure AI Search, Bing, Azure Functions</p>`},
   {d:'d3', title:'Semantic Kernel & Multi-Agent', content:`<table class="cs-table"><tr><th>Concept</th><th>What</th></tr>
 <tr><td><b>Kernel</b></td><td>Central orchestrator</td></tr>
 <tr><td><b>Plugin</b></td><td>Collection of callable functions</td></tr>
 <tr><td><b>Planner</b></td><td>Auto-creates plans from functions</td></tr>
 <tr><td><b>Memory</b></td><td>Stores conversation history</td></tr></table>
-<p style="margin-top:12px"><b>Multi-agent patterns:</b> Sequential (chain), Parallel (simultaneous), Hierarchical (managerâ†’workers), Collaborative (discuss + refine)</p>`},
+<p style="margin-top:12px"><b>Multi-agent patterns:</b> Sequential (chain), Parallel (simultaneous), Hierarchical (manager→workers), Collaborative (discuss + refine)</p>`},
   {d:'d4', title:'Custom Vision', content:`<table class="cs-table"><tr><th>Type</th><th>Task</th><th>Min Images/Tag</th></tr>
 <tr><td>Classification</td><td>What is it?</td><td>5 (30+ rec)</td></tr>
 <tr><td>Object Detection</td><td>Where is it?</td><td>15 (50+ rec)</td></tr></table>
 <p style="margin-top:12px"><b>Metrics:</b> Precision (false positive rate), Recall (false negative rate), AP (area under PR curve), mAP (mean across classes)</p>
 <p style="margin-top:8px"><b>Domains:</b> General, General (compact/exportable), Food, Landmarks, Retail</p>
 <p style="margin-top:8px"><b>Compact models</b> export to ONNX/TensorFlow/CoreML for edge.</p>
-<p style="margin-top:8px"><b>âš ï¸ Retiring Sept 2028</b> â€” migrate to Azure ML AutoML or Content Understanding</p>`},
+<p style="margin-top:8px"><b>⚠️ Retiring Sept 2028</b> — migrate to Azure ML AutoML or Content Understanding</p>`},
   {d:'d4', title:'Video Indexer & Spatial Analysis', content:`<p><b>Video Indexer extracts:</b> Faces, OCR, topics, keywords, sentiment, scenes, shots, transcript, translation, labels, brands, named entities</p>
 <p style="margin-top:12px"><b>Spatial Analysis operations:</b></p>
 <table class="cs-table"><tr><th>Operation</th><th>Detects</th></tr>
@@ -999,12 +995,12 @@ const CHEATSHEETS = [
 <p style="margin-top:12px"><b>Requires:</b> Edge device, Docker container, NVIDIA GPU, RTSP video stream</p>`},
   {d:'d4', title:'Face API Parameters & Attributes', content:`<table class="cs-table"><tr><th>Parameter</th><th>Purpose</th></tr>
 <tr><td><code>detectionModel</code></td><td>detection_01, _02, _03</td></tr>
-<tr><td><code>recognitionModel</code></td><td>recognition_01 â€“ _04</td></tr>
+<tr><td><code>recognitionModel</code></td><td>recognition_01 – _04</td></tr>
 <tr><td><code>returnFaceId</code></td><td>Must be true for recognition</td></tr>
 <tr><td><code>returnFaceLandmarks</code></td><td>27 facial landmark points</td></tr>
 <tr><td><code>returnFaceAttributes</code></td><td>blur, exposure, glasses, headPose, mask, noise, occlusion, qualityForRecognition</td></tr>
 <tr><td><code>faceIdTimeToLive</code></td><td>Default: 86400s (24h)</td></tr></table>
-<p style="margin-top:12px"><b>Limits:</b> Min face: 36Ã—36px. Max face: 4096Ã—4096px. Max image: 6 MB. Formats: JPEG, PNG, GIF (1st frame), BMP.</p>
+<p style="margin-top:12px"><b>Limits:</b> Min face: 36×36px. Max face: 4096×4096px. Max image: 6 MB. Formats: JPEG, PNG, GIF (1st frame), BMP.</p>
 <p style="margin-top:8px"><b>Quality:</b> High for enrollment, Medium+ for identification. Only with detection_01/03 + recognition_03/04.</p>`},
   {d:'d5', title:'Text Analytics Endpoints', content:`<table class="cs-table"><tr><th>Feature</th><th>Path</th></tr>
 <tr><td>Sentiment</td><td><code>/text/analytics/v3.1/sentiment</code></td></tr>
@@ -1029,7 +1025,7 @@ const CHEATSHEETS = [
 <p style="margin-top:12px"><b>Custom Question Answering:</b></p>
 <table class="cs-table"><tr><th>Feature</th><th>Purpose</th></tr>
 <tr><td>Multi-turn</td><td>Follow-up prompts</td></tr>
-<tr><td>Alternate phrasing</td><td>Multiple questions â†’ same answer</td></tr>
+<tr><td>Alternate phrasing</td><td>Multiple questions → same answer</td></tr>
 <tr><td>Chit-chat</td><td>Professional, Friendly, Witty, Caring, Enthusiastic</td></tr>
 <tr><td>Active learning</td><td>Suggests questions from traffic</td></tr>
 <tr><td>Precise answering</td><td>Short answer from longer passage</td></tr></table>`},
@@ -1070,7 +1066,7 @@ const CHEATSHEETS = [
 <tr><td>freshness</td><td>Date recency</td></tr>
 <tr><td>distance</td><td>Geographic proximity</td></tr>
 <tr><td>tag</td><td>Matching tags from query param</td></tr></table>
-<p style="margin-top:12px"><b>Interpolation:</b> linear (default), constant, quadratic, logarithmic. âš ï¸ quadratic + logarithmic NOT allowed for tag.</p>
+<p style="margin-top:12px"><b>Interpolation:</b> linear (default), constant, quadratic, logarithmic. ⚠️ quadratic + logarithmic NOT allowed for tag.</p>
 <p style="margin-top:8px"><b>Aggregation:</b> sum (default), average, minimum, maximum, firstMatching</p>
 <p style="margin-top:12px"><b>Suggesters:</b> Enable autocomplete + suggestions. <code>searchMode: analyzingInfixMatching</code>. String fields only. One per index.</p>
 <p style="margin-top:8px"><b>Synonym maps:</b> <code>"hotel, motel, inn"</code> or <code>"US => USA"</code>. One map per field, max 5,000 rules.</p>`},
@@ -1084,7 +1080,7 @@ const CHEATSHEETS = [
 <tr><td>Scoring profiles max</td><td>100 per index</td></tr>
 <tr><td>Custom Vision min (classify)</td><td>5/tag (30+ rec)</td></tr>
 <tr><td>Custom Vision min (detect)</td><td>15/tag (50+ rec)</td></tr>
-<tr><td>Face min detectable</td><td>36Ã—36 px</td></tr>
+<tr><td>Face min detectable</td><td>36×36 px</td></tr>
 <tr><td>Text Analytics max doc</td><td>5,120 chars</td></tr>
 <tr><td>Fine-tuning min</td><td>10 examples</td></tr>
 <tr><td>Max stop sequences</td><td>4</td></tr>
@@ -1149,7 +1145,7 @@ const MINDMAPS = [
 ### Key Vault
 - Secure key storage
 - Key rotation pattern
-- App uses Key1 â†’ regen Key2 â†’ switch â†’ regen Key1
+- App uses Key1 → regen Key2 → switch → regen Key1
 ### RBAC Roles
 - Cognitive Services User (call APIs)
 - Cognitive Services Contributor (manage + call)
@@ -1168,7 +1164,7 @@ const MINDMAPS = [
 ## Responsible AI
 ### Content Filters
 - Hate / Sexual / Violence / Self-harm
-- Severity: safe â†’ low â†’ medium â†’ high
+- Severity: safe → low → medium → high
 - Applied to BOTH input AND output
 ### Additional Protections
 - Blocklists (custom terms YOU define)
@@ -1241,9 +1237,9 @@ const MINDMAPS = [
 ## Prompt Engineering
 - Zero-shot / Few-shot / Chain-of-thought / Grounding
 ## RAG Pattern
-- User query â†’ AI Search retrieves docs â†’ docs as context â†’ OpenAI generates answer
+- User query → AI Search retrieves docs → docs as context → OpenAI generates answer
 ## Microsoft Foundry
-### Hub â†’ Project â†’ Connections â†’ Prompt Flow
+### Hub → Project → Connections → Prompt Flow
 ### Evaluation: Groundedness, Relevance, Coherence, Fluency
 ## Fine-Tuning
 - JSONL format, min 10 examples
@@ -1253,10 +1249,10 @@ const MINDMAPS = [
 - Agent: plans, uses tools, iterates
 - Chatbot: responds, no tools, stateless
 ## Foundry Agent Service
-### API: Agent â†’ Thread â†’ Message â†’ Run â†’ RunStep
+### API: Agent → Thread → Message → Run → RunStep
 ### Tools: Code Interpreter, File Search, Function Calling
 ## Semantic Kernel
-- Kernel (orchestrator) â†’ Plugin (functions) â†’ Planner (auto-plan)
+- Kernel (orchestrator) → Plugin (functions) → Planner (auto-plan)
 ## Multi-Agent Patterns
 - Sequential, Parallel, Hierarchical, Collaborative`},
   {id:'d4', title:'Domain 4: Computer Vision (10-15%)', color:'#FF8C42', md:`# Computer Vision
@@ -1271,10 +1267,10 @@ const MINDMAPS = [
 - recognition_04 (best, face masks)
 ### Rules
 - Can't change model after PersonGroup creation
-- PersonGroup workflow: Create â†’ Add persons â†’ Add faces â†’ Train â†’ Identify
+- PersonGroup workflow: Create → Add persons → Add faces → Train → Identify
 ## Custom Vision
 - Classification (5 img/tag) vs Object Detection (15 img/tag)
-- Compact models â†’ ONNX/TensorFlow/CoreML
+- Compact models → ONNX/TensorFlow/CoreML
 - Retiring Sept 2028
 ## Video Indexer vs Spatial Analysis
 - Video Indexer = recorded video (topics, transcript, faces)
@@ -1304,7 +1300,7 @@ const MINDMAPS = [
   {id:'d6', title:'Domain 6: Knowledge Mining (15-20%)', color:'#FB7185', md:`# Knowledge Mining
 ## Azure AI Search
 ### Architecture
-- Data Source â†’ Indexer â†’ [Skillset] â†’ Index â†’ Queries
+- Data Source → Indexer → [Skillset] → Index → Queries
 ### Field Attributes
 - searchable, filterable, sortable, facetable, retrievable
 ### Query Syntax
@@ -1322,7 +1318,7 @@ const MINDMAPS = [
 - Custom: Template (fixed) vs Neural (variable)
 - Composed model: auto-route, max 200
 ## Knowledge Store
-- Table â†’ Table Storage, Object â†’ Blob (JSON), File â†’ Blob (images)`}
+- Table → Table Storage, Object → Blob (JSON), File → Blob (images)`}
 ];
 
 // ==================== STATE ====================
@@ -1356,7 +1352,7 @@ const LS = {
 
 // ==================== HEADER INIT ====================
 (function(){
-  document.getElementById('header-title').textContent = 'ðŸŽ¯ ' + EXAM_CONFIG.code + ' Exam Prep';
+  document.getElementById('header-title').textContent = '🎯 ' + EXAM_CONFIG.code + ' Exam Prep';
   document.title = EXAM_CONFIG.code + ' Exam Prep';
   document.getElementById('header-subtitle').innerHTML = `<a href="${EXAM_CONFIG.url}" target="_blank">${EXAM_CONFIG.name}</a>`;
   if(EXAM_CONFIG.examDate){
@@ -1364,9 +1360,9 @@ const LS = {
     const exam = new Date(EXAM_CONFIG.examDate + 'T00:00:00');
     const now = new Date(); now.setHours(0,0,0,0);
     const days = Math.ceil((exam - now) / 86400000);
-    if(days > 0) cd.textContent = `â° ${days} day${days!==1?'s':''} until exam`;
-    else if(days === 0) cd.textContent = 'ðŸ”¥ Exam day!';
-    else cd.textContent = 'âœ… Exam passed';
+    if(days > 0) cd.textContent = `⏰ ${days} day${days!==1?'s':''} until exam`;
+    else if(days === 0) cd.textContent = '🔥 Exam day!';
+    else cd.textContent = '✅ Exam passed';
   }
 })();
 
@@ -1374,7 +1370,7 @@ const LS = {
 function toggleTheme(){
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
   document.documentElement.setAttribute('data-theme', isLight ? '' : 'light');
-  document.getElementById('theme-toggle').textContent = isLight ? 'ðŸŒ™' : 'â˜€ï¸';
+  document.getElementById('theme-toggle').textContent = isLight ? '🌙' : '☀️';
   LS.set('theme', isLight ? 'dark' : 'light');
   // Update markmap text colors
   const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
@@ -1383,7 +1379,7 @@ function toggleTheme(){
 // Restore saved theme
 if(LS.get('theme','dark')==='light'){
   document.documentElement.setAttribute('data-theme','light');
-  document.getElementById('theme-toggle').textContent = 'â˜€ï¸';
+  document.getElementById('theme-toggle').textContent = '☀️';
 }
 
 // ==================== ZEN MODE ====================
@@ -1436,7 +1432,7 @@ function renderDashboard(){
   document.getElementById('dash-mastered').textContent=masteredCount;
   document.getElementById('dash-starred').textContent=starredCount;
   document.getElementById('dash-streak').textContent=streak;
-  document.getElementById('dash-quiz').textContent=lastQuiz?lastQuiz.pct+'%':'â€”';
+  document.getElementById('dash-quiz').textContent=lastQuiz?lastQuiz.pct+'%':'—';
   document.getElementById('dash-quiz').style.color=lastQuiz&&lastQuiz.pct>=70?'var(--green)':'var(--red)';
 
   // Mastery ring SVG
@@ -1523,13 +1519,13 @@ function showCard(){
     document.getElementById('fc-actions').style.display='none';
     document.getElementById('fc-done').style.display='block';
     const pct = fcDeck.length?Math.round(fcCorrect/fcDeck.length*100):0;
-    document.getElementById('fc-summary').textContent=`${fcCorrect}/${fcDeck.length} correct (${pct}%) â€” ${Object.keys(starred).filter(k=>starred[k]).length} cards starred for review`;
+    document.getElementById('fc-summary').textContent=`${fcCorrect}/${fcDeck.length} correct (${pct}%) — ${Object.keys(starred).filter(k=>starred[k]).length} cards starred for review`;
     renderProgress();
     return;
   }
   const c = fcDeck[fcIndex];
   const dom = DOMAINS.find(d=>d.id===c.d);
-  document.getElementById('fc-domain').textContent = `${dom.name} Â· Card ${fcIndex+1}/${fcDeck.length}` + (starred[c.id]?' â˜…':'');
+  document.getElementById('fc-domain').textContent = `${dom.name} · Card ${fcIndex+1}/${fcDeck.length}` + (starred[c.id]?' ★':'');
   document.getElementById('fc-question').textContent = c.q;
   document.getElementById('fc-answer').textContent = c.a;
   const card = document.getElementById('fc-card');
@@ -1631,7 +1627,7 @@ function answerQuiz(i){
   document.getElementById(`qopt${i}`).classList.add(correct?'correct':'wrong');
   if(!correct) document.getElementById(`qopt${q.ans}`).classList.add('correct');
   const expEl=document.getElementById('quiz-explanation');
-  expEl.textContent=(correct?'âœ“ Correct! ':'âœ— Wrong. ')+q.exp;
+  expEl.textContent=(correct?'✓ Correct! ':'✗ Wrong. ')+q.exp;
   expEl.style.display='block';
   document.getElementById('quiz-next').style.display='';
   document.getElementById('quiz-score-live').textContent=`${quizScore} correct`;
@@ -1646,25 +1642,25 @@ function showQuizResults(){
   document.getElementById('quiz-final-score').textContent=`${quizScore} / ${quizQs.length}`;
   document.getElementById('quiz-final-pct').textContent=`${pct}%`;
   const msgEl=document.getElementById('quiz-pass-msg');
-  if(pct>=70) msgEl.innerHTML=`<span style="color:var(--green);font-size:1.2rem;font-weight:700">âœ“ Pass (â‰¥70%)</span>`;
-  else msgEl.innerHTML=`<span style="color:var(--red);font-size:1.2rem;font-weight:700">âœ— Below passing â€” review starred flashcards</span>`;
+  if(pct>=70) msgEl.innerHTML=`<span style="color:var(--green);font-size:1.2rem;font-weight:700">✓ Pass (≥70%)</span>`;
+  else msgEl.innerHTML=`<span style="color:var(--red);font-size:1.2rem;font-weight:700">✗ Below passing — review starred flashcards</span>`;
   const reviewEl=document.getElementById('quiz-review');
   const wrongQs = quizQs.filter((_,i)=>quizAnswers[i]!==undefined && quizAnswers[i]!==quizQs[i].ans);
   if(wrongQs.length>0){
-    let html=`<div class="card mt-20"><h3 style="margin-bottom:16px;color:var(--red)">âœ— Review Wrong Answers (${wrongQs.length})</h3>`;
+    let html=`<div class="card mt-20"><h3 style="margin-bottom:16px;color:var(--red)">✗ Review Wrong Answers (${wrongQs.length})</h3>`;
     wrongQs.forEach(q=>{
       const dom=DOMAINS.find(d=>d.id===q.d);
       html+=`<div style="margin-bottom:16px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
         <div class="fc-domain">${dom.name}</div>
         <div style="font-size:.95rem;margin-bottom:8px">${q.q}</div>
-        <div style="font-size:.85rem;color:var(--green)">âœ“ ${q.opts[q.ans]}</div>
+        <div style="font-size:.85rem;color:var(--green)">✓ ${q.opts[q.ans]}</div>
         <div style="font-size:.85rem;color:var(--text2);margin-top:4px">${q.exp}</div>
       </div>`;
     });
     html+=`</div>`;
     reviewEl.innerHTML=html;
   } else {
-    reviewEl.innerHTML=`<div class="card mt-20 text-center" style="color:var(--green)"><b>Perfect score! ðŸŽ‰</b></div>`;
+    reviewEl.innerHTML=`<div class="card mt-20 text-center" style="color:var(--green)"><b>Perfect score! 🎉</b></div>`;
   }
   const today=new Date().toISOString().slice(0,10);
   const quizHist=LS.get('quizHistory',[]);
@@ -1690,9 +1686,9 @@ function renderProgress(){
 
   document.getElementById('stats-grid').innerHTML=`
     <div class="stat-card"><div class="num" style="color:var(--accent)">${masteredCount}</div><div class="lbl">Cards Mastered</div></div>
-    <div class="stat-card"><div class="num" style="color:var(--orange)">${starredCount}</div><div class="lbl">â˜… Need Review</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--orange)">${starredCount}</div><div class="lbl">★ Need Review</div></div>
     <div class="stat-card"><div class="num" style="color:var(--green)">${totalReviewed}</div><div class="lbl">Total Reviews</div></div>
-    <div class="stat-card"><div class="num" style="color:${lastQuiz&&lastQuiz.pct>=70?'var(--green)':'var(--red)'}">${lastQuiz?lastQuiz.pct+'%':'â€”'}</div><div class="lbl">Last Quiz</div></div>`;
+    <div class="stat-card"><div class="num" style="color:${lastQuiz&&lastQuiz.pct>=70?'var(--green)':'var(--red)'}">${lastQuiz?lastQuiz.pct+'%':'—'}</div><div class="lbl">Last Quiz</div></div>`;
 
   const barsEl=document.getElementById('progress-bars');
   barsEl.innerHTML='';
@@ -1756,7 +1752,7 @@ function renderCheatSheets(filter){
   items.forEach((cs,i)=>{
     const dom=DOMAINS.find(d=>d.id===cs.d);
     el.innerHTML+=`<div class="cs-section" onclick="this.classList.toggle('open')">
-      <div class="cs-header"><span><span class="tag" style="background:rgba(99,102,241,.15);color:var(--accent)">${dom.name}</span> ${cs.title}</span><span class="arrow">â–¶</span></div>
+      <div class="cs-header"><span><span class="tag" style="background:rgba(99,102,241,.15);color:var(--accent)">${dom.name}</span> ${cs.title}</span><span class="arrow">▶</span></div>
       <div class="cs-body">${cs.content}</div>
     </div>`;
   });
@@ -1796,11 +1792,11 @@ function initMindMaps(){
     section.innerHTML = `
       <div class="mm-header" onclick="toggleMindMap(this, ${idx})">
         <span><span class="tag" style="background:${mm.color}22;color:${mm.color}">${mm.id.toUpperCase()}</span> ${mm.title}</span>
-        <span class="arrow">â–¶</span>
+        <span class="arrow">▶</span>
       </div>
       <div class="mm-body">
         <div class="mm-wrap" id="mm-wrap-${idx}">
-          <button class="mm-fullscreen-btn" onclick="toggleFullscreen(${idx})">â›¶ Fullscreen</button>
+          <button class="mm-fullscreen-btn" onclick="toggleFullscreen(${idx})">⛶ Fullscreen</button>
           <div id="mm-body-${idx}" style="width:100%;height:100%"></div>
         </div>
       </div>`;
@@ -1820,7 +1816,7 @@ function toggleMindMap(header, idx){
 function renderMindmap(idx){
   if(mmRendered[idx]) return;
   const body = document.getElementById('mm-body-' + idx);
-  body.innerHTML = '<p style="padding:20px;color:var(--text2)">Loading mind mapâ€¦</p>';
+  body.innerHTML = '<p style="padding:20px;color:var(--text2)">Loading mind map…</p>';
   loadMmDeps().then(() => {
     const { Transformer, Markmap } = window.markmap;
     const { root } = new Transformer().transform(MINDMAPS[idx].md);
@@ -1849,10 +1845,10 @@ function toggleFullscreen(idx){
   const btn = wrap.querySelector('.mm-fullscreen-btn');
   wrap.classList.toggle('mm-expanded');
   if(wrap.classList.contains('mm-expanded')){
-    btn.textContent = 'âœ• Close';
+    btn.textContent = '✕ Close';
     document.body.style.overflow = 'hidden';
   } else {
-    btn.textContent = 'â›¶ Fullscreen';
+    btn.textContent = '⛶ Fullscreen';
     document.body.style.overflow = '';
   }
   if(mmInstances[idx]) setTimeout(() => mmInstances[idx].fit(), 200);

@@ -2,7 +2,7 @@
 
 > Adapt to your own schedule — day 1 = 6 days before exam, day 6 = exam day.
 > **METHOD:** Each day has 3 phases: READ → DRILL → RECALL.
-> Use the [interactive app](https://demo-ninjas.github.io/pass_az_102/) for flashcards and quizzes.
+> Use the [interactive app](https://demo-ninjas.github.io/pass_ai_102/) for flashcards and quizzes.
 
 ---
 

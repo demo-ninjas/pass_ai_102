@@ -4,15 +4,15 @@
 
 ## 🌐 Interactive Study App
 
-**👉 [Launch the app](https://demo-ninjas.github.io/pass_az_102/)** — works in browser, no install, saves progress locally.
+**👉 [Launch the app](https://demo-ninjas.github.io/pass_ai_102/)** — works in browser, no install, saves progress locally.
 
 | Feature | Description |
 |---------|-------------|
-| 🃏 **Flashcards** | 147 active-recall cards across all 6 domains. Mark ✓/✗, auto-star weak cards, spaced repetition. |
-| 📝 **Quiz** | 55 scenario-based multiple choice questions with explanations. Filter by domain. Wrong-answer review after each quiz. |
+| 🃏 **Flashcards** | 167 active-recall cards across all 6 domains. Mark ✓/✗, auto-star weak cards, spaced repetition. |
+| 📝 **Quiz** | 64 scenario-based multiple choice questions with explanations. Filter by domain. Wrong-answer review after each quiz. |
 | 🧠 **Mind Maps** | Interactive mind maps (powered by markmap) for each domain. Zoom, pan, explore. |
 | 📊 **Progress** | Mastery tracking per domain, study streak, quiz history. |
-| 📋 **Cheat Sheets** | 30 collapsible reference sections with exact API details, model names, parameters. |
+| 📋 **Cheat Sheets** | 33 collapsible reference sections with exact API details, model names, parameters. |
 
 ---
 
@@ -70,7 +70,7 @@ ai102/
 
 ## How to Study
 
-1. **Launch the [app](https://demo-ninjas.github.io/pass_az_102/)** and start with flashcards for the highest-weight domain (Plan & Manage).
+1. **Launch the [app](https://demo-ninjas.github.io/pass_ai_102/)** and start with flashcards for the highest-weight domain (Plan & Manage).
 2. **Use the Mind Maps** to see how concepts connect within each domain.
 3. **Take quizzes** to test yourself under exam-like conditions.
 4. **Review starred cards** — the ones you get wrong are exactly what the exam tests.
