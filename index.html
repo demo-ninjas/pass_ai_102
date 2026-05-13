@@ -355,6 +355,7 @@ body.zen .bottom-nav { display:none !important; }
         <button class="btn btn-primary" onclick="startQuiz(10)">10 Questions</button>
         <button class="btn btn-secondary" onclick="startQuiz(25)">25 Questions</button>
       </div>
+      <p id="quiz-pool-count" style="color:var(--text3);font-size:.78rem;text-align:center;margin-top:12px"></p>
     </div>
   </div>
   <div id="quiz-active" style="display:none">
@@ -1577,12 +1578,20 @@ function initQuiz(){
   const el = document.getElementById('quiz-domain-filters');
   el.innerHTML = `<button class="active" onclick="setQuizDomain('all',this)">All Domains</button>`;
   DOMAINS.forEach(d=>{ el.innerHTML += `<button onclick="setQuizDomain('${d.id}',this)">${d.name}</button>`; });
+  updateQuizPoolCount();
 }
 
 function setQuizDomain(d,btn){
   quizDomain=d;
   document.querySelectorAll('#quiz-domain-filters button').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  updateQuizPoolCount();
+}
+
+function updateQuizPoolCount(){
+  const pool = QUIZ_QUESTIONS.filter(q=>quizDomain==='all'||q.d===quizDomain);
+  const el = document.getElementById('quiz-pool-count');
+  if(el) el.textContent = pool.length + ' questions available' + (pool.length < 25 ? ' (fewer than 25)' : '');
 }
 
 function startQuiz(n){
@@ -1608,7 +1617,12 @@ function showQuizQ(){
   const optsEl=document.getElementById('quiz-opts');
   optsEl.innerHTML='';
   q.opts.forEach((o,i)=>{
-    optsEl.innerHTML+=`<label id="qopt${i}" onclick="answerQuiz(${i})"><input type="radio" name="quiz">${String.fromCharCode(65+i)}) ${o}</label>`;
+    const lbl=document.createElement('label');
+    lbl.id='qopt'+i;
+    lbl.onclick=()=>answerQuiz(i);
+    lbl.innerHTML=`<input type="radio" name="quiz">`;
+    lbl.appendChild(document.createTextNode(String.fromCharCode(65+i)+') '+o));
+    optsEl.appendChild(lbl);
   });
   const pct=Math.round(quizIdx/quizQs.length*100);
   document.getElementById('quiz-count').textContent=`${quizIdx+1}/${quizQs.length}`;
@@ -1650,11 +1664,12 @@ function showQuizResults(){
     let html=`<div class="card mt-20"><h3 style="margin-bottom:16px;color:var(--red)">✗ Review Wrong Answers (${wrongQs.length})</h3>`;
     wrongQs.forEach(q=>{
       const dom=DOMAINS.find(d=>d.id===q.d);
+      const esc=s=>{const t=document.createElement('span');t.textContent=s;return t.innerHTML;};
       html+=`<div style="margin-bottom:16px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
-        <div class="fc-domain">${dom.name}</div>
-        <div style="font-size:.95rem;margin-bottom:8px">${q.q}</div>
-        <div style="font-size:.85rem;color:var(--green)">✓ ${q.opts[q.ans]}</div>
-        <div style="font-size:.85rem;color:var(--text2);margin-top:4px">${q.exp}</div>
+        <div class="fc-domain">${esc(dom.name)}</div>
+        <div style="font-size:.95rem;margin-bottom:8px">${esc(q.q)}</div>
+        <div style="font-size:.85rem;color:var(--green)">✓ ${esc(q.opts[q.ans])}</div>
+        <div style="font-size:.85rem;color:var(--text2);margin-top:4px">${esc(q.exp)}</div>
       </div>`;
     });
     html+=`</div>`;
