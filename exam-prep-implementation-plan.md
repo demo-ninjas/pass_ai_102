@@ -3,6 +3,41 @@
 > Use this plan to build an interactive study app for **any** Microsoft certification exam.
 > Start a new project for each exam. Replace `[EXAM-ID]` and `[EXAM-NAME]` throughout.
 > Each phase builds on the previous one — don't skip ahead.
+>
+> **Target:** 100% exam objective coverage with at least one flashcard AND one quiz question per bullet in the official "Skills Measured" document.
+
+---
+
+## Phase 0: Get the Official Skills Measured Document
+
+### Goal
+Download the exact list of testable objectives before writing any content.
+
+### Prompt
+```
+I need to pass [EXAM-ID]: [EXAM-NAME]. My workspace is empty at c:\source\[exam-id].
+
+1. Go to the official exam page: https://learn.microsoft.com/en-us/credentials/certifications/[exam-slug]/
+2. Find the "Skills Measured" section (or download the study guide PDF)
+3. Save the COMPLETE skills measured document as content_covered_in_the_exam.md with proper markdown formatting:
+   - H2 per domain with weight percentages
+   - H3 per sub-section
+   - Bullet per testable objective
+4. Count and list every bullet — this is the coverage target
+
+This document is the single source of truth. Every bullet MUST have content by the end.
+```
+
+### Expected Output
+```
+[exam-id]/
+└── content_covered_in_the_exam.md    ← The coverage checklist
+```
+
+### Quality Check
+- [ ] Every domain has its weight percentage
+- [ ] Every sub-section has numbered bullets
+- [ ] Total bullet count is clear (aim: 80-120 objectives for most exams)
 
 ---
 
@@ -13,25 +48,27 @@ Build the knowledge base from official Microsoft sources.
 
 ### Prompt
 ```
-I need to pass [EXAM-ID]: [EXAM-NAME]. My workspace is empty at c:\source\[exam-id].
+Using the content_covered_in_the_exam.md as your checklist:
 
-1. Research the official exam page and study guide on learn.microsoft.com
-2. Create a README.md with exam overview, domains, weights, and key links
-3. Create a detailed study-guide.md with every exam objective and MS Learn module links
-4. Create a study-tracker.md with a day-by-day cram plan using READ → DRILL → RECALL methodology (make it generic — no hardcoded dates, use "Day 1, Day 2" etc. relative to exam day)
-5. Create a cheat-sheets/ folder with one detailed cheat sheet per exam domain, including:
+1. Create a README.md with exam overview, domains, weights, and key links
+2. Create a detailed study-guide.md with every exam objective and MS Learn module links
+3. Create a study-tracker.md with a day-by-day cram plan using READ → DRILL → RECALL methodology (generic — "Day 1, Day 2" etc., no hardcoded dates)
+4. Create a cheat-sheets/ folder with one detailed cheat sheet per exam domain, including:
    - Exact service names, model names, API parameters, SDK classes
    - REST endpoint patterns and URL formats
    - "Numbers to remember" section (minimums, limits, defaults, timeouts)
    - Decision tables: "when to use A vs B" for every choice the exam tests
-6. Create a practice-questions.md with 25+ scenario-based multiple choice questions with answers and explanations
+5. Create a practice-questions.md with 25+ scenario-based multiple choice questions with answers and explanations
 
 Focus on EXAM-LEVEL detail — exact parameter names, model versions, config values, CLI commands. Not conceptual overviews. The exam tests specifics.
+
+CRITICAL: Cross-reference every bullet in content_covered_in_the_exam.md. If a bullet has no cheat sheet entry, add one.
 ```
 
 ### Expected Output
 ```
 [exam-id]/
+├── content_covered_in_the_exam.md  ← From Phase 0
 ├── README.md
 ├── study-guide.md
 ├── study-tracker.md
@@ -43,7 +80,7 @@ Focus on EXAM-LEVEL detail — exact parameter names, model versions, config val
 ```
 
 ### Quality Check
-- [ ] Every exam objective from the study guide has at least one cheat sheet entry
+- [ ] Every exam objective from the skills measured doc has at least one cheat sheet entry
 - [ ] Every cheat sheet has a "Numbers to Remember" section
 - [ ] Every cheat sheet has at least one "When to Use A vs B" decision table
 - [ ] MS Learn links are real and working
@@ -99,55 +136,90 @@ Create a single-file study app that works in any browser, saves progress locally
 
 ### Prompt
 ```
-Build a single-file HTML/JS interactive study app (index.html) with a modern dark theme that includes:
+Build a single-file HTML/JS interactive study app (index.html) using the design specs from the Architecture Notes section below. Include:
 
-1. Flashcards tab — all cards from flashcards.md with:
+1. EXAM_CONFIG block at the top of the file:
+   - id, code, name, url, examDate (null or 'YYYY-MM-DD'), passingScore, ghPages
+   - Everything else derives from this config (title, localStorage prefix, header, countdown)
+
+2. Dashboard (landing page) with:
+   - Study flow guidance: Explore (Mind Maps) → Review (Cheat Sheets) → Practice (Flashcards) → Validate (Quiz)
+   - Mastery ring SVG (% of cards mastered)
+   - 30-day activity heat map (color-coded by XP earned)
+   - Quick stats: mastered count, starred count, day streak, last quiz score
+
+3. Flashcards tab — all cards from flashcards.md with:
    - Domain filter buttons
    - Click-to-flip card animation (CSS 3D transform)
-   - "Got it" ✓ / "Again" ✗ buttons
+   - "Got it" ✓ / "Again" ✗ buttons (+5 XP each)
    - Auto-star wrong cards, track mastered cards in localStorage
    - "Review Starred" mode for weak cards
    - Progress bar showing position in deck
 
-2. Quiz tab — all questions from practice-questions.md with:
-   - Domain filter buttons
+4. Quiz tab — all questions from practice-questions.md with:
+   - BOTH single-answer AND multi-select questions (ans can be number OR array)
+   - "Select N" indicator for multi-select, Submit button, checkbox inputs
+   - Domain filter buttons + "X questions available" counter
    - Choose 10 or 25 question quiz length
-   - Immediate feedback with correct answer highlighted + explanation
+   - Immediate feedback with correct answer highlighted + explanation (+10 XP each)
    - Score shown as pass/fail (≥70%)
-   - Wrong-answer review panel after quiz completion
+   - Wrong-answer review panel after quiz completion (handles both single and multi-select)
    - Quiz history saved in localStorage
+   - CRITICAL: render options with document.createTextNode() not innerHTML (prevents HTML tags in options like <prosody> from being parsed)
 
-3. Mind Maps tab — one interactive mind map per domain using markmap:
-   - Use markmap-autoloader from CDN (https://cdn.jsdelivr.net/npm/markmap-autoloader@latest)
-   - Set manual rendering mode — render only when user expands a domain
-   - Full topic hierarchy matching the cheat sheets content
-   - Include all "when to use" decisions as branches in the tree
+5. Mind Maps tab — one interactive mind map per domain using markmap programmatic API:
+   - DO NOT use markmap-autoloader (it doesn't work with dynamic content)
+   - Lazy-load d3 → markmap-view → markmap-lib via sequential promise chain
+   - Render only when user expands a domain (container must be visible first)
+   - SVG must have explicit height (600px) not min-height
+   - Fullscreen toggle button per map
+   - Override SVG text fill with var(--text) for theme compatibility
+   - See Architecture Notes for exact implementation pattern
 
-4. Progress tab — localStorage-based tracking:
+6. Progress tab — localStorage-based tracking:
    - Cards mastered vs need review per domain (color-coded progress bars)
    - Total reviews count
    - Last quiz score
    - Study streak counter (consecutive days studied)
-   - Reset all progress button
+   - Reset all progress button (only clears THIS exam's keys, not all localStorage)
 
-5. Cheat Sheets tab — collapsible reference sections:
+7. Cheat Sheets tab — collapsible reference sections:
    - All content from the cheat-sheets/ folder converted to HTML tables
    - Domain filter buttons
    - Click to expand/collapse each section
 
+8. Navigation:
+   - Desktop: Fixed left sidebar (220px) with icon + label buttons
+   - Mobile (≤768px): Bottom tab bar with icons, sidebar hidden, hamburger toggle
+   - Theme toggle (🌙/☀️) with dark/light CSS custom properties
+   - Zen Mode (🧘) hides sidebar + top bar for focused study
+   - XP badge in top bar
+
 Requirements:
-- Mobile-friendly (responsive, touch-friendly buttons)
+- Mobile-friendly (responsive at 768px and 375px breakpoints)
 - Works offline (no server needed, just open the file)
-- No dependencies except markmap CDN
+- No dependencies except markmap CDN (lazy-loaded on first use)
 - All data embedded in the JS (FLASHCARDS array, QUIZ_QUESTIONS array, etc.)
-- Dark theme, clean UI, smooth animations
-- Persistent state via localStorage (prefix keys with exam ID to avoid conflicts)
+- Inter font from Google Fonts CDN
+- Dark + light theme via CSS custom properties + data-theme attribute
+- Persistent state via localStorage (prefix keys with EXAM_CONFIG.id)
+- Flashcard IDs auto-normalized to sequential 1,2,3... at runtime with localStorage migration
+```
+
+### Data Structures
+```js
+const EXAM_CONFIG = { id, code, name, url, examDate, passingScore, ghPages };
+const DOMAINS = [{id, name, weight, color}];
+const FLASHCARDS = [{id, d, q, a}];
+const QUIZ_QUESTIONS = [{d, q, opts, ans, exp}];  // ans: number (single) or array (multi-select)
+const CHEATSHEETS = [{d, title, content}];          // content is HTML string
+const MINDMAPS = [{id, title, color, md}];          // md is markdown string for markmap
 ```
 
 ### Expected Output
 ```
 [exam-id]/
-├── index.html    ← The app (single file, ~1500 lines)
+├── index.html    ← The app (single file, ~2000-2500 lines)
 └── ... (existing files)
 ```
 
@@ -160,64 +232,125 @@ Requirements:
 - [ ] Progress persists across page refreshes
 - [ ] Looks good on mobile (test at 375px width)
 - [ ] Mind maps render when expanded (not all on page load)
+- [ ] Quiz options with HTML-like content (e.g. `<prosody>`) render as text, not parsed as HTML
+- [ ] Multi-select quiz questions show checkboxes and a Submit button
+- [ ] Theme toggle works and persists across refreshes
+- [ ] Zen mode hides all chrome
 
 ---
 
-## Phase 4: Content Sync & Gap Analysis
+## Phase 4: Coverage Verification (100% Target)
 
 ### Goal
-Ensure 100% content synchronicity between markdown files, app data, and mind maps.
+Ensure EVERY bullet in `content_covered_in_the_exam.md` has at least one flashcard AND one quiz question.
 
 ### Prompt
 ```
-Do a systematic content audit:
+Do a systematic 100% coverage audit:
 
-1. Count flashcards, quiz questions, and cheat sheet sections per domain
-2. Identify any domain underrepresented relative to its exam weight
-3. Check that every "when to choose A vs B" decision in the cheat sheets has a matching flashcard AND quiz question
-4. Check every topic in the mind maps matches the cheat sheets (full content synchronicity)
-5. Look for topics where we have the "what" but not the "when to choose" — add decision context
-6. Look for topics where definitions are too thin for exam-level questions (e.g., "facetable" should explain WHEN to use it, not just what it means)
-7. Add missing content to fix ALL gaps found
-8. Ensure flashcard IDs are sequential and don't skip
+1. Read content_covered_in_the_exam.md and number every bullet point (the testable objectives)
+2. For EACH numbered bullet, check:
+   - Is there at least one flashcard covering it? (cite the FC ID)
+   - Is there at least one quiz question covering it? (cite the quiz Q)
+3. Produce a coverage table:
+   | # | Objective | FC? | Quiz? | Status (✅/🟡/🔴) |
+4. For every 🟡 (partial) or 🔴 (missing) item:
+   - Add a flashcard to the FLASHCARDS array
+   - Add a quiz question to the QUIZ_QUESTIONS array
+   - For "minimize effort" scenarios, add a quiz Q where the constraint changes the answer
+   - For "select two" scenarios, add a multi-select quiz Q (ans as array)
+5. Count flashcards and quiz questions per domain
+6. Check proportionality vs exam weight (±20% tolerance)
+7. If any domain is significantly over/under-represented, rebalance
+8. Ensure flashcard IDs are sequential
 9. Update README with current content counts
 ```
 
+### Coverage Targets
+| Metric | Minimum |
+|--------|---------|
+| Exam objectives with ✅ (FC + Quiz) | **100%** |
+| Flashcards per domain | Proportional to exam weight ±20% |
+| Quiz questions total | **80+** (at least 1 per objective) |
+| Multi-select quiz questions | **At least 5** |
+| "Minimize effort" constraint questions | **At least 5** |
+| Scenario-based (not definitional) quiz questions | **≥75%** |
+
 ### Quality Check
-- [ ] Flashcard count per domain is proportional to exam weight (±20%)
-- [ ] Every decision table in cheat sheets has matching flashcard(s) + quiz Q(s)
-- [ ] Mind map nodes match cheat sheet headings 1:1
-- [ ] No "thin" definitions remaining — all have "when to use" context
+- [ ] Coverage table shows ✅ for every bullet in the skills measured doc
+- [ ] Zero 🔴 (missing) items remain
+- [ ] Zero 🟡 (partial) items remain
+- [ ] Flashcard count per domain is proportional to exam weight
 - [ ] README content counts match actual counts
+- [ ] Quiz includes both single-answer and multi-select question types
 
 ---
 
-## Phase 5: Final Expert Panel Review
+## Phase 5: Expert Panel Review & Practice Assessment Comparison
 
 ### Goal
-Catch remaining errors, validate methodology, confirm exam readiness.
+Catch remaining errors, validate against real exam question patterns, confirm exam readiness.
 
 ### Prompt
 ```
 Final expert panel review across all content:
 
-1. Certification exam coach: Are quiz questions scenario-based like the real exam? Are distractors realistic (wrong answers that SOUND right)? Any missing question types?
-2. Cognitive scientist: Does the study method support active recall and spaced repetition? Is the READ → DRILL → RECALL cycle sound? Any methodology improvements?
-3. Technical expert: Verify all facts against current Microsoft docs. Flag anything outdated or incorrect. Check exact parameter names, model versions, API paths.
+1. Certification exam coach:
+   - Are quiz questions scenario-based like the real exam? Count definitional vs scenario-based (target: ≥75% scenario).
+   - Are distractors realistic (wrong answers that SOUND right)?
+   - Do we have "minimize effort/cost" constraint questions where the constraint changes the answer?
+   - Do we have multi-select "Select TWO" questions?
+   - Do we have API workflow/step-ordering questions?
+   - Do we have "Portal vs SDK vs REST API" decision questions?
+   - Any missing question types?
+   - Check for duplicate/near-duplicate quiz questions — remove them.
+
+2. Cognitive scientist: Does the study method support active recall and spaced repetition? Is the READ → DRILL → RECALL cycle sound?
+
+3. Technical expert:
+   - Verify all facts against current Microsoft docs. Flag anything outdated or incorrect.
+   - Check exact parameter names, model versions, API paths.
+   - Check for deprecated services/features — mark them clearly.
+   - Check SSML namespace (https vs http), SDK class names, endpoint URL patterns.
+
 4. UX designer: Is the app mobile-friendly? Any friction in the flashcard flow? Are domain filters intuitive?
 
-Fix everything found. Then give me a summary of:
+5. Content deduplication:
+   - Find and remove duplicate flashcards (same question, different IDs)
+   - Find and remove near-duplicate quiz questions
+   - Verify all URLs (GitHub Pages, MS Learn links, exam page links) are consistent
+
+Fix everything found. Then give me:
 - Total flashcards, quiz questions, cheat sheet sections, mind maps
 - Content coverage per domain vs exam weight
 - Any remaining gaps and whether they matter for passing
+- Final coverage table: all objectives ✅/🟡/🔴
+```
+
+### Compare Against Official Practice Assessment
+```
+Take the official Microsoft practice assessment for [EXAM-ID]:
+https://learn.microsoft.com/en-us/credentials/certifications/[exam-slug]/practice/assessment?assessment-type=practice&assessmentId=[id]
+
+For each question encountered, note:
+- Question pattern (scenario, multi-select, ordering, code completion, etc.)
+- Topic tested
+- Whether our app covers this topic
+
+Add quiz questions and flashcards for any patterns or topics we're missing.
 ```
 
 ### Quality Check
 - [ ] No factual errors remaining
+- [ ] No duplicate flashcards or quiz questions
 - [ ] Quiz distractors are realistic (not obviously wrong)
-- [ ] Study tracker references the app (not stale file references)
+- [ ] ≥75% of quiz questions are scenario-based
+- [ ] At least 5 multi-select questions
+- [ ] At least 5 "minimize effort" constraint questions
+- [ ] Study tracker references the app with correct URL
 - [ ] Study tracker uses generic dates (Day 1, Day 2... not specific calendar dates)
 - [ ] All content counts in README are accurate
+- [ ] All URLs consistent (GitHub Pages, repo, exam page)
 
 ---
 
@@ -229,21 +362,24 @@ Deploy to GitHub Pages and share with team.
 ### Prompt
 ```
 1. Initialize git repo if needed
-2. Push to https://github.com/demo-ninjas/pass_ai_102.git
+2. Push to https://github.com/[org]/pass_[exam-id].git
 3. Update README.md with:
    - Link to the live GitHub Pages app at the top
-   - Feature table (flashcards, quiz, mind maps, progress, cheat sheets) with counts
+   - Feature table (flashcards, quiz, mind maps, progress, cheat sheets) with accurate counts
    - Full repository file structure
    - "How to Study" section with step-by-step instructions
    - Contributing note
-4. Give me a short Teams message I can share with colleagues about the app
-5. Give me a prompt I can use to evaluate whether this app + Microsoft Learn combined is superior to Microsoft Learn alone for passing this exam
+4. Verify all URLs match (EXAM_CONFIG.ghPages, README links, study-tracker links)
+5. Give me a short Teams message I can share with colleagues about the app
 ```
 
 ### Post-Deploy
 - [ ] Enable GitHub Pages: repo Settings → Pages → Source: main, folder: / (root) → Save
 - [ ] Test the live URL: `https://[org].github.io/pass_[exam-id]/`
 - [ ] Test on mobile
+- [ ] Verify quiz multi-select works
+- [ ] Verify mind maps render (expand one, check text is visible)
+- [ ] Verify theme toggle works
 - [ ] Share with team
 
 ---
@@ -452,10 +588,21 @@ const MINDMAPS = [{id, title, color, md}];  // md is markdown string for markmap
 ### Estimated Build Time
 | Phase | Time |
 |-------|------|
+| Phase 0: Get Skills Measured Doc | 5 min |
 | Phase 1: Research & Scaffold | 15-20 min |
 | Phase 2: Expert Review & Traps | 10-15 min |
 | Phase 3: Build App | 15-20 min |
-| Phase 4: Content Sync | 10-15 min |
-| Phase 5: Final Review | 5-10 min |
+| Phase 4: 100% Coverage Verification | 15-20 min |
+| Phase 5: Expert Panel + Practice Assessment | 10-15 min |
 | Phase 6: Ship | 5 min |
-| **Total** | **~60-90 min per exam** |
+| **Total** | **~75-100 min per exam** |
+
+### AI-102 Reference Numbers (Achieved)
+| Metric | Count |
+|--------|-------|
+| Exam objectives (bullets in skills doc) | 106 |
+| Flashcards | 204 |
+| Quiz questions (single + multi-select) | 103 |
+| Cheat sheet sections | 33 |
+| Mind maps | 6 |
+| Coverage: objectives with FC + Quiz | 106/106 (100%) |
