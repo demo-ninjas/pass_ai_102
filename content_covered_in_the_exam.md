@@ -1,0 +1,198 @@
+# AI-102: Skills Measured (as of December 23, 2025)
+
+---
+
+## Audience Profile
+
+As a Microsoft Azure AI engineer, you build, manage, and deploy AI solutions that leverage Azure AI.
+
+Your responsibilities include participating in all phases of AI solutions development, including:
+- Requirements definition and design
+- Development
+- Deployment
+- Integration
+- Maintenance
+- Performance tuning
+- Monitoring
+
+You work with solution architects to translate their vision. You also work with data scientists, data engineers, IoT specialists, infrastructure administrators, and other software developers to build complete and secure end-to-end AI solutions and integrate AI capabilities in other applications and solutions.
+
+**Languages:** Python, C#  
+**Skills:** REST APIs, SDKs, image/video processing, NLP, knowledge mining, generative AI on Azure, responsible AI principles.
+
+---
+
+## Skills at a Glance
+
+| Domain | Weight |
+|--------|--------|
+| Plan and manage an Azure AI solution | 20–25% |
+| Implement generative AI solutions | 15–20% |
+| Implement an agentic solution | 5–10% |
+| Implement computer vision solutions | 10–15% |
+| Implement natural language processing solutions | 15–20% |
+| Implement knowledge mining and information extraction solutions | 15–20% |
+
+---
+
+## Domain 1: Plan and Manage an Azure AI Solution (20–25%)
+
+### 1.1 Select the Appropriate Microsoft Foundry Services
+- Select the appropriate service for a generative AI solution
+- Select the appropriate service for a computer vision solution
+- Select the appropriate service for a natural language processing solution
+- Select the appropriate service for a speech solution
+- Select the appropriate service for an information extraction solution
+- Select the appropriate service for a knowledge mining solution
+
+### 1.2 Plan, Create and Deploy a Microsoft Foundry Service
+- Plan for a solution that meets Responsible AI principles
+- Create an Azure AI resource
+- Choose the appropriate AI models for your solution
+- Deploy AI models using the appropriate deployment options
+- Install and utilize the appropriate SDKs and APIs
+- Determine a default endpoint for a service
+- Integrate Microsoft Foundry Services into a CI/CD pipeline
+- Plan and implement a container deployment
+
+### 1.3 Manage, Monitor, and Secure a Microsoft Foundry Service
+- Monitor an Azure AI resource
+- Manage costs for Microsoft Foundry Services
+- Manage and protect account keys
+- Manage authentication for a Microsoft Foundry Service resource
+
+### 1.4 Implement AI Solutions Responsibly
+- Implement content moderation solutions
+- Configure responsible AI insights, including content safety
+- Implement responsible AI, including content filters and blocklists
+- Prevent harmful behavior, including prompt shields and harm detection
+- Design a responsible AI governance framework
+
+---
+
+## Domain 2: Implement Generative AI Solutions (15–20%)
+
+### 2.1 Build Generative AI Solutions with Microsoft Foundry
+- Plan and prepare for a generative AI solution
+- Deploy a hub, project, and necessary resources with Microsoft Foundry
+- Deploy the appropriate generative AI model for your use case
+- Implement a prompt flow solution
+- Implement a RAG pattern by grounding a model in your data
+- Evaluate models and flows
+- Integrate your project into an application with Microsoft Foundry SDK
+- Utilize prompt templates in your generative AI solution
+
+### 2.2 Use Azure OpenAI in Foundry Models to Generate Content
+- Provision an Azure OpenAI in Foundry Models resource
+- Select and deploy an Azure OpenAI model
+- Submit prompts to generate code and natural language responses
+- Use the DALL-E model to generate images
+- Integrate Azure OpenAI into your own application
+- Use large multimodal models in Azure OpenAI
+
+### 2.3 Optimize and Operationalize a Generative AI Solution
+- Configure parameters to control generative behavior
+- Configure model monitoring and diagnostic settings, including performance and resource consumption
+- Optimize and manage resources for deployment, including scalability and foundational model updates
+- Enable tracing and collect feedback
+- Implement model reflection
+- Deploy containers for use on local and edge devices
+- Implement orchestration of multiple generative AI models
+- Apply prompt engineering techniques to improve responses
+- Fine-tune a generative model
+
+---
+
+## Domain 3: Implement an Agentic Solution (5–10%)
+
+### 3.1 Create Custom Agents
+- Understand the role and use cases of an agent
+- Configure the necessary resources to build an agent
+- Create an agent with the Microsoft Foundry Agent Service
+- Implement complex agents with Microsoft Agent Framework
+- Implement complex workflows including orchestration for a multi-agent solution, multiple users, and autonomous capabilities
+- Test, optimize and deploy an agent
+
+---
+
+## Domain 4: Implement Computer Vision Solutions (10–15%)
+
+### 4.1 Analyze Images
+- Select visual features to meet image processing requirements
+- Detect objects in images and generate image tags
+- Include image analysis features in an image processing request
+- Interpret image processing responses
+- Extract text from images using Azure Vision in Foundry Tools
+- Convert handwritten text using Azure Vision in Foundry Tools
+
+### 4.2 Implement Custom Vision Models
+- Choose between image classification and object detection models
+- Label images
+- Train a custom image model, including image classification and object detection
+- Evaluate custom vision model metrics
+- Publish a custom vision model
+- Consume a custom vision model
+- Build a custom vision model code first
+
+### 4.3 Analyze Videos
+- Use Azure AI Video Indexer to extract insights from a video or live stream
+- Use Azure Vision in Foundry Tools Spatial Analysis to detect presence and movement of people in video
+
+---
+
+## Domain 5: Implement Natural Language Processing Solutions (15–20%)
+
+### 5.1 Analyze and Translate Text
+- Extract key phrases and entities
+- Determine sentiment of text
+- Detect the language used in text
+- Detect personally identifiable information (PII) in text
+- Translate text and documents by using Azure Translator in Foundry Tools
+
+### 5.2 Process and Translate Speech
+- Integrate generative AI speaking capabilities in an application
+- Implement text-to-speech and speech-to-text using Azure Speech in Foundry Tools
+- Improve text-to-speech by using SSML
+- Implement custom speech solutions with Azure Speech in Foundry Tools
+- Implement intent and keyword recognition with Azure Speech in Foundry Tools
+- Translate speech-to-speech and speech-to-text by using Azure Speech in Foundry Tools
+
+### 5.3 Implement Custom Language Models
+- Create intents, entities, and add utterances
+- Train, evaluate, deploy, and test a language understanding model
+- Optimize, backup, and recover language understanding model
+- Consume a language model from a client application
+- Create a custom question answering project
+- Add question-and-answer pairs and import sources for question answering
+- Train, test, and publish a knowledge base
+- Create a multi-turn conversation
+- Add alternate phrasing and chit-chat to a knowledge base
+- Export a knowledge base
+- Create a multi-language question answering solution
+- Implement custom translation, including training, improving, and publishing a custom model
+
+---
+
+## Domain 6: Implement Knowledge Mining and Information Extraction Solutions (15–20%)
+
+### 6.1 Implement an Azure AI Search Solution
+- Provision an Azure AI Search resource, create an index, and define a skillset
+- Create data sources and indexers
+- Implement custom skills and include them in a skillset
+- Create and run an indexer
+- Query an index, including syntax, sorting, filtering, and wildcards
+- Manage Knowledge Store projections, including file, object, and table projections
+- Implement semantic and vector store solutions
+
+### 6.2 Implement an Azure Document Intelligence in Foundry Tools Solution
+- Provision a Document Intelligence resource
+- Use prebuilt models to extract data from documents
+- Implement a custom document intelligence model
+- Train, test, and publish a custom document intelligence model
+- Create a composed document intelligence model
+
+### 6.3 Extract Information with Azure Content Understanding in Foundry Tools
+- Create an OCR pipeline to extract text from images and documents
+- Summarize, classify, and detect attributes of documents
+- Extract entities, tables, and images from documents
+- Process and ingest documents, images, videos, and audio with Azure Content Understanding in Foundry Tools
