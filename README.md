@@ -8,8 +8,8 @@
 
 | Feature | Description |
 |---------|-------------|
-| 🃏 **Flashcards** | 167 active-recall cards across all 6 domains. Mark ✓/✗, auto-star weak cards, spaced repetition. |
-| 📝 **Quiz** | 64 scenario-based multiple choice questions with explanations. Filter by domain. Wrong-answer review after each quiz. |
+| 🃏 **Flashcards** | 179 active-recall cards across all 6 domains. Mark ✓/✗, auto-star weak cards, spaced repetition. |
+| 📝 **Quiz** | 74 scenario-based questions (single + multi-select) with explanations. Filter by domain. Wrong-answer review after each quiz. |
 | 🧠 **Mind Maps** | Interactive mind maps (powered by markmap) for each domain. Zoom, pan, explore. |
 | 📊 **Progress** | Mastery tracking per domain, study streak, quiz history. |
 | 📋 **Cheat Sheets** | 33 collapsible reference sections with exact API details, model names, parameters. |

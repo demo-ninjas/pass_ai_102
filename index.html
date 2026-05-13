@@ -370,6 +370,7 @@ body.zen .bottom-nav { display:none !important; }
       <div class="quiz-opts" id="quiz-opts"></div>
       <div class="quiz-explanation" id="quiz-explanation" style="display:none"></div>
       <div class="flex-center mt-20">
+        <button class="btn btn-primary" id="quiz-submit" style="display:none" onclick="submitMultiAnswer()">Submit Answer</button>
         <button class="btn btn-primary" id="quiz-next" style="display:none" onclick="nextQuizQ()">Next →</button>
       </div>
     </div>
@@ -616,6 +617,19 @@ const FLASHCARDS = [
   {id:166,d:'d6',q:'fieldMappings vs outputFieldMappings: which for OCR output?',a:'outputFieldMappings — OCR is an enrichment output (after skillset), not source data.'},
   {id:167,d:'d5',q:'SpeechRecognizer vs IntentRecognizer vs TranslationRecognizer?',a:'SpeechRecognizer = just STT. IntentRecognizer = STT + CLU intent extraction. TranslationRecognizer = STT + translate to other languages.'},
   {id:168,d:'d4',q:'Video Indexer vs Spatial Analysis: when use which?',a:'Video Indexer = analyze recorded video (topics, transcript, faces). Spatial Analysis = real-time live camera (count people, zones).'},
+  // Gap fill: exam-style content from practice assessment
+  {id:169,d:'d1',q:'Two prerequisites for diagnostic logging on Azure AI Services?',a:'Log Analytics workspace + Azure Storage account'},
+  {id:170,d:'d1',q:'Foundry portal vs SDK vs REST API: when use portal?',a:'Portal = no-code, minimize admin effort. SDK = programmatic control. REST API = scripting/endpoint management.'},
+  {id:171,d:'d4',q:'Video Indexer API: steps to extract keyframe thumbnails?',a:'Upload video → Get video index → Get thumbnail for each keyframe ID'},
+  {id:172,d:'d6',q:'Extract text from scanned receipts with minimal dev effort?',a:'Azure Document Intelligence prebuilt-receipt model (not Custom Vision, not OCR manually)'},
+  {id:173,d:'d3',q:'Create multi-agent workflow with minimal admin effort in Foundry?',a:'Microsoft Foundry portal (not SDK, not REST API — portal is no-code)'},
+  {id:174,d:'d1',q:'What two destinations can diagnostic logs be sent to?',a:'Azure Storage account (archive) and Log Analytics workspace (query/analyze)'},
+  {id:175,d:'d1',q:'Diagnostic logging key metrics for Azure AI Services?',a:'Total Calls, Total Errors, Latency, Blocked Calls (429), Token Usage'},
+  {id:176,d:'d3',q:'Azure AI Agent Service SDK vs Foundry SDK: difference?',a:'Agent Service SDK = direct agent API programmatic access. Foundry SDK = broader Foundry platform operations including agents.'},
+  {id:177,d:'d4',q:'Video Indexer: what is a keyframe?',a:'A representative frame from each shot/scene, auto-selected by the indexer'},
+  {id:178,d:'d4',q:'Video Indexer API: Get Video Index returns what?',a:'JSON with insights: faces, keywords, topics, transcript, scenes, shots, keyframe IDs'},
+  {id:179,d:'d2',q:'Azure OpenAI "On Your Data" vs custom RAG pipeline: when use "On Your Data"?',a:'"On Your Data" = quick no-code setup. Custom RAG = full control over search, prompt, chunking.'},
+  {id:180,d:'d1',q:'Azure AI services in Foundry Tools vs standalone: difference?',a:'Foundry Tools = integrated experience within Foundry portal. Standalone = separate Azure resource with own endpoint.'},
 ];
 
 const QUIZ_QUESTIONS = [
@@ -818,6 +832,37 @@ const QUIZ_QUESTIONS = [
   {d:'d4',q:'Your app needs to detect faces in blurry surveillance footage AND return face landmarks. Which detection model?',
    opts:['detection_01','detection_02','detection_03','recognition_04'],
    ans:2, exp:'detection_03 handles blurry/small faces AND returns landmarks. detection_02 handles blur but returns NO landmarks. recognition_04 is a recognition model, not detection.'},
+  // Multi-select + exam-style questions (from practice assessment patterns)
+  {d:'d1',q:'You have a Microsoft Foundry Service resource. You need to enable diagnostic logging. What are two prerequisites? Each correct answer presents a complete solution.',
+   opts:['A Log Analytics workspace','An Azure Cosmos DB for NoSQL account','An Azure Key Vault','An Azure SQL database','An Azure Storage account'],
+   ans:[0,4], exp:'Diagnostic logging requires a Log Analytics workspace (for querying logs) and an Azure Storage account (for archiving logs). Cosmos DB, Key Vault, and SQL are not prerequisites.'},
+  {d:'d4',q:'You are building an app that uses Azure AI Video Indexer. You need to extract keyframes from uploaded video and store them on disk using the API. How should you implement the solution?',
+   opts:['Upload the video and download the ZIP file of the thumbnails','Upload the video, download the ZIP file of the thumbnails, and get the thumbnail for each keyframe','Upload the video, get the video index, and get the thumbnail for each keyframe'],
+   ans:2, exp:'The correct flow is: Upload video → Get the video index (which contains keyframe IDs) → Get individual thumbnail for each keyframe ID. There is no ZIP download for keyframe thumbnails.'},
+  {d:'d6',q:'You are building an app that will extract text from scanned receipts. You need to recommend which service to use. The solution must minimize development effort. What should you recommend?',
+   opts:['Azure Vision in Foundry Tools','Azure AI Custom Vision','Azure Document Intelligence in Foundry Tools','Azure Machine Learning'],
+   ans:2, exp:'Document Intelligence has a prebuilt-receipt model that extracts merchant, items, and totals with minimal effort. Custom Vision is for image classification, not text extraction. Azure ML requires training a custom model.'},
+  {d:'d3',q:'You have a Microsoft Foundry service. You plan to create an agent that will automate sending expense reports. The solution will use multiple agent types. You need to create the agent while minimizing administrative effort. What should you use?',
+   opts:['The Azure AI Agent Service SDK','The Microsoft Foundry portal','The Microsoft Foundry REST API','The Microsoft Foundry SDK'],
+   ans:1, exp:'The Foundry portal provides a graphical no-code interface to create, configure, and test agents — minimizing admin effort. SDKs and REST APIs require code and are for programmatic control.'},
+  {d:'d1',q:'You need to monitor an Azure AI Services resource for failed API calls and throttling. What two metrics should you configure alerts for? Each correct answer presents part of the solution.',
+   opts:['Total Calls','Total Errors','Latency','Blocked Calls (HTTP 429)','Successful Calls'],
+   ans:[1,3], exp:'Total Errors captures failed calls. Blocked Calls (429) captures throttled requests. Total Calls and Successful Calls don\'t indicate problems. Latency indicates slowness, not failures.'},
+  {d:'d1',q:'You are deploying Azure AI Services to a virtual network. You need private connectivity from your VNet without exposing traffic to the public internet. What should you configure?',
+   opts:['Service Endpoint','Private Endpoint','Network Security Group','Azure Firewall'],
+   ans:1, exp:'Private Endpoint gives the resource a private IP in your VNet. Service Endpoint optimizes routing but traffic still uses the public IP. NSG and Firewall control traffic flow but don\'t provide private connectivity to PaaS.'},
+  {d:'d2',q:'Your RAG application returns answers that sometimes include information not found in the source documents. You need to detect and flag these ungrounded responses. What should you configure?',
+   opts:['Content filters with high severity','Prompt shields','Groundedness detection','A custom blocklist'],
+   ans:2, exp:'Groundedness detection checks if the response is supported by the provided context. Content filters block harmful categories. Prompt shields detect injection. Blocklists block specific terms.'},
+  {d:'d5',q:'You need to build a bot that answers common IT support questions from your company knowledge base. Users will ask questions in natural language. The solution must minimize development effort. Which service should you use?',
+   opts:['CLU (Conversational Language Understanding)','Custom Question Answering','Azure OpenAI with fine-tuning','Text Analytics entity recognition'],
+   ans:1, exp:'Custom Question Answering is designed for FAQ-style Q&A from a knowledge base with minimal effort. CLU extracts intents/entities for commands, not FAQ answers. Fine-tuning is overkill. Entity recognition doesn\'t answer questions.'},
+  {d:'d6',q:'You are configuring an Azure AI Search index. Users need to filter results by category AND see a sidebar showing the count of results per category. What two field attributes must you set on the category field?',
+   opts:['searchable','filterable','sortable','facetable','retrievable'],
+   ans:[1,3], exp:'filterable enables $filter expressions. facetable enables count-by-category sidebars. searchable is for free-text search. sortable is for $orderby. retrievable controls whether the field appears in results.'},
+  {d:'d1',q:'You need to route Azure AI diagnostic logs to both a long-term archive and a real-time query tool. What two destinations should you configure?',
+   opts:['Azure Event Hubs','Azure Storage account','Azure SQL Database','Log Analytics workspace','Azure Cosmos DB'],
+   ans:[1,3], exp:'Storage account provides long-term archive. Log Analytics workspace provides real-time querying with Kusto (KQL). Event Hubs is for streaming to external systems. SQL and Cosmos are not diagnostic log destinations.'},
 ];
 
 // ==================== CHEAT SHEET DATA ====================
@@ -1608,25 +1653,63 @@ function startQuiz(n){
 function showQuizQ(){
   if(quizIdx>=quizQs.length){ showQuizResults(); return; }
   quizAnswered=false;
+  quizMultiSelected=[];
   const q=quizQs[quizIdx];
+  const isMulti=Array.isArray(q.ans);
   const dom=DOMAINS.find(d=>d.id===q.d);
   document.getElementById('quiz-domain').textContent=dom.name;
-  document.getElementById('quiz-question').textContent=`Q${quizIdx+1}. ${q.q}`;
+  document.getElementById('quiz-question').textContent=`Q${quizIdx+1}. ${q.q}` + (isMulti ? ` (Select ${q.ans.length})` : '');
   document.getElementById('quiz-explanation').style.display='none';
   document.getElementById('quiz-next').style.display='none';
+  document.getElementById('quiz-submit').style.display=isMulti?'':'none';
   const optsEl=document.getElementById('quiz-opts');
   optsEl.innerHTML='';
   q.opts.forEach((o,i)=>{
     const lbl=document.createElement('label');
     lbl.id='qopt'+i;
-    lbl.onclick=()=>answerQuiz(i);
-    lbl.innerHTML=`<input type="radio" name="quiz">`;
+    if(isMulti){
+      lbl.onclick=()=>toggleMultiSelect(i);
+    } else {
+      lbl.onclick=()=>answerQuiz(i);
+    }
+    lbl.innerHTML=`<input type="${isMulti?'checkbox':'radio'}" name="quiz">`;
     lbl.appendChild(document.createTextNode(String.fromCharCode(65+i)+') '+o));
     optsEl.appendChild(lbl);
   });
   const pct=Math.round(quizIdx/quizQs.length*100);
   document.getElementById('quiz-count').textContent=`${quizIdx+1}/${quizQs.length}`;
   document.getElementById('quiz-bar').style.width=pct+'%';
+  document.getElementById('quiz-score-live').textContent=`${quizScore} correct`;
+}
+
+let quizMultiSelected=[];
+function toggleMultiSelect(i){
+  if(quizAnswered) return;
+  const idx=quizMultiSelected.indexOf(i);
+  if(idx>-1) quizMultiSelected.splice(idx,1); else quizMultiSelected.push(i);
+  document.querySelectorAll('#quiz-opts label').forEach((l,j)=>{
+    l.classList.toggle('selected', quizMultiSelected.includes(j));
+  });
+}
+
+function submitMultiAnswer(){
+  if(quizAnswered) return;
+  const q=quizQs[quizIdx];
+  if(!Array.isArray(q.ans)) return;
+  quizAnswered=true;
+  const correctSet=new Set(q.ans);
+  const selectedSet=new Set(quizMultiSelected);
+  const isCorrect=correctSet.size===selectedSet.size && [...correctSet].every(v=>selectedSet.has(v));
+  if(isCorrect) quizScore++;
+  quizAnswers[quizIdx]=quizMultiSelected.slice();
+  addXP(10);
+  q.ans.forEach(ci=>document.getElementById('qopt'+ci).classList.add('correct'));
+  quizMultiSelected.forEach(si=>{ if(!correctSet.has(si)) document.getElementById('qopt'+si).classList.add('wrong'); });
+  const expEl=document.getElementById('quiz-explanation');
+  expEl.textContent=(isCorrect?'✓ Correct! ':'✗ Wrong. ')+q.exp;
+  expEl.style.display='block';
+  document.getElementById('quiz-next').style.display='';
+  document.getElementById('quiz-submit').style.display='none';
   document.getElementById('quiz-score-live').textContent=`${quizScore} correct`;
 }
 
@@ -1659,16 +1742,25 @@ function showQuizResults(){
   if(pct>=70) msgEl.innerHTML=`<span style="color:var(--green);font-size:1.2rem;font-weight:700">✓ Pass (≥70%)</span>`;
   else msgEl.innerHTML=`<span style="color:var(--red);font-size:1.2rem;font-weight:700">✗ Below passing — review starred flashcards</span>`;
   const reviewEl=document.getElementById('quiz-review');
-  const wrongQs = quizQs.filter((_,i)=>quizAnswers[i]!==undefined && quizAnswers[i]!==quizQs[i].ans);
+  const wrongQs = quizQs.filter((_,i)=>{
+    if(quizAnswers[i]===undefined) return false;
+    const q=quizQs[i];
+    if(Array.isArray(q.ans)){
+      const s=new Set(q.ans); const a=quizAnswers[i];
+      return !(Array.isArray(a) && a.length===s.size && a.every(v=>s.has(v)));
+    }
+    return quizAnswers[i]!==q.ans;
+  });
   if(wrongQs.length>0){
     let html=`<div class="card mt-20"><h3 style="margin-bottom:16px;color:var(--red)">✗ Review Wrong Answers (${wrongQs.length})</h3>`;
     wrongQs.forEach(q=>{
       const dom=DOMAINS.find(d=>d.id===q.d);
       const esc=s=>{const t=document.createElement('span');t.textContent=s;return t.innerHTML;};
+      const correctAnswers = Array.isArray(q.ans) ? q.ans.map(i=>q.opts[i]).join(', ') : q.opts[q.ans];
       html+=`<div style="margin-bottom:16px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
         <div class="fc-domain">${esc(dom.name)}</div>
         <div style="font-size:.95rem;margin-bottom:8px">${esc(q.q)}</div>
-        <div style="font-size:.85rem;color:var(--green)">✓ ${esc(q.opts[q.ans])}</div>
+        <div style="font-size:.85rem;color:var(--green)">✓ ${esc(correctAnswers)}</div>
         <div style="font-size:.85rem;color:var(--text2);margin-top:4px">${esc(q.exp)}</div>
       </div>`;
     });
