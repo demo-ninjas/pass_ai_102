@@ -983,6 +983,110 @@ const QUIZ_QUESTIONS = [
   {d:'d6',q:'You need to process a mix of scanned PDFs, images of whiteboards, and short video clips to extract text and summaries. Which service handles all of these?',
    opts:['Azure AI Search','Azure Document Intelligence','Azure Content Understanding in Foundry Tools','Azure AI Vision Image Analysis'],
    ans:2, exp:'Content Understanding processes multi-modal content: documents, images, videos, and audio. Document Intelligence handles only documents. AI Search indexes content but doesn\'t extract from video.'},
+
+  // ==================== HARD QUESTIONS (5 per domain) ====================
+
+  // --- D1: Plan & Manage (Hard) ---
+  {d:'d1',q:'You deploy an Azure AI container on-premises. It works for 48 hours then stops responding. Logs show "billing endpoint unreachable." The container has NO disconnected container approval. What happens?',
+   opts:['Container continues with degraded performance','Container shuts down after the billing grace period expires','Container automatically switches to free tier','Container queues requests until connectivity returns'],
+   ans:1, exp:'Connected containers require periodic billing phone-home. Without it, the container stops after a grace period (~10-15 min for some, up to hours for others). Disconnected containers require special Microsoft approval.'},
+  {d:'d1',q:'A developer uses Cognitive Services User role and tries to regenerate API keys via the Azure portal. What happens?',
+   opts:['Keys regenerate successfully','Operation fails — User role cannot manage keys','Keys regenerate but the developer cannot view them','Operation succeeds but requires MFA confirmation'],
+   ans:1, exp:'Cognitive Services User can only CALL APIs (data plane). Key regeneration is a management plane operation requiring Contributor or higher. This is a common RBAC trap.'},
+  {d:'d1',q:'You have an Azure OpenAI resource in East US. A new model version is released. Your existing deployments continue using the old version. You want automatic updates. What should you configure?',
+   opts:['Set deployment to "Auto-update to default"','Redeploy manually with the new version','Enable Azure Update Management','Set model lifecycle policy to "Latest"'],
+   ans:0, exp:'Azure OpenAI deployments can be set to auto-update to the default model version. Without this, deployments stay on their current version until manually updated or the version is retired.'},
+  {d:'d1',q:'Your app calls Azure AI Language and Azure AI Vision through a multi-service resource. You need separate cost tracking for each service. What should you do?',
+   opts:['Create separate single-service resources for each','Use Azure Cost Management tags on the multi-service resource','Use Azure Monitor metrics filtered by service type','You cannot track costs separately with a multi-service resource'],
+   ans:0, exp:'Multi-service resources provide a single bill. For separate cost tracking per service, you need separate single-service resources. Tags help categorize but don\'t split the bill by API type within one resource.'},
+  {d:'d1',q:'You configure a Private Endpoint for your Azure AI resource AND set the firewall to "Deny all public access." A developer tries to call the API from their home network. What two things must change for it to work? Each correct answer presents part of the solution.',
+   opts:['Add the developer\'s IP to the firewall allow list','Connect via VPN to the VNet with the Private Endpoint','Remove the Private Endpoint','Change the firewall to "Allow all networks"','Use a service endpoint instead'],
+   ans:[0,1], exp:'Either add their IP to the firewall (for public access) OR connect via VPN to the VNet (for private access). Both approaches work, but the question asks for what must change — they need network access via either path. Best practice: VPN + Private Endpoint.'},
+
+  // --- D2: Generative AI (Hard) ---
+  {d:'d2',q:'Your RAG system retrieves relevant documents but the model still hallucinates facts not in the documents. What two actions should you take? Each correct answer presents part of the solution.',
+   opts:['Increase temperature to 1.5 for more creative answers','Add explicit system message: "Only answer from provided context. Say I don\'t know if not found."','Enable groundedness detection to flag ungrounded responses','Fine-tune the model on your documents','Increase max_tokens'],
+   ans:[1,2], exp:'System message grounding instructions + groundedness detection work together. Temperature increase worsens hallucination. Fine-tuning teaches style, not factual accuracy. max_tokens doesn\'t affect truthfulness.'},
+  {d:'d2',q:'You fine-tuned a model to output medical reports in a specific JSON schema. The fine-tuned model now ignores the system message. Why?',
+   opts:['Fine-tuned models cannot use system messages','The fine-tuning data overrode the system message behavior','Fine-tuning requires re-deploying the base model','The model needs more max_tokens'],
+   ans:1, exp:'Fine-tuning data that conflicts with system messages can override system message behavior. If training examples didn\'t include system messages, the model may learn to ignore them. Always include system messages in fine-tuning data.'},
+  {d:'d2',q:'You need to evaluate your Foundry AI solution on four quality dimensions. Which metric measures whether the response actually addresses the user\'s question?',
+   opts:['Groundedness','Coherence','Relevance','Fluency'],
+   ans:2, exp:'Relevance = does the answer address the question? Groundedness = is it supported by context? Coherence = is it logically structured? Fluency = is the language natural? These are the 4 standard Foundry evaluation metrics.'},
+  {d:'d2',q:'Your Prompt Flow has 3 LLM nodes in sequence. The second node takes 8 seconds. You need to debug which node is the bottleneck. What should you enable?',
+   opts:['Content filters with logging','Application Insights custom events','Tracing in Microsoft Foundry','Diagnostic settings on the Azure OpenAI resource'],
+   ans:2, exp:'Tracing tracks requests through each Prompt Flow node, showing latency, token usage, and errors per step. Diagnostic settings show resource-level metrics but not per-node flow details.'},
+  {d:'d2',q:'You set temperature=0 and still get slightly different outputs for the same prompt. Why?',
+   opts:['temperature=0 doesn\'t guarantee determinism; use seed parameter for reproducibility','The model is non-deterministic by design and cannot be made deterministic','Content filters are modifying the output','The prompt is too long'],
+   ans:0, exp:'temperature=0 makes output nearly deterministic but not perfectly. The seed parameter (when supported) provides reproducible outputs. GPU floating-point arithmetic can still cause minor variations.'},
+
+  // --- D3: Agentic (Hard) ---
+  {d:'d3',q:'You build a multi-agent system where Agent A researches, Agent B writes, and Agent C reviews. Agent C can send work back to Agent B for revision. What pattern is this?',
+   opts:['Sequential (linear chain)','Hierarchical (manager delegates)','Collaborative with feedback loops','Parallel execution'],
+   ans:2, exp:'Collaborative with feedback loops: agents interact bidirectionally. Sequential = linear A→B→C with no backflow. Hierarchical = a manager controls workers. Parallel = independent concurrent execution.'},
+  {d:'d3',q:'In Foundry Agent Service, an agent needs to search the web AND query a SQL database. How are these capabilities added?',
+   opts:['As system message instructions','As tools (function calling) attached to the agent','As separate agents in a multi-agent system','As plugins in the Foundry portal'],
+   ans:1, exp:'Tools (functions) give agents capabilities like web search, code interpreter, and custom functions. System messages set behavior. Multi-agent is for complex orchestration, not adding simple capabilities.'},
+  {d:'d3',q:'You create a Thread, add Messages, and create a Run. The Run status shows "requires_action". What does this mean?',
+   opts:['The agent encountered an error','The agent wants to call a tool and needs you to provide the tool output','The agent is waiting for user confirmation','The thread has exceeded the token limit'],
+   ans:1, exp:'requires_action means the agent wants to execute a function/tool call. Your code must execute the function, then submit the tool output back to continue the Run. This is the function calling loop.'},
+  {d:'d3',q:'In Semantic Kernel, you want the AI to automatically decide which plugins to call based on the user\'s request. What should you configure?',
+   opts:['Manually invoke each plugin function','Set function calling behavior to "auto"','Create a sequential planner','Use a prompt template with plugin names'],
+   ans:1, exp:'Auto function calling lets the model decide which registered plugin functions to invoke. Manual = you call them. Planner creates execution plans but auto is the simpler approach for tool selection.'},
+  {d:'d3',q:'Your agent occasionally enters an infinite loop calling the same tool repeatedly. What two safeguards should you implement? Each correct answer presents part of the solution.',
+   opts:['Set a maximum number of tool call iterations','Add a timeout for the Run','Increase the model\'s temperature','Remove all tools from the agent','Add loop detection logic in the orchestration layer'],
+   ans:[0,4], exp:'Max iterations cap the tool-calling loop. Loop detection identifies repeated patterns and breaks out. Timeout helps but doesn\'t prevent the loop itself. Removing tools defeats the purpose. Temperature doesn\'t affect tool calling loops.'},
+
+  // --- D4: Computer Vision (Hard) ---
+  {d:'d4',q:'You need to identify people across multiple photos (who is this person?). You create a PersonGroup with recognition_03 and enroll faces. Later you want better accuracy with recognition_04. What must you do?',
+   opts:['Update the PersonGroup model to recognition_04','Create a new PersonGroup with recognition_04 and re-enroll all faces','Just re-train the existing PersonGroup','Switch the detection model to detection_03'],
+   ans:1, exp:'Recognition models CANNOT be changed after PersonGroup creation. You must create a new group with recognition_04 and re-enroll all faces. This is a common exam trap.'},
+  {d:'d4',q:'Your Image Analysis 4.0 call returns a "people" result with bounding boxes. Can you identify WHO the people are from this result?',
+   opts:['Yes, if you pass a PersonGroup ID','Yes, Image Analysis 4.0 includes face identification','No — Image Analysis detects people with bounding boxes only, not identity','Yes, but only with detection_03 model'],
+   ans:2, exp:'Image Analysis people feature detects bounding boxes around people but does NOT identify them. For identification, you need Face API with a trained PersonGroup. This is a key distinction.'},
+  {d:'d4',q:'You trained a Custom Vision classification model and exported it as ONNX for a mobile app. The model accuracy drops significantly on the mobile device. What is the most likely cause?',
+   opts:['ONNX doesn\'t support classification','The model was trained with a non-compact domain','The mobile device lacks a GPU','The ONNX runtime version is incompatible'],
+   ans:1, exp:'Only compact domains can be exported to ONNX/TensorFlow/CoreML. Non-compact models are cloud-only. If somehow exported, they perform poorly because compact domains are specifically optimized for edge inference.'},
+  {d:'d4',q:'Azure AI Video Indexer extracts insights from a recorded training video. Azure AI Vision Spatial Analysis monitors a retail store camera. Which statement is TRUE?',
+   opts:['Both process real-time video streams','Video Indexer processes recorded video; Spatial Analysis processes live RTSP streams','Both require NVIDIA GPUs','Spatial Analysis can extract transcripts from video'],
+   ans:1, exp:'Video Indexer = recorded video analysis (topics, faces, transcript, scenes). Spatial Analysis = real-time RTSP stream processing (people counting, zone detection) on NVIDIA GPU edge devices. Different use cases entirely.'},
+  {d:'d4',q:'Face API Detect returns a qualityForRecognition value of "low" for a detected face. You try to add it to a PersonGroup for identification. What happens?',
+   opts:['It succeeds but with a warning','It fails — low quality faces cannot be enrolled','It succeeds — quality is informational only, enrollment accepts any quality','It succeeds but the face is flagged as unreliable'],
+   ans:2, exp:'qualityForRecognition is advisory — the API does NOT block enrollment of low-quality faces. However, Microsoft recommends "high" for enrollment and "medium" or better for identification queries. Using low-quality faces degrades accuracy.'},
+
+  // --- D5: NLP & Speech (Hard) ---
+  {d:'d5',q:'Language detection returns language "unknown" with confidence score 1.0. A developer says this must be a bug because unknown should have 0.0 confidence. Who is correct?',
+   opts:['The developer is correct — unknown should have 0.0','The API is correct — unknown always returns confidence 1.0','The API returns 0.5 for unknown','Confidence is not returned for unknown results'],
+   ans:1, exp:'This is a well-known exam trap. When the language cannot be determined, the API returns name: "(Unknown)", iso6391Name: "NaN", and confidence: 1.0 (NOT 0.0). The confidence reflects certainty that the text IS ambiguous.'},
+  {d:'d5',q:'You build a CLU model with a "BookFlight" intent. Users also say things like "reserve a seat" and "get me a plane ticket." The model doesn\'t recognize these. What should you do?',
+   opts:['Create separate intents for each phrase','Add these as utterances to the BookFlight intent','Create list entities for flight synonyms','Increase the confidence threshold'],
+   ans:1, exp:'Different phrasings of the same action should be added as utterances (training examples) to the SAME intent. Creating separate intents fragments the model. List entities are for entity values, not intent recognition.'},
+  {d:'d5',q:'Your Custom Question Answering project returns low-confidence answers for questions that have correct QnA pairs. Active learning suggestions appear. What should you do with them?',
+   opts:['Ignore them — the model will self-improve','Accept relevant suggestions as alternate phrasings for existing QnA pairs','Delete and recreate the knowledge base','Increase the confidence threshold'],
+   ans:1, exp:'Active learning suggests alternate phrasings based on real user queries. Accepting relevant suggestions adds them as alternate questions, improving future matching. The model does NOT self-improve without human review.'},
+  {d:'d5',q:'You need speech-to-text for a call center with heavy background noise and industry jargon. Standard recognition accuracy is poor. What two actions improve accuracy? Each correct answer presents part of the solution.',
+   opts:['Use a larger Azure region','Train a Custom Speech model with domain audio + transcripts','Add a custom pronunciation file','Switch from real-time to batch transcription','Increase the audio bitrate to 320kbps'],
+   ans:[1,2], exp:'Custom Speech model trained on domain audio handles noise and jargon. Pronunciation files help with acronyms and unusual terms. Region size doesn\'t affect accuracy. Batch vs real-time doesn\'t improve recognition. 16kHz/16-bit is sufficient.'},
+  {d:'d5',q:'You translate speech from English to French using TranslationRecognizer. You get text translations but no spoken French audio output. What is missing?',
+   opts:['The target language was not added','A voice_name for the French target was not specified','Azure Speech TTS is not installed','The French neural voice model needs to be deployed first'],
+   ans:1, exp:'Speech-to-text translation only needs add_target_language(). Speech-to-speech ALSO needs a voice_name (e.g., "fr-FR-DeniseNeural") for synthesized output. Without it, you only get text translation.'},
+
+  // --- D6: Knowledge Mining (Hard) ---
+  {d:'d6',q:'You define a field as searchable=true, filterable=false, facetable=true. When you try to create the index, what happens?',
+   opts:['Index creates successfully','Error — facetable requires filterable to also be true','Warning but index creates','Error — searchable and facetable are mutually exclusive'],
+   ans:1, exp:'A field must be filterable to be facetable. Facets are built on top of the filter infrastructure. This is a subtle constraint that appears on the exam.'},
+  {d:'d6',q:'Your skillset has an OCR skill followed by a Key Phrase Extraction skill. The Key Phrase skill input must reference the OCR output. What is the correct source path?',
+   opts:['/document/content','/document/normalized_images/*/text','/document/merged_content','/document/keyPhrases'],
+   ans:1, exp:'OCR skill outputs to /document/normalized_images/*/text. If you use a merge skill to combine with document text, the path becomes /document/merged_content. The source path must match the actual enrichment tree node.'},
+  {d:'d6',q:'You add a suggester to an existing index field that already has 1 million documents. Suggestions return empty results. Why?',
+   opts:['Suggesters don\'t work on existing data — you must rebuild the index','The field needs to be searchable','The suggester name is wrong','You need to rerun the indexer'],
+   ans:0, exp:'Adding a suggester to an existing field requires an index REBUILD (delete + recreate + re-index). Suggesters build prefix data structures during indexing; existing documents don\'t have these prefixes. Simply rerunning the indexer is insufficient.'},
+  {d:'d6',q:'You configure semantic search on your index. Results now include captions and answers, but ranking seems unchanged. What is most likely wrong?',
+   opts:['Semantic search is not enabled on the search service','The semantic configuration doesn\'t specify the correct content fields','The query is missing queryType=semantic and semanticConfiguration parameters','The index needs to be rebuilt for semantic search'],
+   ans:2, exp:'Semantic search requires queryType=semantic AND semanticConfiguration=<name> in the query. Without these query parameters, the search falls back to standard BM25 ranking even if the configuration exists on the index.'},
+  {d:'d6',q:'You have a composed Document Intelligence model with 3 custom models. A new form type arrives that none of the 3 models handle. What should you do?',
+   opts:['Retrain one of the existing models to include the new form','Train a new custom model and add it to the composed model','Delete the composed model and start over','Use the prebuilt-document model instead'],
+   ans:1, exp:'Composed models can have custom models added (up to 200 components). Train a new model for the new form type and add it to the composition. No need to delete or retrain existing models.'},
 ];
 
 // ==================== CHEAT SHEET DATA ====================
@@ -1788,7 +1892,7 @@ function showQuizQ(){
     const lbl=document.createElement('label');
     lbl.id='qopt'+i;
     if(isMulti){
-      lbl.onclick=()=>toggleMultiSelect(i);
+      lbl.onclick=(e)=>{ e.preventDefault(); toggleMultiSelect(i); };
     } else {
       lbl.onclick=()=>answerQuiz(i);
     }
@@ -1808,7 +1912,9 @@ function toggleMultiSelect(i){
   const idx=quizMultiSelected.indexOf(i);
   if(idx>-1) quizMultiSelected.splice(idx,1); else quizMultiSelected.push(i);
   document.querySelectorAll('#quiz-opts label').forEach((l,j)=>{
-    l.classList.toggle('selected', quizMultiSelected.includes(j));
+    const sel=quizMultiSelected.includes(j);
+    l.classList.toggle('selected', sel);
+    const cb=l.querySelector('input'); if(cb) cb.checked=sel;
   });
 }
 
